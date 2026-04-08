@@ -5,140 +5,224 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Case 3: Lina’s Diary</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap');
         
         :root {
-            --primary: #8AB6F9;
-            --secondary: #CADCFC;
-            --accent: #F2E8CF;
-            --text-dark: #2B2D42;
-            --bg-color: #F1F6F9;
+            --primary-blue: #8AB6F9;
+            --dark-blue: #4A7CDE;
+            --bg-blue: #EAF2FF;
+            --accent-pink: #FFB5A7;
+            --dark-pink: #D96C75;
             --white: #FFFFFF;
+            --text-dark: #2B2D42;
+            --text-gray: #6C757D;
         }
+        
+        * { box-sizing: border-box; }
+        
         body {
             font-family: 'Sarabun', sans-serif;
-            background-color: var(--bg-color);
+            background-color: var(--bg-blue);
             color: var(--text-dark);
             margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
+            min-height: 100vh;
         }
+        
+        /* Layout หลัก */
         .container {
             background-color: var(--white);
             width: 100%;
-            max-width: 850px;
+            max-width: 1000px;
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 10px 30px rgba(138, 182, 249, 0.2);
             text-align: center;
+            display: flex;
+            flex-direction: column;
         }
         .hidden { display: none !important; }
-        h1, h2 { color: var(--primary); font-weight: 600; }
+        h1, h2 { color: var(--dark-blue); font-weight: 700; }
         
+        /* Top Bar สไตล์ภาพต้นแบบ */
+        .top-bar {
+            background: linear-gradient(135deg, var(--dark-blue), var(--primary-blue));
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(74, 124, 222, 0.3);
+        }
+        .agent-info { font-size: 18px; font-weight: 600; }
+        .timer { font-size: 20px; font-weight: bold; color: #FFE3E3; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+
+        /* Split Screen (หน้าอ่านและหน้าคำถาม) */
+        .game-layout {
+            display: flex;
+            gap: 20px;
+            height: 65vh; /* ล็อกความสูงให้เลื่อนอ่านได้ */
+            min-height: 500px;
+        }
+        
+        /* คอลัมน์ซ้าย: บทอ่าน */
+        .reading-panel {
+            flex: 1;
+            background-color: #F8FAFC;
+            border: 2px solid var(--primary-blue);
+            border-radius: 15px;
+            padding: 25px;
+            overflow-y: auto;
+            text-align: left;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+        }
+        .file-header {
+            color: var(--dark-pink);
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--accent-pink);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .diary-domain { font-style: italic; color: var(--text-gray); margin-bottom: 15px; display: block; background: #fff; padding: 5px 10px; border-radius: 5px; border-left: 4px solid var(--accent-pink); }
+        .diary-text { font-size: 16px; line-height: 1.8; color: #333; }
+
+        /* คอลัมน์ขวา: คำถาม */
+        .question-panel {
+            flex: 1;
+            background-color: var(--white);
+            border: 2px solid var(--accent-pink);
+            border-radius: 15px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: var(--dark-blue);
+        }
+        .score-badge {
+            background-color: var(--bg-blue);
+            padding: 5px 15px;
+            border-radius: 20px;
+            color: var(--dark-blue);
+            font-size: 14px;
+        }
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+        
+        /* สไตล์ Choice */
+        .choices-container { display: flex; flex-direction: column; gap: 12px; }
+        .choice-btn {
+            background-color: var(--white);
+            border: 2px solid #E2E8F0;
+            padding: 15px 20px;
+            border-radius: 10px;
+            text-align: left;
+            font-size: 16px;
+            font-family: 'Sarabun', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-dark);
+        }
+        .choice-btn:hover { border-color: var(--primary-blue); background-color: var(--bg-blue); }
+        .choice-btn.selected { border-color: var(--dark-blue); background-color: var(--bg-blue); font-weight: bold; }
+        
+        /* กล่องเฉลย */
+        .explanation-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #FFF0F3;
+            border-left: 4px solid var(--dark-pink);
+            border-radius: 8px;
+            font-size: 15px;
+            color: #851C24;
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
         /* สไตล์ปุ่มทั่วไป */
         .btn {
-            background-color: var(--primary);
+            background-color: var(--primary-blue);
             color: white;
             border: none;
             padding: 12px 25px;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
             font-weight: bold;
-            margin: 15px 5px;
             transition: 0.3s;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        .btn:hover { background-color: #6d9ceb; transform: translateY(-2px); }
-        
-        /* ฟอร์มและ Input */
-        input {
-            width: 80%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 2px solid var(--secondary);
-            font-family: 'Sarabun', sans-serif; font-size: 16px;
-        }
-        input:focus { outline: none; border-color: var(--primary); }
-        
-        /* ระบบ Avatar */
-        .avatar-container {
-            display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap;
-        }
-        .avatar-label {
-            font-size: 40px; cursor: pointer; padding: 10px; border-radius: 50%;
-            border: 3px solid transparent; background-color: var(--bg-color);
-            transition: 0.3s; display: inline-block;
-        }
-        .avatar-radio { display: none; }
-        .avatar-radio:checked + .avatar-label {
-            border-color: var(--primary); background-color: var(--secondary); transform: scale(1.1);
-        }
+        .btn:hover { background-color: var(--dark-blue); transform: translateY(-2px); }
+        .btn-pink { background-color: var(--accent-pink); color: var(--text-dark); }
+        .btn-pink:hover { background-color: var(--dark-pink); color: white; }
 
-        /* ปุ่มเลือกไดอารี่ */
-        .diary-btn { 
-            padding: 15px 20px; margin: 10px; border-radius: 15px; 
-            border: 2px solid var(--primary); background: var(--white); 
-            cursor: pointer; font-size: 18px; transition: 0.3s; color: var(--text-dark);
+        /* Input & Forms */
+        input { width: 80%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 2px solid var(--bg-blue); font-family: 'Sarabun', sans-serif; font-size: 16px; }
+        input:focus { outline: none; border-color: var(--primary-blue); }
+
+        /* Avatar & Diary Buttons */
+        .avatar-container { display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; }
+        .avatar-label { font-size: 40px; cursor: pointer; padding: 10px; border-radius: 50%; border: 3px solid transparent; background-color: var(--bg-blue); transition: 0.3s; display: inline-block; }
+        .avatar-radio { display: none; }
+        .avatar-radio:checked + .avatar-label { border-color: var(--primary-blue); background-color: white; transform: scale(1.1); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .diary-btn { padding: 15px 20px; margin: 10px; border-radius: 15px; border: 2px solid var(--primary-blue); background: var(--white); cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .diary-btn:hover { background: var(--bg-blue); }
+        .diary-btn.selected { background: var(--accent-pink); border-color: var(--dark-pink); font-weight: bold; color: var(--text-dark); }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .game-layout { flex-direction: column; height: auto; }
+            .reading-panel { max-height: 40vh; }
         }
-        .diary-btn:hover { background: var(--bg-color); }
-        .diary-btn.selected { background: var(--secondary); border-color: var(--primary); font-weight: bold; }
-        
-        /* สไตล์หน้ากระดาษไดอารี่ */
-        .diary-paper {
-            background-color: #FAFAFA;
-            border-left: 6px solid var(--primary);
-            padding: 25px;
-            text-align: left;
-            border-radius: 0 10px 10px 0;
-            box-shadow: 2px 2px 12px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-            font-size: 16px;
-            line-height: 1.8;
-            color: #444;
-        }
-        .diary-domain { font-style: italic; color: #777; margin-bottom: 15px; display: block; border-bottom: 1px dashed #ccc; padding-bottom: 10px; }
-        
-        /* สไตล์กล่องคำถาม */
-        .timer { font-size: 28px; color: #e63946; font-weight: bold; margin: 20px 0; background: #ffe3e3; display: inline-block; padding: 5px 20px; border-radius: 20px;}
-        .question-block { 
-            text-align: left; margin-bottom: 20px; background: var(--white); 
-            padding: 20px; border-radius: 15px; border: 1px solid var(--secondary);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        }
-        .question-text { font-weight: 600; margin-bottom: 15px; font-size: 17px; color: var(--primary); }
-        .option-label {
-            display: block; padding: 10px 15px; margin: 8px 0; background: var(--bg-color);
-            border-radius: 10px; cursor: pointer; transition: 0.2s; border: 1px solid transparent;
-        }
-        .option-label:hover { background: var(--secondary); }
-        input[type="radio"] { margin-right: 10px; transform: scale(1.2); }
     </style>
 </head>
 <body>
 
 <div class="container" id="app">
+    
+    <div id="top-bar" class="top-bar hidden">
+        <div class="agent-info">🕵️ Agent: <span id="display-playerName"></span></div>
+        <div class="timer">Time: <span id="timerDisplay">10:00</span></div>
+    </div>
+
     <div id="page-login">
         <h1>Case 3: Lina’s Diary</h1>
-        <p style="color: #777; margin-bottom: 20px;">The Hidden Story - Jigsaw Reading</p>
+        <p style="color: var(--text-gray); margin-bottom: 20px;">The Hidden Story - Jigsaw Reading</p>
         
         <input type="text" id="groupName" placeholder="Group Name (ชื่อกลุ่มต้องเหมือนกัน 4 คน)">
         <input type="text" id="playerName" placeholder="Your Name (ชื่อของคุณ)">
         
-        <h3 style="margin-top: 25px;">เลือก Avatar นักสืบของคุณ</h3>
+        <h3 style="margin-top: 25px; color: var(--dark-pink);">เลือก Avatar นักสืบของคุณ</h3>
         <div class="avatar-container">
             <input type="radio" name="avatar" id="av1" value="🕵️‍♂️" class="avatar-radio" checked>
             <label for="av1" class="avatar-label">🕵️‍♂️</label>
-            
             <input type="radio" name="avatar" id="av2" value="🕵️‍♀️" class="avatar-radio">
             <label for="av2" class="avatar-label">🕵️‍♀️</label>
-            
-            <input type="radio" name="avatar" id="av3" value="🐶🔍" class="avatar-radio">
+            <input type="radio" name="avatar" id="av3" value="🐶" class="avatar-radio">
             <label for="av3" class="avatar-label">🐶</label>
-            
-            <input type="radio" name="avatar" id="av4" value="🐱🕵️" class="avatar-radio">
+            <input type="radio" name="avatar" id="av4" value="🐱" class="avatar-radio">
             <label for="av4" class="avatar-label">🐱</label>
         </div>
 
-        <h3 style="margin-top: 25px;">เลือกเบาะแส (Diary) ที่ต้องการอ่าน</h3>
+        <h3 style="margin-top: 25px; color: var(--dark-blue);">เลือกเบาะแส (Diary) ที่ต้องการอ่าน</h3>
         <div>
             <button id="btn-diary-1" class="diary-btn" onclick="selectDiary(1)">🍽️ Diary No.1</button>
             <button id="btn-diary-2" class="diary-btn" onclick="selectDiary(2)">🖌️ Diary No.2</button>
@@ -146,124 +230,150 @@
             <button id="btn-diary-4" class="diary-btn" onclick="selectDiary(4)">💮 Diary No.4</button>
         </div>
         <br>
-        <button class="btn" onclick="startGame()" style="width: 80%; padding: 15px; font-size: 18px;">เข้าสู่การสืบสวน 🔍</button>
+        <button class="btn" onclick="startGame()" style="width: 80%; padding: 15px; font-size: 18px; margin-top: 10px;">เข้าสู่การสืบสวน 🔍</button>
     </div>
 
     <div id="page-intro" class="hidden">
         <h2>Introduction</h2>
-        <div class="diary-paper" style="border-left-color: #6c757d; font-style: italic;">
+        <div class="reading-panel" style="margin-top: 20px; font-style: italic; height: auto;">
             "Lina was a student everyone noticed for the right reasons. She was a gifted artist at her secondary school, known for her kindness and her quiet, focused energy in the art studio. She had a loving family and a close group of friends. Life seemed "perfect" on the surface, which is exactly why the incident was so devastating—it happened in the shadows where no one thought to look."
         </div>
-        <button class="btn" onclick="enterDiary()">เปิดอ่าน Diary ของคุณ 📖</button>
+        <button class="btn btn-pink" onclick="enterDiary()" style="margin-top: 20px;">เริ่มวิเคราะห์ Diary 📖</button>
     </div>
 
     <div id="page-diary" class="hidden">
-        <h2 id="diary-title">Diary Title</h2>
-        <div class="diary-paper" id="diary-content"></div>
-        
-        <h3>คำถามทดสอบความเข้าใจ</h3>
-        <div class="timer" id="timerDisplay">10:00</div>
-        
-        <div id="questions-container"></div>
-        <button class="btn" onclick="submitAnswers()" style="width: 100%; padding: 15px; font-size: 18px;">ส่งคำตอบ / Submit Answers</button>
+        <div class="game-layout">
+            <div class="reading-panel">
+                <div class="file-header" id="diary-title">FILE: LINA'S DIARY</div>
+                <span class="diary-domain" id="diary-domain">Domain: ...</span>
+                <div class="diary-text" id="diary-content"></div>
+            </div>
+
+            <div class="question-panel">
+                <div class="q-header">
+                    <span style="font-size: 18px;">Question <span id="q-current">1</span>/5</span>
+                    <span class="score-badge">Score: <span id="score-display">0</span>/5</span>
+                </div>
+                
+                <div class="question-text" id="q-text">คำถามจะปรากฏที่นี่...</div>
+                
+                <div class="choices-container" id="choices-container">
+                    </div>
+
+                <div class="explanation-box" id="explanation-box">
+                    <strong>💡 เฉลย:</strong> <span id="exp-text">คำอธิบาย...</span>
+                </div>
+
+                <div style="margin-top: auto; display: flex; justify-content: space-between;">
+                    <button class="btn" id="btn-submit-ans" onclick="checkAnswer()">ตรวจคำตอบ</button>
+                    <button class="btn btn-pink hidden" id="btn-next-q" onclick="nextQuestion()">ข้อต่อไป ➡</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="page-waiting" class="hidden">
         <h2>ทีมของคุณกำลังสืบสวน... ⏳</h2>
-        <p>คุณตอบคำถามถูกต้องครบถ้วนแล้ว กรุณารอเพื่อนร่วมทีม</p>
-        <div style="background: var(--bg-color); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+        <p>คุณวิเคราะห์ข้อมูลครบถ้วนแล้ว กรุณารอเพื่อนร่วมทีม</p>
+        <div class="reading-panel" style="height: auto; text-align: center; margin-bottom: 20px;">
             <p><strong>สถานะผู้เล่น (จำลอง):</strong></p>
             <ul style="list-style: none; padding: 0; font-size: 18px; line-height: 2;">
                 <li>🕵️‍♂️ Player 1: <span style="color: #2a9d8f;">เสร็จแล้ว (ได้รับแว่นขยาย 🔍)</span></li>
                 <li>🕵️‍♀️ Player 2: <span style="color: #2a9d8f;">เสร็จแล้ว</span></li>
                 <li>🐶 Player 3: <span style="color: #e76f51;">กำลังวิเคราะห์...</span></li>
-                <li>🐱 คุณ: <span style="color: #2a9d8f;">เสร็จแล้ว</span></li>
+                <li>🐱 <span id="my-status-name">คุณ</span>: <span style="color: #2a9d8f;">เสร็จแล้ว</span></li>
             </ul>
         </div>
-        <button class="btn" onclick="startVotingPhase()">ข้ามไปโหวต (สำหรับจำลองเกม)</button>
+        <button class="btn btn-pink" onclick="startVotingPhase()">ข้ามไปโหวต (สำหรับทดสอบเกม)</button>
     </div>
 
     <div id="page-voting" class="hidden">
         <h2>โหวตหาสาเหตุการเสียชีวิต ⚖️</h2>
-        <p>ปรึกษากับเพื่อนในทีมจากข้อมูลทั้ง 4 เล่ม (คุณมีสิทธิ์โหวต 2 ครั้ง)</p>
-        <div style="max-width: 400px; margin: 0 auto; text-align: left;">
-            <button class="btn" style="display:block; width:100%" onclick="checkVote('Accident')">1. อุบัติเหตุ (Accident)</button>
-            <button class="btn" style="display:block; width:100%" onclick="checkVote('Sickness')">2. โรคประจำตัว (Sickness)</button>
-            <button class="btn" style="display:block; width:100%" onclick="checkVote('Cyberbully')">3. การกลั่นแกล้งไซเบอร์ (Cyberbullying)</button>
-            <button class="btn" style="display:block; width:100%" onclick="checkVote('Murder')">4. ฆาตกรรม (Murder)</button>
-            <button class="btn" style="display:block; width:100%" onclick="checkVote('Family')">5. ปัญหาครอบครัว (Family Issues)</button>
+        <p style="color: var(--dark-pink);">ปรึกษากับเพื่อนในทีมจากข้อมูลทั้ง 4 เล่ม (คุณมีสิทธิ์โหวต 2 ครั้ง)</p>
+        <div class="choices-container" style="max-width: 400px; margin: 0 auto;">
+            <button class="choice-btn" onclick="checkVote('Accident')">1. อุบัติเหตุ (Accident)</button>
+            <button class="choice-btn" onclick="checkVote('Sickness')">2. โรคประจำตัว (Sickness)</button>
+            <button class="choice-btn" onclick="checkVote('Cyberbully')">3. การกลั่นแกล้งไซเบอร์ (Cyberbullying)</button>
+            <button class="choice-btn" onclick="checkVote('Murder')">4. ฆาตกรรม (Murder)</button>
+            <button class="choice-btn" onclick="checkVote('Family')">5. ปัญหาครอบครัว (Family Issues)</button>
         </div>
     </div>
 
     <div id="page-result" class="hidden">
-        <h2>ไขคดีสำเร็จ! 🎉</h2>
-        <h3 style="color: #e63946;">สาเหตุที่แท้จริงคือ: Cyberbullying</h3>
-        <div style="background: var(--bg-color); padding: 20px; border-radius: 15px; text-align: left; margin-bottom: 20px;">
+        <h2 style="font-size: 32px;">ไขคดีสำเร็จ! 🎉</h2>
+        <h3 style="color: var(--dark-pink);">สาเหตุที่แท้จริงคือ: Cyberbullying</h3>
+        <div class="reading-panel" style="height: auto; margin-bottom: 20px;">
             <p><strong>ทำไมถึงเป็น Cyberbullying?</strong><br>
             จาก Diary ทั้ง 4 เล่ม จะเห็นว่า Lina มีครอบครัวอบอุ่น มีเพื่อนที่ดี และมีแฟนที่รักเธอ แต่เธอถูกคุกคามผ่านหน้าจอ (Shadows, Unseen audience, Slaughterhouse ในช่องคอมเมนต์, URL บนล็อกเกอร์) ซึ่งทำให้เธอรู้สึกว่าไม่มีที่ไหนปลอดภัยแม้แต่ในโลกความจริง</p>
             <p><strong>นิยามของ Cyberbully:</strong><br>
             การกลั่นแกล้ง การคุกคาม หรือการให้ร้ายผู้อื่นผ่านช่องทางดิจิทัล เช่น โซเชียลมีเดีย ข้อความ หรือเว็บไซต์ ซึ่งมักสร้างบาดแผลทางจิตใจที่มองไม่เห็นแต่รุนแรงมาก</p>
         </div>
-        <h2 id="final-score" style="color: var(--primary); font-size: 28px;">คะแนนรวมของคุณ: </h2>
-        <button class="btn" onclick="saveData()" style="padding: 15px 30px;">💾 บันทึกข้อมูลคะแนน</button>
+        <h2 id="final-score" style="color: var(--dark-blue); font-size: 28px;">คะแนนรวมของคุณ: </h2>
+        <button class="btn" onclick="saveData()" style="padding: 15px 30px; font-size: 18px;">💾 บันทึกข้อมูลคะแนน</button>
     </div>
 </div>
 
 <script>
 let currentDiary = 0;
 let points = 0;
-let timeRemaining = 600; // 10 minutes
+let timeRemaining = 600; // 10 นาที
 let timerInterval;
 let votingAttempts = 0;
 
-// ฐานข้อมูลคำถามและเนื้อเรื่องทั้งหมด
+// State สำหรับหน้าคำถาม
+let currentQuestionIndex = 0;
+let correctAnswersCount = 0;
+let mistakesMade = 0;
+let selectedChoiceIndex = null;
+
+// ฐานข้อมูลคำถามพร้อมเฉลยอย่างละเอียด (exp)
 const diaries = {
     1: {
-        title: "October 14th: The Dinner Table",
+        title: "FILE: OCTOBER 14TH - THE DINNER TABLE",
         domain: "Domain: Family Relations",
         content: `The house smells like garlic and rosemary—Mom’s "celebration roast." We sat there for two hours, just talking. Dad was retelling that ridiculous story about his first car, and for a second, I actually forgot to be afraid. They look at me with so much pride when I talk about my upcoming art exhibition. I felt so safe in the warmth of the yellow kitchen light, surrounded by people who would move mountains for me. Mom reached over and squeezed my hand, telling me how much she loves my "bright spirit."<br><br>I almost told them then. I almost let the words spill out. But how do you tell people who think you’re a masterpiece that you’re actually being dismantled?<br><br>When my phone vibrated against the wooden table, the sound was like a gunshot. My stomach did a slow, sickening flip. I didn't even look at the screen, but I instinctively pulled my hand away from Mom’s. She didn't notice the way I suddenly went cold, or how I spent the rest of the meal staring at the shadows the candles cast on the wall—jagged, dark shapes that looked exactly like the 'shame' emojis that have been flooding my private folders since Monday.`,
         qa: [
-            { q: "1. How does the girl feel during dinner?", opts: ["A) Happy and hungry.", "B) Scared and quiet.", "C) Angry and loud."], ans: 1 },
-            { q: "2. Why does she pull her hand away from her mom?", opts: ["A) The food is hot.", "B) Her phone vibrated.", "C) She is being rude."], ans: 1 },
-            { q: "3. What do the 'shadows' on the wall look like?", opts: ["A) Mean emojis.", "B) Her parents.", "C) Pretty art."], ans: 0 },
-            { q: "4. What do her parents think of her?", opts: ["A) She is a 'bright spirit.'", "B) She is a bad student.", "C) She is very sick."], ans: 0 },
-            { q: "5. Main Idea: What is the girl doing at dinner?", opts: ["A) Eating her favorite meal.", "B) Hiding a secret.", "C) Arguing with her dad."], ans: 1 }
+            { q: "1. How does the girl feel during dinner?", opts: ["A) Happy and hungry.", "B) Scared and quiet.", "C) Angry and loud."], ans: 1, exp: "ตอนแรกเธอบอกว่า 'forgot to be afraid' แต่เมื่อโทรศัพท์สั่นเธอก็ 'went cold' และเงียบไปตลอดมื้ออาหาร" },
+            { q: "2. Why does she pull her hand away from her mom?", opts: ["A) The food is hot.", "B) Her phone vibrated.", "C) She is being rude."], ans: 1, exp: "ในบทความระบุชัดเจนว่า 'When my phone vibrated... instinctively pulled my hand away' เพราะเธอตกใจและกลัว" },
+            { q: "3. What do the 'shadows' on the wall look like?", opts: ["A) Mean emojis.", "B) Her parents.", "C) Pretty art."], ans: 0, exp: "บทความเปรียบเทียบเงาว่า 'looked exactly like the shame emojis' (เหมือนอีโมจิที่ใช้รังแกเธอ)" },
+            { q: "4. What do her parents think of her?", opts: ["A) She is a 'bright spirit.'", "B) She is a bad student.", "C) She is very sick."], ans: 0, exp: "แม่ของเธอบอกว่ารัก 'bright spirit' ของเธอ และพ่อแม่ก็ภูมิใจในตัวเธอมาก" },
+            { q: "5. Main Idea: What is the girl doing at dinner?", opts: ["A) Eating her favorite meal.", "B) Hiding a secret.", "C) Arguing with her dad."], ans: 1, exp: "แม้ภายนอกจะดูเหมือนครอบครัวกำลังกินข้าวกันอย่างมีความสุข แต่ความจริงคือเธอกำลังปิดบังความลับ (Hiding a secret) เรื่องที่ถูกกลั่นแกล้ง" }
         ]
     },
     2: {
-        title: "October 17th: The Art Room Sanctuary",
+        title: "FILE: OCTOBER 17TH - THE ART ROOM SANCTUARY",
         domain: "Domain: School Relations",
         content: `Mr. Harrison let me stay late in the studio today. He says I have a "rare eye for perspective." It’s the only place in this building where the air doesn't feel like it’s running out. Even Chloe and Sarah came by to drop off a coffee; they’re the best friends anyone could ask for. We spent the afternoon laughing about our disastrous history presentation, and for a few hours, I felt like a normal sixteen-year-old. I’m surrounded by teachers who believe in me and friends who hold my hand in the hallway. I should be happy. I have every reason to be.<br><br>As they walked away, I saw them glance at their phones and then quickly at me. It was a split second, a tiny hitch in their laughter. I looked down at my canvas and realized I’d been painting the same recursive loop of thorns over and over. My phone buzzed in my pocket—a sharp, rhythmic pulse. It’s a "ping" that follows me into every room, a digital footprint I can’t scrub off. Even in this sanctuary, I can feel the unseen audience watching me through the lens, waiting for the girl in the "perfect" art room to finally break.`,
         qa: [
-            { q: "1. Why does she like the art room?", opts: ["A) She can breathe there.", "B) There are no teachers.", "C) She can sleep there."], ans: 0 },
-            { q: "2. What do her friends Chloe and Sarah bring her?", opts: ["A) A new painting.", "B) A cup of coffee.", "C) A history book."], ans: 1 },
-            { q: "3. What 'clue' shows a problem at school?", opts: ["A) Her friends ignore her.", "B) Her friends check their phones.", "C) The room is too dark."], ans: 1 },
-            { q: "4. Who is the 'unseen audience'?", opts: ["A) People in the hallway.", "B) People online.", "C) People at a museum."], ans: 1 },
-            { q: "5. Main Idea: How does the girl feel at school?", opts: ["A) Happy and successful.", "B) Watched and judged.", "C) Bored and tired."], ans: 1 }
+            { q: "1. Why does she like the art room?", opts: ["A) She can breathe there.", "B) There are no teachers.", "C) She can sleep there."], ans: 0, exp: "เธอบอกว่าที่นี่เป็นที่เดียวที่ 'air doesn't feel like it’s running out' ทำให้เธอรู้สึกหายใจออกและปลอดภัย" },
+            { q: "2. What do her friends Chloe and Sarah bring her?", opts: ["A) A new painting.", "B) A cup of coffee.", "C) A history book."], ans: 1, exp: "บทความระบุชัดเจนว่า 'came by to drop off a coffee'" },
+            { q: "3. What 'clue' shows a problem at school?", opts: ["A) Her friends ignore her.", "B) Her friends check their phones.", "C) The room is too dark."], ans: 1, exp: "อาการชะงักและเหลือบมองโทรศัพท์ (glance at their phones) แล้วมองมาที่เธออย่างรวดเร็ว เป็นสัญญาณผิดปกติ" },
+            { q: "4. Who is the 'unseen audience'?", opts: ["A) People in the hallway.", "B) People online.", "C) People at a museum."], ans: 1, exp: "'Unseen audience watching me through the lens' หมายถึงคนที่จับจ้องเธอผ่านกล้องโทรศัพท์และโลกออนไลน์" },
+            { q: "5. Main Idea: How does the girl feel at school?", opts: ["A) Happy and successful.", "B) Watched and judged.", "C) Bored and tired."], ans: 1, exp: "แม้จะอยู่กับเพื่อนและครู แต่เธอก็ยังรู้สึกเหมือนถูกจับตามองจากโลกออนไลน์ตลอดเวลา (Watched and judged)" }
         ]
     },
     3: {
-        title: "October 20th: The Last Date",
+        title: "FILE: OCTOBER 20TH - THE LAST DATE",
         domain: "Domain: Romantic Relationships",
         content: `Leo took me to the pier tonight. The air was salty and cold, and he gave me his hoodie without me even asking. We sat on the edge of the wood, watching the black water churn underneath. He told me he’s never met anyone as "real" as me. He makes me feel seen, truly seen, in a way that makes the rest of the world fade into the background. When he kissed me, I felt a flicker of hope—the idea that maybe his love could be a shield thick enough to stop the arrows.<br><br>We took a selfie against the moonlight, but as he went to post it, I felt a wave of pure terror. "Don't tag me," I whispered, my voice shaking. He looked confused, his thumb hovering over the screen. He doesn't know that every time my name is linked to a photo, the 'Comment' section turns into a slaughterhouse. He sees a beautiful memory; I see a new coordinate for them to find me. The "tether" is tightening, and even his arms around me can't stop the silent, digital scream waiting for me in the notifications I’m too scared to open.`,
         qa: [
-            { q: "1. How is Leo during the date?", opts: ["A) Mean and cold.", "B) Kind and loving.", "C) Quiet and bored."], ans: 1 },
-            { q: "2. Why does she say 'Don't tag me'?", opts: ["A) She looks ugly.", "B) She fears mean comments.", "C) She hates the photo."], ans: 1 },
-            { q: "3. What is the 'slaughterhouse'?", opts: ["A) The internet comments.", "B) A place at the pier.", "C) A scary movie."], ans: 0 },
-            { q: "4. How does she feel when Leo kisses her?", opts: ["A) A little hopeful.", "B) Very angry.", "C) Totally safe."], ans: 0 },
-            { q: "5. Main Idea: Why is the date sad?", opts: ["A) The weather was bad.", "B) Love cannot stop the bullies.", "C) Leo wants to break up."], ans: 1 }
+            { q: "1. How is Leo during the date?", opts: ["A) Mean and cold.", "B) Kind and loving.", "C) Quiet and bored."], ans: 1, exp: "Leo อ่อนโยน ให้เสื้อฮู้ด และบอกว่าเธอเป็นคนที่ 'real' ทำให้เธอรู้สึกอบอุ่น" },
+            { q: "2. Why does she say 'Don't tag me'?", opts: ["A) She looks ugly.", "B) She fears mean comments.", "C) She hates the photo."], ans: 1, exp: "เธอกลัวว่าถ้าถูกแท็ก ช่องคอมเมนต์จะกลายเป็นพื้นที่ให้คนเข้ามารุมด่าเธอ" },
+            { q: "3. What is the 'slaughterhouse'?", opts: ["A) The internet comments.", "B) A place at the pier.", "C) A scary movie."], ans: 0, exp: "เธอเปรียบเทียบ 'Comment section' ว่าเปลี่ยนไปเป็น slaughterhouse (โรงฆ่าสัตว์) เพราะมีแต่คำพูดที่ทำร้ายจิตใจ" },
+            { q: "4. How does she feel when Leo kisses her?", opts: ["A) A little hopeful.", "B) Very angry.", "C) Totally safe."], ans: 0, exp: "เมื่อเขาจูบ เธอรู้สึก 'felt a flicker of hope' (มีความหวังขึ้นมาเล็กน้อย)" },
+            { q: "5. Main Idea: Why is the date sad?", opts: ["A) The weather was bad.", "B) Love cannot stop the bullies.", "C) Leo wants to break up."], ans: 1, exp: "แม้จะมีความรักจาก Leo แต่มันก็ไม่สามารถเป็นเกราะป้องกันเธอจากการถูกกลั่นแกล้งทางไซเบอร์ได้" }
         ]
     },
     4: {
-        title: "October 23rd: The Final Entry",
+        title: "FILE: OCTOBER 23RD - THE FINAL ENTRY",
         domain: "The Reveal: The Digital Storm",
         content: `The "Countdown" is over. I finally looked.<br><br>I thought I could keep the worlds separate. I thought if I had a good family, good friends, and a boy who loved me, the voices on the screen wouldn't matter. But they found the cracks. They took the photo from the pier. They took my art. They took the "bright spirit" Mom loves and turned it into something unrecognizable.<br><br>They’ve been voting on my life for weeks. A thousand people I don't know, and a few I thought I did, all hitting "like" on a thread that says I shouldn't exist. The "Burn Page" didn't just stay on the internet; it bled into the physical world. I saw the URL scratched into my locker, the same one I saw in the bathroom stall, the same one sent to my inbox a hundred times a day.<br><br>I’m looking at the roast Mom made, the art Mr. Harrison praised, and the hoodie Leo gave me. They are all beautiful things, but they aren't loud enough. The notifications are a rhythmic, digital heartbeat that has replaced my own. I realize now that the "map" they drew leads to a place where the lights are always on and the shouting never stops. If I can't turn off the screen, I have to turn off the sound. I’m tired of being a spectacle. I just want to be still.`,
         qa: [
-            { q: "1. What is the girl's real problem?", opts: ["A) She failed her art class.", "B) She is being cyberbullied.", "C) She lost her phone."], ans: 1 },
-            { q: "2. Where did she see the bullying link?", opts: ["A) On her locker.", "B) On the TV.", "C) In a library book."], ans: 0 },
-            { q: "3. What is the 'Countdown'?", opts: ["A) A game for a party.", "B) A timer for the bullying.", "C) A school project."], ans: 1 },
-            { q: "4. Why can't her family help her now?", opts: ["A) They don't love her.", "B) The digital hate is too loud.", "C) They are not at home."], ans: 1 },
-            { q: "5. Main Idea: What does 'turn off the sound' mean?", opts: ["A) Fix her broken phone.", "B) Stop the bullying forever.", "C) Listen to soft music."], ans: 1 }
+            { q: "1. What is the girl's real problem?", opts: ["A) She failed her art class.", "B) She is being cyberbullied.", "C) She lost her phone."], ans: 1, exp: "บทความพูดถึง 'Burn Page', คนที่มากด Like ให้ข้อความที่ว่าเธอไม่ควรมีชีวิตอยู่ แสดงถึงการถูก Cyberbullying" },
+            { q: "2. Where did she see the bullying link?", opts: ["A) On her locker.", "B) On the TV.", "C) In a library book."], ans: 0, exp: "เธอเห็น URL ที่ใช้บูลลี่เธอ 'scratched into my locker' (ถูกขูดไว้บนล็อกเกอร์ของเธอ)" },
+            { q: "3. What is the 'Countdown'?", opts: ["A) A game for a party.", "B) A timer for the bullying.", "C) A school project."], ans: 1, exp: "'Countdown' ในบริบทนี้คือการรอคอยเวลาที่ความอดทนของเธอต่อการถูกบูลลี่จะสิ้นสุดลง" },
+            { q: "4. Why can't her family help her now?", opts: ["A) They don't love her.", "B) The digital hate is too loud.", "C) They are not at home."], ans: 1, exp: "สิ่งดีๆ รอบตัวเธอเช่นครอบครัวและเพื่อน 'aren't loud enough' (เสียงไม่ดังพอ) ที่จะกลบเสียงแห่งความเกลียดชังจากโลกดิจิทัล" },
+            { q: "5. Main Idea: What does 'turn off the sound' mean?", opts: ["A) Fix her broken phone.", "B) Stop the bullying forever.", "C) Listen to soft music."], ans: 1, exp: "'Turn off the sound' เป็นการเปรียบเปรยถึงการยุติทุกอย่างเพื่อหนีจากความเจ็บปวด หรือการเลือกที่จะจากไปเพื่อให้เสียงบูลลี่เงียบลง" }
         ]
     }
 };
@@ -275,44 +385,114 @@ function selectDiary(num) {
 }
 
 function showPage(pageId) {
-    document.querySelectorAll('.container > div').forEach(div => div.classList.add('hidden'));
+    document.querySelectorAll('.container > div:not(#top-bar)').forEach(div => div.classList.add('hidden'));
     document.getElementById(pageId).classList.remove('hidden');
 }
 
 function startGame() {
     let group = document.getElementById('groupName').value;
     let player = document.getElementById('playerName').value;
-    if(!group || !player) {
-        alert("กรุณากรอกชื่อกลุ่มและชื่อผู้เล่นให้ครบถ้วน"); return;
-    }
-    if(currentDiary === 0) {
-        alert("กรุณาเลือก Diary ที่ต้องการสืบสวน (1-4)"); return;
-    }
+    if(!group || !player) { alert("กรุณากรอกชื่อกลุ่มและชื่อผู้เล่นให้ครบถ้วน"); return; }
+    if(currentDiary === 0) { alert("กรุณาเลือก Diary ที่ต้องการสืบสวน"); return; }
+    
+    document.getElementById('display-playerName').innerText = player;
+    document.getElementById('my-status-name').innerText = player;
     showPage('page-intro');
 }
 
 function enterDiary() {
+    document.getElementById('top-bar').classList.remove('hidden'); // แสดง Top Bar
     showPage('page-diary');
+    
     let diaryData = diaries[currentDiary];
     document.getElementById('diary-title').innerText = diaryData.title;
-    document.getElementById('diary-content').innerHTML = `<span class="diary-domain">${diaryData.domain}</span>` + diaryData.content;
+    document.getElementById('diary-domain').innerText = diaryData.domain;
+    document.getElementById('diary-content').innerHTML = diaryData.content;
     
-    // สร้างคำถาม
-    let qContainer = document.getElementById('questions-container');
-    qContainer.innerHTML = '';
-    diaryData.qa.forEach((item, index) => {
-        let qHtml = `<div class='question-block'>
-            <div class='question-text'>${item.q}</div>`;
-        item.opts.forEach((opt, optIndex) => {
-            qHtml += `<label class='option-label'>
-                <input type="radio" name="q${index}" value="${optIndex}"> ${opt} 
-            </label>`;
-        });
-        qHtml += `</div>`;
-        qContainer.innerHTML += qHtml;
-    });
-
+    // รีเซ็ตสถานะคำถาม
+    currentQuestionIndex = 0;
+    correctAnswersCount = 0;
+    mistakesMade = 0;
+    renderQuestion();
     startTimer(600, 'timerDisplay');
+}
+
+function renderQuestion() {
+    let qData = diaries[currentDiary].qa[currentQuestionIndex];
+    document.getElementById('q-current').innerText = currentQuestionIndex + 1;
+    document.getElementById('score-display').innerText = correctAnswersCount;
+    document.getElementById('q-text').innerText = qData.q;
+    
+    // ซ่อนเฉลยและปุ่ม Next, เคลียร์ตัวเลือกเก่า
+    document.getElementById('explanation-box').style.display = 'none';
+    document.getElementById('btn-next-q').classList.add('hidden');
+    document.getElementById('btn-submit-ans').classList.remove('hidden');
+    selectedChoiceIndex = null;
+    
+    let choicesHtml = '';
+    qData.opts.forEach((opt, index) => {
+        choicesHtml += `<button class="choice-btn" id="choice-${index}" onclick="selectChoice(${index})">${opt}</button>`;
+    });
+    document.getElementById('choices-container').innerHTML = choicesHtml;
+}
+
+function selectChoice(index) {
+    // ล้างสีปุ่มอื่น
+    document.querySelectorAll('.choice-btn').forEach(btn => btn.classList.remove('selected'));
+    // ไฮไลต์ปุ่มที่เลือก
+    document.getElementById('choice-' + index).classList.add('selected');
+    selectedChoiceIndex = index;
+}
+
+function checkAnswer() {
+    if (selectedChoiceIndex === null) {
+        alert("กรุณาเลือกคำตอบก่อนตรวจครับ!");
+        return;
+    }
+    
+    let qData = diaries[currentDiary].qa[currentQuestionIndex];
+    
+    if (selectedChoiceIndex === qData.ans) {
+        // ตอบถูก
+        correctAnswersCount++;
+        document.getElementById('score-display').innerText = correctAnswersCount;
+        
+        // แสดงเฉลย
+        document.getElementById('exp-text').innerText = qData.exp;
+        document.getElementById('explanation-box').style.display = 'block';
+        
+        // สลับปุ่ม
+        document.getElementById('btn-submit-ans').classList.add('hidden');
+        document.getElementById('btn-next-q').classList.remove('hidden');
+        
+        // ล็อกปุ่มตัวเลือกไม่ให้กดเปลี่ยน
+        document.querySelectorAll('.choice-btn').forEach(btn => btn.style.pointerEvents = 'none');
+    } else {
+        // ตอบผิด (บังคับทบทวนตามบรีฟ)
+        mistakesMade++;
+        alert("คำตอบยังไม่ถูกต้อง ลองกลับไปทบทวนเนื้อหาในไดอารี่อีกครั้งนะครับ 🔍");
+        document.querySelectorAll('.choice-btn').forEach(btn => btn.classList.remove('selected'));
+        selectedChoiceIndex = null;
+    }
+}
+
+function nextQuestion() {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < 5) {
+        renderQuestion();
+    } else {
+        // ทำครบ 5 ข้อ
+        clearInterval(timerInterval);
+        document.getElementById('top-bar').classList.add('hidden');
+        
+        if (mistakesMade === 0) {
+            points += 3;
+            alert("ยอดเยี่ยม! คุณตอบถูกรวดเดียวครบ 5 ข้อ ได้รับแว่นขยายโบนัส 🔍 (+3 คะแนน)");
+        } else {
+            alert("คุณผ่านการทดสอบเนื้อหาแล้ว! ไปรวมตัวกับเพื่อนๆ ในทีมได้เลย");
+        }
+        showPage('page-waiting');
+    }
 }
 
 function startTimer(seconds, displayId) {
@@ -325,37 +505,14 @@ function startTimer(seconds, displayId) {
         document.getElementById(displayId).innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
         if (timeRemaining <= 0) {
             clearInterval(timerInterval);
-            alert("หมดเวลา! ระบบจะส่งคำตอบของคุณทันที");
-            submitAnswers(true);
+            alert("หมดเวลา! การสืบสวนในส่วนนี้สิ้นสุดลง");
+            document.getElementById('top-bar').classList.add('hidden');
+            showPage('page-waiting');
         }
     }, 1000);
 }
 
-function submitAnswers(isTimeout = false) {
-    let allCorrect = true;
-    let questions = diaries[currentDiary].qa;
-    
-    for (let i = 0; i < questions.length; i++) {
-        let selected = document.querySelector(`input[name="q${i}"]:checked`);
-        if (!selected || parseInt(selected.value) !== questions[i].ans) {
-            allCorrect = false;
-            break;
-        }
-    }
-    
-    if (allCorrect) {
-        if (!isTimeout) points += 3; // โบนัสแว่นขยาย (3 คะแนน)
-        alert(isTimeout ? "คุณตอบถูกครบทุกข้อ แต่หมดเวลาเสียก่อน (ไม่ได้โบนัส)" : "ยอดเยี่ยม! คุณตอบถูกครบ 5 ข้อ ได้รับแว่นขยายโบนัส 🔍 (+3 คะแนน)");
-        clearInterval(timerInterval);
-        showPage('page-waiting');
-    } else {
-        alert("ยังมีข้อที่ตอบผิด หรือยังตอบไม่ครบ กรุณากลับไปวิเคราะห์บทอ่านอีกครั้ง!");
-    }
-}
-
-function startVotingPhase() {
-    showPage('page-voting');
-}
+function startVotingPhase() { showPage('page-voting'); }
 
 function checkVote(answer) {
     votingAttempts++;
@@ -366,11 +523,11 @@ function checkVote(answer) {
         document.getElementById('final-score').innerText = "คะแนนรวมของคุณ: " + points + " คะแนน";
     } else {
         if (votingAttempts === 1) {
-            alert("ผิดพลาด! วิเคราะห์ข้อมูลใหม่ คุณมีเวลาปรึกษาเพื่อนอีกครั้งก่อนโหวตรอบที่ 2");
+            alert("วิเคราะห์ผิดพลาด! ปรึกษาเพื่อนในทีมแล้วโหวตใหม่ (คุณเหลือโอกาสอีก 1 ครั้ง)");
         } else {
-            alert("ผิดเป็นครั้งที่ 2! การสืบสวนล้มเหลว");
+            alert("ผิดเป็นครั้งที่ 2! สิ้นสุดการโหวต");
             showPage('page-result');
-            document.getElementById('final-score').innerText = "คะแนนรวมของคุณ: " + points + " คะแนน (พลาดคะแนนโหวตกลุ่ม)";
+            document.getElementById('final-score').innerText = "คะแนนรวมของคุณ: " + points + " คะแนน";
         }
     }
 }
@@ -380,7 +537,6 @@ function saveData() {
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzkC7Bbv4I3nXWYB5vad_1Ohv8hIUaoPgl39PxtuG0GAy8qwoggf1EbAcGmBADWBWkH3g/exec';
     
     let selectedAvatar = document.querySelector('input[name="avatar"]:checked').value;
-    
     const dataToSend = {
         groupName: document.getElementById('groupName').value,
         playerName: document.getElementById('playerName').value,
@@ -396,11 +552,7 @@ function saveData() {
     })
     .then(response => response.json())
     .then(data => {
-        if(data.result === "success") {
-            alert("✅ บันทึกข้อมูลคะแนนลง Google Sheet สำเร็จ!");
-        } else {
-            alert("⚠️ ส่งข้อมูลสำเร็จ แต่มีบางอย่างผิดพลาดหลังบ้าน");
-        }
+        if(data.result === "success") alert("✅ บันทึกข้อมูลคะแนนลง Google Sheet สำเร็จ!");
     })
     .catch(error => {
         console.error('Error!', error.message);
