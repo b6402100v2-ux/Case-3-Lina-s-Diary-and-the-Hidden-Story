@@ -20,7 +20,6 @@
             --success: #4CAF50;
             --error: #FF5252;
             
-            /* สีสำหรับหน้า Assembly */
             --asm-bg: #0B1120;
             --asm-card: #111827;
             --asm-card-ready: #0A221C;
@@ -58,10 +57,10 @@
         .question-text { font-size: 1.2rem; font-weight: 600; margin-bottom: 25px; color: var(--dark-blue); line-height: 1.5; }
         
         .choices-container { display: flex; flex-direction: column; gap: 15px; }
-        .choice-btn { background-color: #F8FAFC; border: 2px solid #E2E8F0; padding: 16px 20px; border-radius: 12px; text-align: left; font-size: 1.05rem; font-family: 'Sarabun', sans-serif; cursor: pointer; transition: all 0.2s; color: var(--text-dark); }
+        .choice-btn { background-color: #F8FAFC; border: 2px solid #E2E8F0; padding: 16px 20px; border-radius: 12px; text-align: center; font-size: 1.05rem; font-family: 'Sarabun', sans-serif; font-weight: bold; cursor: pointer; transition: all 0.2s; color: var(--text-dark); }
         .choice-btn:hover { border-color: var(--primary-blue); background-color: #F0F5FF; transform: translateY(-2px); }
-        .choice-btn.selected { border-color: var(--dark-blue); background-color: #EAF2FF; font-weight: 600; box-shadow: inset 0 0 0 1px var(--dark-blue); }
-        .choice-btn.correct { background-color: #E8F5E9; border-color: var(--success); color: #2E7D32; font-weight: bold; }
+        .choice-btn.selected { border-color: var(--dark-blue); background-color: #EAF2FF; box-shadow: inset 0 0 0 1px var(--dark-blue); }
+        .choice-btn.correct { background-color: #E8F5E9; border-color: var(--success); color: #2E7D32; }
         .choice-btn.wrong { background-color: #FFEBEE; border-color: var(--error); color: #C62828; animation: shake 0.5s; }
         
         .explanation-box { margin-top: 25px; padding: 20px; background: linear-gradient(135deg, #FFF0F3 0%, #FFE6E9 100%); border-left: 5px solid var(--dark-pink); border-radius: 12px; font-size: 1rem; color: #902933; display: none; animation: slideUpFade 0.4s ease-out; }
@@ -84,7 +83,6 @@
         .diary-btn:hover { transform: translateY(-3px); border-color: var(--primary-blue);}
         .diary-btn.selected { background: var(--dark-blue); color: white; font-weight: bold; transform: scale(1.05); }
 
-        /* --- สไตล์ของหน้า Team Assembly --- */
         .assembly-wrapper { background-color: var(--asm-bg); border-radius: 20px; padding: 40px; color: white; width: 100%; max-width: 800px; margin: 0 auto; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
         .assembly-title { color: var(--asm-gold); font-family: 'Courier Prime', monospace; font-size: 24px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
         .bonus-badge { border: 1px solid var(--asm-gold); color: var(--asm-gold); padding: 8px 20px; border-radius: 8px; display: inline-block; font-size: 16px; font-weight: bold; margin-bottom: 20px; background: rgba(252, 211, 77, 0.1); }
@@ -172,7 +170,7 @@
                     <span style="font-size: 1.2rem; font-weight: bold; color: var(--text-gray);">Question <span id="q-current" style="color: var(--dark-blue); font-size: 1.4rem;">1</span>/5</span>
                     <span class="score-badge">Score: <span id="score-display">0</span>/5</span>
                 </div>
-                <div class="question-text" id="q-text">คำถามจะปรากฏที่นี่...</div>
+                <div class="question-text" id="q-text" style="text-align: left;">คำถามจะปรากฏที่นี่...</div>
                 <div class="choices-container" id="choices-container"></div>
                 
                 <div class="explanation-box" id="explanation-box">
@@ -202,19 +200,29 @@
 
     <div id="page-voting" class="hidden">
         <h2 style="font-size: 2.2rem; color: var(--dark-blue);">FINAL VERDICT ⚖️</h2>
-        <p style="font-size: 1.1rem; margin-bottom: 30px;">ผู้เล่นครบแล้ว! ปรึกษากับเพื่อนในทีมและโหวตหาสาเหตุที่แท้จริง (โหวตได้ 2 ครั้ง)</p>
+        <p style="font-size: 1.1rem; margin-bottom: 30px;">All agents are ready! Consult your team and vote for the real cause. (You have 2 attempts)</p>
         <div class="choices-container" style="max-width: 500px; margin: 0 auto;">
-            <button class="choice-btn" onclick="checkVote('Accident')" style="text-align: center; font-weight: bold;">1. อุบัติเหตุ (Accident)</button>
-            <button class="choice-btn" onclick="checkVote('Sickness')" style="text-align: center; font-weight: bold;">2. โรคประจำตัว (Sickness)</button>
-            <button class="choice-btn" onclick="checkVote('Cyberbully')" style="text-align: center; font-weight: bold; color: var(--dark-blue);">3. การกลั่นแกล้งไซเบอร์ (Cyberbullying)</button>
-            <button class="choice-btn" onclick="checkVote('Murder')" style="text-align: center; font-weight: bold;">4. ฆาตกรรม (Murder)</button>
-            <button class="choice-btn" onclick="checkVote('Family')" style="text-align: center; font-weight: bold;">5. ปัญหาครอบครัว (Family Issues)</button>
+            <button class="choice-btn" onclick="checkVote('Accident')">1. Accident</button>
+            <button class="choice-btn" onclick="checkVote('Sickness')">2. Sickness</button>
+            <button class="choice-btn" onclick="checkVote('Cyberbullying')" style="color: var(--dark-blue);">3. Cyberbullying</button>
+            <button class="choice-btn" onclick="checkVote('Murder')">4. Murder</button>
+            <button class="choice-btn" onclick="checkVote('Family')">5. Family Issues</button>
         </div>
+    </div>
+
+    <div id="page-review" class="hidden">
+        <h2 style="font-size: 2.2rem; color: var(--error);">CASE REVIEW 🔍</h2>
+        <p style="font-size: 1.1rem; margin-bottom: 15px;">Your first verdict was incorrect. You have 3 minutes to review all evidence before the final vote.</p>
+        <div class="timer" id="review-timer" style="margin-bottom: 20px; display: inline-block; background: #FFEBEE; color: #C62828;">03:00</div>
+        
+        <div class="reading-panel" style="height: 55vh; overflow-y: auto; text-align: left; margin-bottom: 20px; border-color: var(--error);" id="all-diaries-content">
+            </div>
+        <button class="btn btn-pink" onclick="skipReview()" style="width: 50%;">Proceed to Final Vote ➡</button>
     </div>
 
     <div id="page-result" class="hidden">
         <h2 style="font-size: 3rem; color: var(--success); margin-bottom: 5px;">CASE CLOSED 🎉</h2>
-        <h3 style="color: var(--dark-pink); font-size: 1.5rem; margin-bottom: 30px;">สาเหตุที่แท้จริง: Cyberbullying</h3>
+        <h3 style="color: var(--dark-pink); font-size: 1.5rem; margin-bottom: 30px;">True Cause: Cyberbullying</h3>
         
         <div class="reading-panel" style="height: auto; margin-bottom: 30px; text-align: left;">
             <div class="file-header" style="background: var(--dark-pink);">EXECUTIVE SUMMARY</div>
@@ -228,21 +236,20 @@
         
         <div style="background: #EAF2FF; padding: 20px; border-radius: 16px; display: inline-block;">
             <span style="font-size: 1.2rem; color: var(--text-gray);">Total Score</span><br>
-            <span id="final-score" style="color: var(--dark-blue); font-size: 3rem; font-weight: bold;">0</span>
+            <div id="final-score" style="color: var(--dark-blue); font-size: 3.5rem; font-weight: bold; line-height: 1;">0</div>
         </div>
     </div>
 </div>
 
 <script>
 // ==========================================
-// https://script.google.com/macros/s/AKfycbzkC7Bbv4I3nXWYB5vad_1Ohv8hIUaoPgl39PxtuG0GAy8qwoggf1EbAcGmBADWBWkH3g/exec
+// ⚠️ https://script.google.com/macros/s/AKfycbzkC7Bbv4I3nXWYB5vad_1Ohv8hIUaoPgl39PxtuG0GAy8qwoggf1EbAcGmBADWBWkH3g/exec
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkC7Bbv4I3nXWYB5vad_1Ohv8hIUaoPgl39PxtuG0GAy8qwoggf1EbAcGmBADWBWkH3g/exec';
 // ==========================================
 
-let currentDiary = 0; let points = 0; let timeRemaining = 600; let timerInterval; let pollingInterval; let votingAttempts = 0;
+let currentDiary = 0; let points = 0; let timeRemaining = 600; let timerInterval; let pollingInterval; let reviewTimerInterval; let votingAttempts = 0;
 let currentQuestionIndex = 0; let correctAnswersCount = 0; let mistakesMade = 0; let selectedChoiceIndex = null;
 
-// ข้อมูล Diary (ฉบับเต็มสมบูรณ์ 4 เล่ม)
 const diaries = {
     1: { 
         title: "FILE: OCT 14 - THE DINNER TABLE", 
@@ -344,7 +351,7 @@ function renderQuestion() {
     
     let choicesHtml = '';
     qData.opts.forEach((opt, index) => {
-        choicesHtml += `<button class="choice-btn" id="choice-${index}" onclick="selectChoice(${index})">
+        choicesHtml += `<button class="choice-btn" id="choice-${index}" onclick="selectChoice(${index})" style="text-align: left;">
                             <span style="font-weight:bold; color:var(--primary-blue); margin-right:10px;">${opt.substring(0,2)}</span>${opt.substring(2)}
                         </button>`;
     });
@@ -352,7 +359,7 @@ function renderQuestion() {
 }
 
 function selectChoice(index) {
-    document.querySelectorAll('.choice-btn').forEach(btn => btn.classList.remove('selected', 'wrong'));
+    document.querySelectorAll('#choices-container .choice-btn').forEach(btn => btn.classList.remove('selected', 'wrong'));
     document.getElementById('choice-' + index).classList.add('selected');
     selectedChoiceIndex = index;
 }
@@ -371,7 +378,7 @@ function checkAnswer() {
         document.getElementById('explanation-box').style.display = 'block';
         document.getElementById('btn-submit-ans').classList.add('hidden');
         document.getElementById('btn-next-q').classList.remove('hidden');
-        document.querySelectorAll('.choice-btn').forEach(btn => btn.style.pointerEvents = 'none');
+        document.querySelectorAll('#choices-container .choice-btn').forEach(btn => btn.style.pointerEvents = 'none');
     } else {
         mistakesMade++;
         selectedBtn.classList.add('wrong');
@@ -414,12 +421,16 @@ function startTimer(seconds, displayId) {
         let min = Math.floor(timeRemaining / 60); let sec = timeRemaining % 60;
         timerEl.innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
         if(timeRemaining <= 60) timerEl.classList.add('warning');
+        
+        // --- 1. แก้ไขให้หมดเวลาแล้วไปหน้า Waiting ได้ แต่ไม่ได้ Bonus ---
         if (timeRemaining <= 0) {
             clearInterval(timerInterval);
-            alert("⏰ หมดเวลา! ระบบจะบันทึกผลตามจริง");
+            alert("⏰ Time is up! หมดเวลาการวิเคราะห์ คุณจะถูกส่งไปรวมกับทีมโดยไม่ได้รับคะแนนโบนัส");
             document.getElementById('top-bar').classList.add('hidden');
-            saveToSheet("saveProgress", "TIMEOUT");
+            saveToSheet("saveProgress", "READY"); // ส่งสถานะว่าพร้อมแล้วเพื่อให้เพื่อนไปต่อได้
             showPage('page-waiting');
+            pollTeamStatus();
+            pollingInterval = setInterval(pollTeamStatus, 3000);
         }
     }, 1000);
 }
@@ -462,7 +473,6 @@ function pollTeamStatus() {
         if (members.length >= 4) {
             clearInterval(pollingInterval);
             setTimeout(() => {
-                alert("🎉 สมาชิกทีมครบ 4 คนแล้ว! เข้าสู่ช่วงโหวตสรุปคดี");
                 showPage('page-voting');
             }, 1000);
         }
@@ -489,24 +499,68 @@ function updateAssemblyUI(readyMembers) {
     document.getElementById('agents-grid').innerHTML = gridHtml;
 }
 
+// --- 3. ระบบโหวต 2 ขั้นตอน และ Review Phase ---
 function checkVote(answer) {
     votingAttempts++;
-    if (answer === 'Cyberbully') {
-        if (votingAttempts === 1) points += 10;
-        else if (votingAttempts === 2) points += 5;
-        document.getElementById('final-score').innerText = points;
+    if (answer === 'Cyberbullying') {
+        if (votingAttempts === 1) {
+            points += 10;
+            document.getElementById('final-score').innerHTML = points + "<br><span style='font-size: 1.5rem; color: #D4AF37;'>🥇 Gold Medal Earned! (+10)</span>";
+        } else if (votingAttempts === 2) {
+            points += 5;
+            document.getElementById('final-score').innerHTML = points + "<br><span style='font-size: 1.5rem; color: #C0C0C0;'>🥈 Silver Medal Earned! (+5)</span>";
+        }
         saveToSheet("saveProgress", "VOTED"); 
         showPage('page-result');
     } else {
         if (votingAttempts === 1) {
-            alert("❌ หลักฐานยังไม่สอดคล้องกัน! ปรึกษาทีมอีกครั้ง (คุณเหลือโอกาสโหวตอีก 1 ครั้ง)");
+            alert("❌ Incorrect Verdict! ทีมของคุณวิเคราะห์ผิดพลาด เข้าสู่ช่วงทบทวนข้อมูลเป็นเวลา 3 นาที");
+            startReviewPhase();
         } else {
-            alert("❌ การสรุปคดีผิดพลาดเป็นครั้งที่ 2!");
-            document.getElementById('final-score').innerText = points;
+            alert("❌ Incorrect Again! ทีมของคุณสรุปคดีพลาดทั้ง 2 ครั้ง");
+            document.getElementById('final-score').innerHTML = points + "<br><span style='font-size: 1.5rem; color: var(--error);'>❌ No Medal Earned</span>";
             saveToSheet("saveProgress", "FAILED_VOTE"); 
             showPage('page-result');
         }
     }
+}
+
+function startReviewPhase() {
+    showPage('page-review');
+    
+    // โหลด Diary ทั้ง 4 เล่มมาให้อ่าน
+    let allContent = "";
+    for(let i=1; i<=4; i++) {
+        allContent += `
+        <div class="file-header" style="background: var(--dark-pink); position: relative;">${diaries[i].title}</div>
+        <div class="file-content diary-text" style="background: #FAFCFF; padding-bottom: 40px; margin-bottom: 20px;">
+            <span class="diary-domain">${diaries[i].domain}</span><br>
+            ${diaries[i].content}
+        </div>`;
+    }
+    document.getElementById('all-diaries-content').innerHTML = allContent;
+
+    // จับเวลา 3 นาที (180 วินาที)
+    let reviewTime = 180;
+    document.getElementById('review-timer').innerText = "03:00";
+    clearInterval(reviewTimerInterval);
+    reviewTimerInterval = setInterval(() => {
+        reviewTime--;
+        let min = Math.floor(reviewTime / 60);
+        let sec = reviewTime % 60;
+        document.getElementById('review-timer').innerText = `0${min}:${sec < 10 ? '0' : ''}${sec}`;
+        
+        if (reviewTime <= 0) {
+            clearInterval(reviewTimerInterval);
+            alert("⏳ Review Time Over! หมดเวลาทบทวนข้อมูล กรุณาทำการโหวตครั้งสุดท้าย");
+            showPage('page-voting');
+        }
+    }, 1000);
+}
+
+function skipReview() {
+    clearInterval(reviewTimerInterval);
+    showPage('page-voting');
 }
 </script>
 </body>
