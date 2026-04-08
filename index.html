@@ -70,7 +70,9 @@
         .btn:active:not(:disabled) { top: 6px; box-shadow: 0 0 0 var(--dark-blue); }
         .btn-pink { background: linear-gradient(to bottom, var(--accent-pink), #e68d94); box-shadow: 0 6px 0 var(--dark-pink); color: #fff; }
         .btn-pink:active:not(:disabled) { top: 6px; box-shadow: 0 0 0 var(--dark-pink); }
-        .btn:disabled { opacity: 0.6; cursor: not-allowed; filter: grayscale(50%); top: 0; box-shadow: 0 6px 0 rgba(0,0,0,0.2); }
+        
+        /* สไตล์ตอนปุ่มถูกล็อก */
+        .btn:disabled { opacity: 0.7; cursor: not-allowed; filter: grayscale(50%); top: 0; box-shadow: 0 6px 0 rgba(0,0,0,0.2); } 
 
         input { width: 80%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 2px solid #E2E8F0; font-family: 'Sarabun', sans-serif; font-size: 1rem; }
         input:focus { outline: none; border-color: var(--primary-blue); }
@@ -197,7 +199,7 @@
             
             <div class="sync-text" id="sync-status">⏳ Synchronizing with Database...</div>
 
-            <button id="btn-proceed-vote" class="btn btn-pink" disabled style="margin-top: 30px; width: 100%;">🔒 รอสมาชิกครบ 4 คนก่อนถึงจะโหวตได้...</button>
+            <button id="btn-proceed-vote" class="btn btn-pink" disabled style="margin-top: 30px; width: 100%;">🔒 รอสมาชิกผ่านส่วนที่ 1 ครบ 4 คน (ตอนนี้ 1/4)...</button>
         </div>
     </div>
 
@@ -245,10 +247,7 @@
 </div>
 
 <script>
-// ==========================================
-// ⚠️ URL ของ Google Apps Script ของคุณ ⚠️
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkC7Bbv4I3nXWYB5vad_1Ohv8hIUaoPgl39PxtuG0GAy8qwoggf1EbAcGmBADWBWkH3g/exec';
-// ==========================================
 
 let currentDiary = 0; let points = 0; let timeRemaining = 600; let timerInterval; let pollingInterval; let reviewTimerInterval; let votingAttempts = 0;
 let currentQuestionIndex = 0; let correctAnswersCount = 0; let mistakesMade = 0; let selectedChoiceIndex = null;
@@ -472,18 +471,24 @@ function pollTeamStatus() {
         let members = data.members || [];
         updateAssemblyUI(members);
         
+        let btnVote = document.getElementById('btn-proceed-vote');
+        
+        // --- 1. ตรวจสอบว่าเพื่อนครบ 4 คนหรือยัง ถ้าครบแล้วค่อยปลดล็อกปุ่มโหวต ---
         if (members.length >= 4) {
-            clearInterval(pollingInterval);
+            clearInterval(pollingInterval); // เลิกตรวจเช็ก
             
             let syncText = document.getElementById('sync-status');
-            syncText.innerText = "✅ All agents are ready!";
+            syncText.innerText = "✅ สมาชิกทุกคนผ่านส่วนที่ 1 เรียบร้อยแล้ว!";
             syncText.style.color = "var(--success)";
             syncText.style.animation = "none";
 
-            let btnVote = document.getElementById('btn-proceed-vote');
             btnVote.disabled = false;
             btnVote.onclick = goToVoting;
             btnVote.innerText = "⚖️ เข้าสู่ห้องโหวตสรุปคดี (Proceed to Vote) ➡";
+        } else {
+            // ถ้ายังไม่ครบ ให้อัปเดตตัวเลขบอกสถานะให้ผู้เล่นรู้
+            btnVote.disabled = true;
+            btnVote.innerText = `🔒 รอสมาชิกผ่านส่วนที่ 1 ครบ 4 คน (ตอนนี้ ${members.length}/4)...`;
         }
     }).catch(err => console.log("Poll error", err));
 }
