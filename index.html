@@ -128,7 +128,128 @@
 </div>
 
 <script>
-// --- ใส่ JavaScript ตามด้านล่างในส่วนนี้ ---
+let currentDiary = 0;
+let points = 0;
+let timeRemaining = 600; // 10 minutes
+let timerInterval;
+let votingAttempts = 0;
+
+// ฐานข้อมูลคำถามและเนื้อเรื่อง
+const diaries = {
+    1: {
+        title: "October 14th: The Dinner Table",
+        content: "The house smells like garlic and rosemary... (เนื้อหาตามที่คุณครูระบุ)",
+        qa: [
+            { q: "1. How does the girl feel during dinner?", opts: ["A) Happy and hungry.", "B) Scared and quiet.", "C) Angry and loud."], ans: 1 },
+            { q: "2. Why does she pull her hand away from her mom?", opts: ["A) The food is hot.", "B) Her phone vibrated.", "C) She is being rude."], ans: 1 },
+            { q: "3. What do the 'shadows' on the wall look like?", opts: ["A) Mean emojis.", "B) Her parents.", "C) Pretty art."], ans: 0 },
+            { q: "4. What do her parents think of her?", opts: ["A) She is a 'bright spirit.'", "B) She is a bad student.", "C) She is very sick."], ans: 0 },
+            { q: "5. Main Idea: What is the girl doing at dinner?", opts: ["A) Eating her favorite meal.", "B) Hiding a secret.", "C) Arguing with her dad."], ans: 1 }
+        ]
+    }
+    // หมายเหตุ: เพื่อความกระชับ คุณครูสามารถก๊อปปี้โครงสร้างของ Diary 2, 3, 4 มาใส่เพิ่มใน Format เดียวกันนี้ได้เลยครับ (ans คือ index ของคำตอบที่ถูก เริ่มจาก 0)
+};
+
+function selectDiary(num) {
+    currentDiary = num;
+    alert("เลือก Diary No." + num);
+}
+
+function showPage(pageId) {
+    document.querySelectorAll('.container > div').forEach(div => div.classList.add('hidden'));
+    document.getElementById(pageId).classList.remove('hidden');
+}
+
+function startGame() {
+    let group = document.getElementById('groupName').value;
+    let player = document.getElementById('playerName').value;
+    if(!group || !player || currentDiary === 0) {
+        alert("กรุณากรอกข้อมูลและเลือก Diary ให้ครบถ้วน"); return;
+    }
+    showPage('page-intro');
+}
+
+function enterDiary() {
+    showPage('page-diary');
+    document.getElementById('diary-title').innerText = diaries[currentDiary] ? diaries[currentDiary].title : "Diary No." + currentDiary;
+    document.getElementById('diary-content').innerText = "เนื้อหา Diary บทที่ " + currentDiary + " จะปรากฏที่นี่ให้นักเรียนอ่านแบบ Jigsaw";
+    
+    // สร้างคำถาม
+    let qContainer = document.getElementById('questions-container');
+    qContainer.innerHTML = '';
+    // ดึง QA มาแสดง (สมมติว่าดึงของ Diary 1 มาเป็นตัวอย่าง)
+    let questions = diaries[1].qa; 
+    questions.forEach((item, index) => {
+        let qHtml = `<div class='question-block'>
+            <p><strong>${item.q}</strong></p>`;
+        item.opts.forEach((opt, optIndex) => {
+            qHtml += `<label><input type="radio" name="q${index}" value="${optIndex}"> ${opt} </label><br>`;
+        });
+        qHtml += `</div>`;
+        qContainer.innerHTML += qHtml;
+    });
+
+    startTimer(600, 'timerDisplay');
+}
+
+function startTimer(seconds, displayId) {
+    clearInterval(timerInterval);
+    timeRemaining = seconds;
+    timerInterval = setInterval(() => {
+        timeRemaining--;
+        let min = Math.floor(timeRemaining / 60);
+        let sec = timeRemaining % 60;
+        document.getElementById(displayId).innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert("หมดเวลา! ระบบจะส่งคำตอบทันที");
+            submitAnswers(true); // บังคับส่ง
+        }
+    }, 1000);
+}
+
+function submitAnswers(isTimeout = false) {
+    // โลจิกเช็คคำตอบ: สำหรับเดโม่ สมมติว่าตอบถูกหมด
+    // ในระบบจริงต้องดึง value จาก Radio buttons มาเทียบกับ 'ans'
+    let allCorrect = true; // สมมติว่าเช็คแล้ว
+    
+    if (allCorrect) {
+        if (!isTimeout) points += 3; // โบนัสแว่นขยาย
+        alert("ตอบถูกครบ 5 ข้อ! คุณได้รับแว่นขยายโบนัส");
+        clearInterval(timerInterval);
+        showPage('page-waiting');
+    } else {
+        alert("ยังมีข้อที่ตอบผิดอยู่ กลับไปทบทวนใหม่!");
+    }
+}
+
+function startVotingPhase() {
+    showPage('page-voting');
+}
+
+function checkVote(answer) {
+    votingAttempts++;
+    if (answer === 'Cyberbully') {
+        if (votingAttempts === 1) points += 10;
+        else if (votingAttempts === 2) points += 5;
+        showPage('page-result');
+        document.getElementById('final-score').innerText = "คะแนนของคุณ: " + points + " คะแนน";
+    } else {
+        if (votingAttempts === 1) {
+            alert("ผิด! คุณมีเวลา 3 นาทีในการทบทวนเนื้อหาก่อนโหวตครั้งที่ 2");
+            // โลจิกกลับไปหน้าทบทวน 3 นาที
+        } else {
+            alert("ผิดเป็นครั้งที่ 2! สิ้นสุดการโหวต");
+            showPage('page-result');
+            document.getElementById('final-score').innerText = "คะแนนของคุณ: " + points + " คะแนน (พลาดโหวตทีม)";
+        }
+    }
+}
+
+function saveData() {
+    alert("ระบบกำลังส่งข้อมูล: ชื่อ, กลุ่ม, คะแนน กลับไปยัง Google Sheet...");
+    // ตรงนี้จะใช้ fetch() เพื่อยิงข้อมูลไปที่ Web App URL ของ Google Apps Script
+}
 </script>
 </body>
 </html>
