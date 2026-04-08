@@ -84,7 +84,7 @@
         .diary-btn:hover { transform: translateY(-3px); border-color: var(--primary-blue);}
         .diary-btn.selected { background: var(--dark-blue); color: white; font-weight: bold; transform: scale(1.05); }
 
-        /* --- สไตล์เฉพาะของหน้า Team Assembly แบบในภาพ --- */
+        /* --- สไตล์ของหน้า Team Assembly --- */
         .assembly-wrapper { background-color: var(--asm-bg); border-radius: 20px; padding: 40px; color: white; width: 100%; max-width: 800px; margin: 0 auto; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); }
         .assembly-title { color: var(--asm-gold); font-family: 'Courier Prime', monospace; font-size: 24px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
         .bonus-badge { border: 1px solid var(--asm-gold); color: var(--asm-gold); padding: 8px 20px; border-radius: 8px; display: inline-block; font-size: 16px; font-weight: bold; margin-bottom: 20px; background: rgba(252, 211, 77, 0.1); }
@@ -151,7 +151,7 @@
         <div class="reading-panel" style="margin: 30px 0; height: auto;">
             <div class="file-header">FILE: BACKGROUND.DOC</div>
             <div class="file-content" style="font-style: italic; font-size: 1.2rem; text-align: center;">
-                "Lina was a student everyone noticed for the right reasons... Life seemed perfect on the surface, which is exactly why the incident was so devastating—it happened in the shadows where no one thought to look."
+                "Lina was a student everyone noticed for the right reasons. She was a gifted artist at her secondary school, known for her kindness and her quiet, focused energy in the art studio. She had a loving family and a close group of friends. Life seemed 'perfect' on the surface, which is exactly why the incident was so devastating—it happened in the shadows where no one thought to look."
             </div>
         </div>
         <button class="btn btn-pink" onclick="enterDiary()">เปิดแฟ้มคดีของคุณ 📖</button>
@@ -220,9 +220,9 @@
             <div class="file-header" style="background: var(--dark-pink);">EXECUTIVE SUMMARY</div>
             <div class="file-content">
                 <p><strong>🔎 ทำไมถึงเป็น Cyberbullying?</strong><br>
-                จาก Diary ทั้ง 4 เล่ม จะเห็นว่า Lina มีครอบครัวอบอุ่น มีเพื่อนที่ดี และมีแฟนที่รักเธอ แต่เธอถูกคุกคามผ่านหน้าจอ ซึ่งทำให้เธอรู้สึกว่าไม่มีที่ไหนปลอดภัย</p>
+                จาก Diary ทั้ง 4 เล่ม จะเห็นว่า Lina มีครอบครัวอบอุ่น มีเพื่อนที่ดี และมีแฟนที่รักเธอ แต่เธอถูกคุกคามผ่านหน้าจอ ซึ่งทำให้เธอรู้สึกว่าไม่มีที่ไหนปลอดภัยแม้แต่ในโลกความจริง</p>
                 <p style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed #ccc;"><strong>📌 นิยามของ Cyberbully:</strong><br>
-                การกลั่นแกล้ง การคุกคาม ผ่านช่องทางดิจิทัล ซึ่งมักสร้างบาดแผลทางจิตใจที่มองไม่เห็นแต่รุนแรงมาก</p>
+                การกลั่นแกล้ง การคุกคาม หรือการให้ร้ายผู้อื่นผ่านช่องทางดิจิทัล เช่น โซเชียลมีเดีย ข้อความ หรือเว็บไซต์ ซึ่งมักสร้างบาดแผลทางจิตใจที่มองไม่เห็นแต่รุนแรงมาก</p>
             </div>
         </div>
         
@@ -242,10 +242,12 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkC7Bbv4I3nXWYB5vad
 let currentDiary = 0; let points = 0; let timeRemaining = 600; let timerInterval; let pollingInterval; let votingAttempts = 0;
 let currentQuestionIndex = 0; let correctAnswersCount = 0; let mistakesMade = 0; let selectedChoiceIndex = null;
 
-// ข้อมูล Diary (ใช้ข้อมูลเดิมของคุณครู)
+// ข้อมูล Diary (ฉบับเต็มสมบูรณ์ 4 เล่ม)
 const diaries = {
-    1: { title: "FILE: OCT 14 - THE DINNER TABLE", domain: "Domain: Family Relations",
-        content: `The house smells like garlic and rosemary... <br><br>I almost told them then...<br><br>When my phone vibrated against the wooden table...`,
+    1: { 
+        title: "FILE: OCT 14 - THE DINNER TABLE", 
+        domain: "Domain: Family Relations",
+        content: `The house smells like garlic and rosemary—Mom’s "celebration roast." We sat there for two hours, just talking. Dad was retelling that ridiculous story about his first car, and for a second, I actually forgot to be afraid. They look at me with so much pride when I talk about my upcoming art exhibition. I felt so safe in the warmth of the yellow kitchen light, surrounded by people who would move mountains for me. Mom reached over and squeezed my hand, telling me how much she loves my "bright spirit."<br><br>I almost told them then. I almost let the words spill out. But how do you tell people who think you’re a masterpiece that you’re actually being dismantled?<br><br>When my phone vibrated against the wooden table, the sound was like a gunshot. My stomach did a slow, sickening flip. I didn't even look at the screen, but I instinctively pulled my hand away from Mom’s. She didn't notice the way I suddenly went cold, or how I spent the rest of the meal staring at the shadows the candles cast on the wall—jagged, dark shapes that looked exactly like the 'shame' emojis that have been flooding my private folders since Monday.`,
         qa: [
             { q: "1. How does the girl feel during dinner?", opts: ["A) Happy and hungry.", "B) Scared and quiet.", "C) Angry and loud."], ans: 1, exp: "ตอนแรกเธอบอกว่า 'forgot to be afraid' แต่เมื่อโทรศัพท์สั่นเธอก็ 'went cold'" },
             { q: "2. Why does she pull her hand away from her mom?", opts: ["A) The food is hot.", "B) Her phone vibrated.", "C) She is being rude."], ans: 1, exp: "ในบทความระบุว่า 'When my phone vibrated... instinctively pulled my hand away'" },
@@ -254,10 +256,42 @@ const diaries = {
             { q: "5. Main Idea: What is the girl doing at dinner?", opts: ["A) Eating her favorite meal.", "B) Hiding a secret.", "C) Arguing with her dad."], ans: 1, exp: "ความจริงคือเธอกำลังปิดบังความลับเรื่องที่ถูกกลั่นแกล้ง" }
         ]
     },
-    // (หมายเหตุ: เพื่อความกะทัดรัดของโค้ด โค้ด Diary เล่มอื่นๆ 2,3,4 ยังคงใช้ข้อมูลเดิมทั้งหมด คุณครูสามารถนำ Array ของเล่ม 2-4 จากโค้ดเก่ามาแปะต่อตรงนี้ได้เลยครับ)
-    2: { title: "FILE: OCT 17 - THE ART ROOM", domain: "Domain: School Relations", content: "...", qa: [ {q:"1...", opts:["A","B","C"], ans:0, exp:""}, {q:"2...", opts:["A","B","C"], ans:0, exp:""}, {q:"3...", opts:["A","B","C"], ans:0, exp:""}, {q:"4...", opts:["A","B","C"], ans:0, exp:""}, {q:"5...", opts:["A","B","C"], ans:0, exp:""} ]},
-    3: { title: "FILE: OCT 20 - THE LAST DATE", domain: "Domain: Romantic Relationships", content: "...", qa: [ {q:"1...", opts:["A","B","C"], ans:0, exp:""}, {q:"2...", opts:["A","B","C"], ans:0, exp:""}, {q:"3...", opts:["A","B","C"], ans:0, exp:""}, {q:"4...", opts:["A","B","C"], ans:0, exp:""}, {q:"5...", opts:["A","B","C"], ans:0, exp:""} ]},
-    4: { title: "FILE: OCT 23 - THE FINAL ENTRY", domain: "The Reveal: The Digital Storm", content: "...", qa: [ {q:"1...", opts:["A","B","C"], ans:0, exp:""}, {q:"2...", opts:["A","B","C"], ans:0, exp:""}, {q:"3...", opts:["A","B","C"], ans:0, exp:""}, {q:"4...", opts:["A","B","C"], ans:0, exp:""}, {q:"5...", opts:["A","B","C"], ans:0, exp:""} ]}
+    2: { 
+        title: "FILE: OCT 17 - THE ART ROOM SANCTUARY", 
+        domain: "Domain: School Relations", 
+        content: `Mr. Harrison let me stay late in the studio today. He says I have a "rare eye for perspective." It’s the only place in this building where the air doesn't feel like it’s running out. Even Chloe and Sarah came by to drop off a coffee; they’re the best friends anyone could ask for. We spent the afternoon laughing about our disastrous history presentation, and for a few hours, I felt like a normal sixteen-year-old. I’m surrounded by teachers who believe in me and friends who hold my hand in the hallway. I should be happy. I have every reason to be.<br><br>As they walked away, I saw them glance at their phones and then quickly at me. It was a split second, a tiny hitch in their laughter. I looked down at my canvas and realized I’d been painting the same recursive loop of thorns over and over. My phone buzzed in my pocket—a sharp, rhythmic pulse. It’s a "ping" that follows me into every room, a digital footprint I can’t scrub off. Even in this sanctuary, I can feel the unseen audience watching me through the lens, waiting for the girl in the "perfect" art room to finally break.`, 
+        qa: [ 
+            { q: "1. Why does she like the art room?", opts: ["A) She can breathe there.", "B) There are no teachers.", "C) She can sleep there."], ans: 0, exp: "เธอบอกว่าที่นี่เป็นที่เดียวที่ 'air doesn't feel like it’s running out'" }, 
+            { q: "2. What do her friends Chloe and Sarah bring her?", opts: ["A) A new painting.", "B) A cup of coffee.", "C) A history book."], ans: 1, exp: "บทความระบุว่าเพื่อน 'came by to drop off a coffee'" }, 
+            { q: "3. What 'clue' shows a problem at school?", opts: ["A) Her friends ignore her.", "B) Her friends check their phones.", "C) The room is too dark."], ans: 1, exp: "อาการชะงักและเหลือบมองโทรศัพท์ของเพื่อนเป็นสัญญาณผิดปกติ" }, 
+            { q: "4. Who is the 'unseen audience'?", opts: ["A) People in the hallway.", "B) People online.", "C) People at a museum."], ans: 1, exp: "หมายถึงคนที่จับจ้องเธอจากโลกออนไลน์" }, 
+            { q: "5. Main Idea: How does the girl feel at school?", opts: ["A) Happy and successful.", "B) Watched and judged.", "C) Bored and tired."], ans: 1, exp: "เธอยังรู้สึกเหมือนถูกจับตามองตลอดเวลา" } 
+        ]
+    },
+    3: { 
+        title: "FILE: OCT 20 - THE LAST DATE", 
+        domain: "Domain: Romantic Relationships", 
+        content: `Leo took me to the pier tonight. The air was salty and cold, and he gave me his hoodie without me even asking. We sat on the edge of the wood, watching the black water churn underneath. He told me he’s never met anyone as "real" as me. He makes me feel seen, truly seen, in a way that makes the rest of the world fade into the background. When he kissed me, I felt a flicker of hope—the idea that maybe his love could be a shield thick enough to stop the arrows.<br><br>We took a selfie against the moonlight, but as he went to post it, I felt a wave of pure terror. "Don't tag me," I whispered, my voice shaking. He looked confused, his thumb hovering over the screen. He doesn't know that every time my name is linked to a photo, the 'Comment' section turns into a slaughterhouse. He sees a beautiful memory; I see a new coordinate for them to find me. The "tether" is tightening, and even his arms around me can't stop the silent, digital scream waiting for me in the notifications I’m too scared to open.`, 
+        qa: [ 
+            { q: "1. How is Leo during the date?", opts: ["A) Mean and cold.", "B) Kind and loving.", "C) Quiet and bored."], ans: 1, exp: "Leo อ่อนโยน ให้เสื้อฮู้ด และทำให้เธอรู้สึกอบอุ่น" }, 
+            { q: "2. Why does she say 'Don't tag me'?", opts: ["A) She looks ugly.", "B) She fears mean comments.", "C) She hates the photo."], ans: 1, exp: "เธอกลัวว่าช่องคอมเมนต์จะกลายเป็นพื้นที่ให้คนด่าเธอ" }, 
+            { q: "3. What is the 'slaughterhouse'?", opts: ["A) The internet comments.", "B) A place at the pier.", "C) A scary movie."], ans: 0, exp: "เธอเปรียบเทียบช่องคอมเมนต์ว่าเหมือนโรงฆ่าสัตว์" }, 
+            { q: "4. How does she feel when Leo kisses her?", opts: ["A) A little hopeful.", "B) Very angry.", "C) Totally safe."], ans: 0, exp: "เมื่อเขาจูบ เธอรู้สึก 'felt a flicker of hope' (มีความหวังเล็กน้อย)" }, 
+            { q: "5. Main Idea: Why is the date sad?", opts: ["A) The weather was bad.", "B) Love cannot stop the bullies.", "C) Leo wants to break up."], ans: 1, exp: "แม้จะมีความรัก แต่มันก็ไม่สามารถหยุดการถูกบูลลี่ได้" } 
+        ]
+    },
+    4: { 
+        title: "FILE: OCT 23 - THE FINAL ENTRY", 
+        domain: "The Reveal: The Digital Storm", 
+        content: `The "Countdown" is over. I finally looked.<br><br>I thought I could keep the worlds separate. I thought if I had a good family, good friends, and a boy who loved me, the voices on the screen wouldn't matter. But they found the cracks. They took the photo from the pier. They took my art. They took the "bright spirit" Mom loves and turned it into something unrecognizable.<br><br>They’ve been voting on my life for weeks. A thousand people I don't know, and a few I thought I did, all hitting "like" on a thread that says I shouldn't exist. The "Burn Page" didn't just stay on the internet; it bled into the physical world. I saw the URL scratched into my locker, the same one I saw in the bathroom stall, the same one sent to my inbox a hundred times a day.<br><br>I’m looking at the roast Mom made, the art Mr. Harrison praised, and the hoodie Leo gave me. They are all beautiful things, but they aren't loud enough. The notifications are a rhythmic, digital heartbeat that has replaced my own. I realize now that the "map" they drew leads to a place where the lights are always on and the shouting never stops. If I can't turn off the screen, I have to turn off the sound. I’m tired of being a spectacle. I just want to be still.`, 
+        qa: [ 
+            { q: "1. What is the girl's real problem?", opts: ["A) She failed her art class.", "B) She is being cyberbullied.", "C) She lost her phone."], ans: 1, exp: "บทความพูดถึง 'Burn Page' และคนกดไลค์ในเพจแอนตี้ แสดงถึงการถูก Cyberbullying" }, 
+            { q: "2. Where did she see the bullying link?", opts: ["A) On her locker.", "B) On the TV.", "C) In a library book."], ans: 0, exp: "เธอเห็น URL ที่ใช้บูลลี่เธอ 'scratched into my locker' (ถูกขูดไว้บนล็อกเกอร์)" }, 
+            { q: "3. What is the 'Countdown'?", opts: ["A) A game for a party.", "B) A timer for the bullying.", "C) A school project."], ans: 1, exp: "'Countdown' ในบริบทนี้คือการรอคอยเวลาที่ความอดทนของเธอจะสิ้นสุดลง" }, 
+            { q: "4. Why can't her family help her now?", opts: ["A) They don't love her.", "B) The digital hate is too loud.", "C) They are not at home."], ans: 1, exp: "สิ่งดีๆ รอบตัวเธอ 'aren't loud enough' ที่จะกลบเสียงด่าทอจากโลกออนไลน์" }, 
+            { q: "5. Main Idea: What does 'turn off the sound' mean?", opts: ["A) Fix her broken phone.", "B) Stop the bullying forever.", "C) Listen to soft music."], ans: 1, exp: "'Turn off the sound' เป็นการเปรียบเปรยถึงการยุติทุกอย่างเพื่อหนีจากความเจ็บปวด" } 
+        ]
+    }
 };
 
 function selectDiary(num) {
@@ -293,7 +327,6 @@ function enterDiary() {
     document.getElementById('diary-domain').innerText = diaryData.domain;
     document.getElementById('diary-content').innerHTML = diaryData.content;
     
-    // เริ่มต้นระบบคำถามใหม่ทั้งหมด
     currentQuestionIndex = 0; correctAnswersCount = 0; mistakesMade = 0;
     renderQuestion();
     startTimer(600, 'timerDisplay');
@@ -331,7 +364,6 @@ function checkAnswer() {
     let selectedBtn = document.getElementById('choice-' + selectedChoiceIndex);
     
     if (selectedChoiceIndex === qData.ans) {
-        // ตอบถูก
         selectedBtn.classList.remove('selected'); selectedBtn.classList.add('correct');
         correctAnswersCount++;
         document.getElementById('score-display').innerText = correctAnswersCount;
@@ -341,7 +373,6 @@ function checkAnswer() {
         document.getElementById('btn-next-q').classList.remove('hidden');
         document.querySelectorAll('.choice-btn').forEach(btn => btn.style.pointerEvents = 'none');
     } else {
-        // ตอบผิด -> แจ้งเตือนและวนกลับไปข้อ 1 ทันทีตามเงื่อนไข (Strict Mode)
         mistakesMade++;
         selectedBtn.classList.add('wrong');
         setTimeout(() => {
@@ -358,7 +389,6 @@ function nextQuestion() {
     if (currentQuestionIndex < 5) {
         renderQuestion();
     } else {
-        // ทำสำเร็จ 5 ข้อ
         clearInterval(timerInterval);
         document.getElementById('top-bar').classList.add('hidden');
         
@@ -367,13 +397,9 @@ function nextQuestion() {
             document.getElementById('bonus-badge').classList.remove('hidden');
         }
         
-        // 1. บันทึกข้อมูลและสถานะ "READY" ไปยัง Google Sheet อัตโนมัติ
         saveToSheet("saveProgress", "READY");
-        
-        // 2. เด้งเข้าหน้า Waiting Room
         showPage('page-waiting');
         
-        // 3. เริ่มวนลูปเช็กเพื่อนทุกๆ 3 วินาที
         pollTeamStatus();
         pollingInterval = setInterval(pollTeamStatus, 3000);
     }
@@ -398,7 +424,6 @@ function startTimer(seconds, displayId) {
     }, 1000);
 }
 
-// ฟังก์ชันบันทึกและส่งข้อมูลไปยัง Google Sheet
 function saveToSheet(actionType, statusTxt) {
     let selectedAvatar = document.querySelector('input[name="avatar"]:checked').value;
     const dataToSend = {
@@ -418,7 +443,6 @@ function saveToSheet(actionType, statusTxt) {
     }).catch(err => console.log("Save error", err));
 }
 
-// ฟังก์ชันดึงสถานะเพื่อนร่วมทีม (Polling)
 function pollTeamStatus() {
     const dataToSend = {
         action: "checkTeam",
@@ -435,7 +459,6 @@ function pollTeamStatus() {
         let members = data.members || [];
         updateAssemblyUI(members);
         
-        // ถ้าระบบเจอเพื่อนครบ 4 คนที่ READY แล้ว ให้ไปหน้าโหวตอัตโนมัติ
         if (members.length >= 4) {
             clearInterval(pollingInterval);
             setTimeout(() => {
@@ -446,20 +469,16 @@ function pollTeamStatus() {
     }).catch(err => console.log("Poll error", err));
 }
 
-// อัปเดตหน้าจอ 2x2 Grid แบบในภาพ
 function updateAssemblyUI(readyMembers) {
     let gridHtml = '';
-    // สร้างการ์ด 4 ใบ
     for (let i = 0; i < 4; i++) {
         if (i < readyMembers.length) {
-            // การ์ดคนที่พร้อมแล้ว (สีเขียว)
             gridHtml += `
             <div class="agent-card ready">
                 <div class="agent-name">${readyMembers[i].avatar} ${readyMembers[i].name}</div>
                 <div class="status-pill ready">READY</div>
             </div>`;
         } else {
-            // การ์ดคนที่ยังรออยู่ (สีเทา)
             gridHtml += `
             <div class="agent-card">
                 <div class="agent-name">Agent ${i + 1}</div>
@@ -476,7 +495,7 @@ function checkVote(answer) {
         if (votingAttempts === 1) points += 10;
         else if (votingAttempts === 2) points += 5;
         document.getElementById('final-score').innerText = points;
-        saveToSheet("saveProgress", "VOTED"); // บันทึกผลไฟนอล
+        saveToSheet("saveProgress", "VOTED"); 
         showPage('page-result');
     } else {
         if (votingAttempts === 1) {
@@ -484,7 +503,7 @@ function checkVote(answer) {
         } else {
             alert("❌ การสรุปคดีผิดพลาดเป็นครั้งที่ 2!");
             document.getElementById('final-score').innerText = points;
-            saveToSheet("saveProgress", "FAILED_VOTE"); // บันทึกผลไฟนอล
+            saveToSheet("saveProgress", "FAILED_VOTE"); 
             showPage('page-result');
         }
     }
