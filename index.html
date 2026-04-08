@@ -70,8 +70,6 @@
         .btn:active:not(:disabled) { top: 6px; box-shadow: 0 0 0 var(--dark-blue); }
         .btn-pink { background: linear-gradient(to bottom, var(--accent-pink), #e68d94); box-shadow: 0 6px 0 var(--dark-pink); color: #fff; }
         .btn-pink:active:not(:disabled) { top: 6px; box-shadow: 0 0 0 var(--dark-pink); }
-        
-        /* สไตล์ตอนปุ่มถูกล็อก */
         .btn:disabled { opacity: 0.7; cursor: not-allowed; filter: grayscale(50%); top: 0; box-shadow: 0 6px 0 rgba(0,0,0,0.2); } 
 
         input { width: 80%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 2px solid #E2E8F0; font-family: 'Sarabun', sans-serif; font-size: 1rem; }
@@ -116,7 +114,7 @@
     
     <div id="top-bar" class="top-bar hidden">
         <div class="agent-info"><span id="agent-avatar">🕵️</span> Agent: <span id="display-playerName"></span></div>
-        <div class="timer">Time: <span id="timerDisplay">10:00</span></div>
+        <div class="timer"><span id="timer-label">Time:</span> <span id="timerDisplay">10:00</span></div>
     </div>
 
     <div id="page-login">
@@ -241,7 +239,7 @@
         
         <div style="background: #EAF2FF; padding: 20px; border-radius: 16px; display: inline-block;">
             <span style="font-size: 1.2rem; color: var(--text-gray);">Total Score</span><br>
-            <div id="final-score" style="color: var(--dark-blue); font-size: 3.5rem; font-weight: bold; line-height: 1;">0</div>
+            <div id="final-score" style="color: var(--dark-blue); font-size: 3.5rem; font-weight: bold; line-height: 1.2;">0</div>
         </div>
     </div>
 </div>
@@ -251,6 +249,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkC7Bbv4I3nXWYB5vad
 
 let currentDiary = 0; let points = 0; let timeRemaining = 600; let timerInterval; let pollingInterval; let reviewTimerInterval; let votingAttempts = 0;
 let currentQuestionIndex = 0; let correctAnswersCount = 0; let mistakesMade = 0; let selectedChoiceIndex = null;
+let votingTimerInterval; let votingTimeRemaining = 600;
 
 const diaries = {
     1: { 
@@ -315,8 +314,8 @@ function showPage(pageId) {
 }
 
 function startGame() {
-    let group = document.getElementById('groupName').value;
-    let player = document.getElementById('playerName').value;
+    let group = document.getElementById('groupName').value.trim();
+    let player = document.getElementById('playerName').value.trim();
     if(!group || !player) { alert("⚠️ กรุณากรอกชื่อกลุ่มและชื่อของคุณ"); return; }
     if(currentDiary === 0) { alert("⚠️ กรุณาเลือกแฟ้มคดี"); return; }
     
@@ -330,6 +329,7 @@ function startGame() {
 
 function enterDiary() {
     document.getElementById('top-bar').classList.remove('hidden');
+    document.getElementById('timer-label').innerText = "Time:";
     showPage('page-diary');
     let diaryData = diaries[currentDiary];
     document.getElementById('diary-title').innerText = diaryData.title;
@@ -440,8 +440,8 @@ function saveToSheet(actionType, statusTxt) {
     let selectedAvatar = document.querySelector('input[name="avatar"]:checked').value;
     const dataToSend = {
         action: actionType,
-        groupName: document.getElementById('groupName').value,
-        playerName: document.getElementById('playerName').value,
+        groupName: document.getElementById('groupName').value.trim(),
+        playerName: document.getElementById('playerName').value.trim(),
         avatar: selectedAvatar,
         diaryNo: currentDiary,
         points: points,
@@ -458,7 +458,7 @@ function saveToSheet(actionType, statusTxt) {
 function pollTeamStatus() {
     const dataToSend = {
         action: "checkTeam",
-        groupName: document.getElementById('groupName').value
+        groupName: document.getElementById('groupName').value.trim()
     };
 
     fetch(SCRIPT_URL, {
@@ -473,9 +473,8 @@ function pollTeamStatus() {
         
         let btnVote = document.getElementById('btn-proceed-vote');
         
-        // --- 1. ตรวจสอบว่าเพื่อนครบ 4 คนหรือยัง ถ้าครบแล้วค่อยปลดล็อกปุ่มโหวต ---
         if (members.length >= 4) {
-            clearInterval(pollingInterval); // เลิกตรวจเช็ก
+            clearInterval(pollingInterval); 
             
             let syncText = document.getElementById('sync-status');
             syncText.innerText = "✅ สมาชิกทุกคนผ่านส่วนที่ 1 เรียบร้อยแล้ว!";
@@ -486,7 +485,6 @@ function pollTeamStatus() {
             btnVote.onclick = goToVoting;
             btnVote.innerText = "⚖️ เข้าสู่ห้องโหวตสรุปคดี (Proceed to Vote) ➡";
         } else {
-            // ถ้ายังไม่ครบ ให้อัปเดตตัวเลขบอกสถานะให้ผู้เล่นรู้
             btnVote.disabled = true;
             btnVote.innerText = `🔒 รอสมาชิกผ่านส่วนที่ 1 ครบ 4 คน (ตอนนี้ ${members.length}/4)...`;
         }
@@ -515,11 +513,40 @@ function updateAssemblyUI(readyMembers) {
 
 function goToVoting() {
     showPage('page-voting');
+    document.getElementById('top-bar').classList.remove('hidden');
+    document.getElementById('timer-label').innerText = "Voting Time:";
+    startVotingTimer();
+}
+
+// --- จับเวลา 10 นาทีสำหรับช่วงโหวต Phase 2 ---
+function startVotingTimer() {
+    clearInterval(votingTimerInterval);
+    votingTimeRemaining = 600; 
+    let timerEl = document.getElementById('timerDisplay');
+    timerEl.classList.remove('warning');
+    
+    votingTimerInterval = setInterval(() => {
+        votingTimeRemaining--;
+        let min = Math.floor(votingTimeRemaining / 60); let sec = votingTimeRemaining % 60;
+        timerEl.innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        if(votingTimeRemaining <= 60) timerEl.classList.add('warning');
+        
+        if (votingTimeRemaining <= 0) {
+            clearInterval(votingTimerInterval);
+            alert("⏰ Voting Time is up! หมดเวลาสำหรับการโหวต!");
+            document.getElementById('top-bar').classList.add('hidden');
+            document.getElementById('final-score').innerHTML = points + "<br><span style='font-size: 1.5rem; color: var(--error);'>❌ Timeout (0 Medals)</span>";
+            saveToSheet("saveProgress", "TIMEOUT_VOTE");
+            showPage('page-result');
+        }
+    }, 1000);
 }
 
 function checkVote(answer) {
     votingAttempts++;
     if (answer === 'Cyberbullying') {
+        clearInterval(votingTimerInterval);
+        document.getElementById('top-bar').classList.add('hidden');
         if (votingAttempts === 1) {
             points += 10;
             document.getElementById('final-score').innerHTML = points + "<br><span style='font-size: 1.5rem; color: #D4AF37;'>🥇 Gold Medal Earned! (+10)</span>";
@@ -532,8 +559,11 @@ function checkVote(answer) {
     } else {
         if (votingAttempts === 1) {
             alert("❌ Incorrect Verdict! ทีมของคุณวิเคราะห์ผิดพลาด เข้าสู่ช่วงทบทวนข้อมูลเป็นเวลา 3 นาที");
+            document.getElementById('top-bar').classList.add('hidden');
             startReviewPhase();
         } else {
+            clearInterval(votingTimerInterval);
+            document.getElementById('top-bar').classList.add('hidden');
             alert("❌ Incorrect Again! ทีมของคุณสรุปคดีพลาดทั้ง 2 ครั้ง");
             document.getElementById('final-score').innerHTML = points + "<br><span style='font-size: 1.5rem; color: var(--error);'>❌ No Medal Earned</span>";
             saveToSheet("saveProgress", "FAILED_VOTE"); 
@@ -544,6 +574,7 @@ function checkVote(answer) {
 
 function startReviewPhase() {
     showPage('page-review');
+    clearInterval(votingTimerInterval); // หยุดเวลาโหวตชั่วคราว
     
     let allContent = "";
     for(let i=1; i<=4; i++) {
@@ -568,7 +599,7 @@ function startReviewPhase() {
         if (reviewTime <= 0) {
             clearInterval(reviewTimerInterval);
             alert("⏳ Review Time Over! หมดเวลาทบทวนข้อมูล กรุณาทำการโหวตครั้งสุดท้าย");
-            showPage('page-voting');
+            skipReview();
         }
     }, 1000);
 }
@@ -576,6 +607,23 @@ function startReviewPhase() {
 function skipReview() {
     clearInterval(reviewTimerInterval);
     showPage('page-voting');
+    document.getElementById('top-bar').classList.remove('hidden');
+    // ดำเนินการจับเวลาโหวตต่อจากเดิม
+    let timerEl = document.getElementById('timerDisplay');
+    votingTimerInterval = setInterval(() => {
+        votingTimeRemaining--;
+        let min = Math.floor(votingTimeRemaining / 60); let sec = votingTimeRemaining % 60;
+        timerEl.innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        if(votingTimeRemaining <= 60) timerEl.classList.add('warning');
+        if (votingTimeRemaining <= 0) {
+            clearInterval(votingTimerInterval);
+            alert("⏰ Voting Time is up! หมดเวลาสำหรับการโหวต!");
+            document.getElementById('top-bar').classList.add('hidden');
+            document.getElementById('final-score').innerHTML = points + "<br><span style='font-size: 1.5rem; color: var(--error);'>❌ Timeout (0 Medals)</span>";
+            saveToSheet("saveProgress", "TIMEOUT_VOTE");
+            showPage('page-result');
+        }
+    }, 1000);
 }
 </script>
 </body>
