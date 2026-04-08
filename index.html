@@ -59,7 +59,7 @@
         .choices-container { display: flex; flex-direction: column; gap: 15px; }
         .choice-btn { background-color: #F8FAFC; border: 2px solid #E2E8F0; padding: 16px 20px; border-radius: 12px; text-align: center; font-size: 1.05rem; font-family: 'Sarabun', sans-serif; font-weight: bold; cursor: pointer; transition: all 0.2s; color: var(--text-dark); }
         .choice-btn:hover { border-color: var(--primary-blue); background-color: #F0F5FF; transform: translateY(-2px); }
-        .choice-btn.selected { border-color: var(--dark-blue); background-color: #EAF2FF; box-shadow: inset 0 0 0 1px var(--dark-blue); }
+        .choice-btn.selected { border-color: var(--dark-blue); background-color: #EAF2FF; box-shadow: inset 0 0 0 2px var(--dark-blue); }
         .choice-btn.correct { background-color: #E8F5E9; border-color: var(--success); color: #2E7D32; }
         .choice-btn.wrong { background-color: #FFEBEE; border-color: var(--error); color: #C62828; animation: shake 0.5s; }
         
@@ -204,12 +204,16 @@
     <div id="page-voting" class="hidden">
         <h2 style="font-size: 2.2rem; color: var(--dark-blue);">FINAL VERDICT ⚖️</h2>
         <p style="font-size: 1.1rem; margin-bottom: 30px;">All agents are ready! Consult your team and vote for the real cause. (You have 2 attempts)</p>
-        <div class="choices-container" style="max-width: 500px; margin: 0 auto;">
-            <button class="choice-btn" onclick="checkVote('Accident')">1. Accident</button>
-            <button class="choice-btn" onclick="checkVote('Sickness')">2. Sickness</button>
-            <button class="choice-btn" onclick="checkVote('Cyberbullying')" style="color: var(--dark-blue);">3. Cyberbullying</button>
-            <button class="choice-btn" onclick="checkVote('Murder')">4. Murder</button>
-            <button class="choice-btn" onclick="checkVote('Family')">5. Family Issues</button>
+        <div class="choices-container" style="max-width: 500px; margin: 0 auto;" id="voting-choices-container">
+            <button class="choice-btn" onclick="selectFinalVote('Accident', this)">1. Accident</button>
+            <button class="choice-btn" onclick="selectFinalVote('Sickness', this)">2. Sickness</button>
+            <button class="choice-btn" onclick="selectFinalVote('Cyberbullying', this)" style="color: var(--dark-blue);">3. Cyberbullying</button>
+            <button class="choice-btn" onclick="selectFinalVote('Murder', this)">4. Murder</button>
+            <button class="choice-btn" onclick="selectFinalVote('Family', this)">5. Family Issues</button>
+        </div>
+        
+        <div style="margin-top: 30px; text-align: center;">
+            <button class="btn btn-pink" onclick="submitFinalVote()" style="width: 100%; max-width: 500px; padding: 16px;">To the Fact ➡</button>
         </div>
     </div>
 
@@ -250,6 +254,9 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkC7Bbv4I3nXWYB5vad
 let currentDiary = 0; let points = 0; let timeRemaining = 600; let timerInterval; let pollingInterval; let reviewTimerInterval; let votingAttempts = 0;
 let currentQuestionIndex = 0; let correctAnswersCount = 0; let mistakesMade = 0; let selectedChoiceIndex = null;
 let votingTimerInterval; let votingTimeRemaining = 600;
+
+// ตัวแปรสำหรับเก็บตัวเลือกที่โดนคลิกใน Phase 2
+let selectedFinalVoteAnswer = null; 
 
 const diaries = {
     1: { 
@@ -518,7 +525,6 @@ function goToVoting() {
     startVotingTimer();
 }
 
-// --- จับเวลา 10 นาทีสำหรับช่วงโหวต Phase 2 ---
 function startVotingTimer() {
     clearInterval(votingTimerInterval);
     votingTimeRemaining = 600; 
@@ -540,6 +546,28 @@ function startVotingTimer() {
             showPage('page-result');
         }
     }, 1000);
+}
+
+// --- ส่วนใหม่ที่แก้ไขสำหรับการเลือกตัวเลือกโหวตและปุ่ม To the Fact ---
+
+function selectFinalVote(answer, btnElement) {
+    selectedFinalVoteAnswer = answer;
+    // เคลียร์สีไฮไลต์ของปุ่มทั้งหมดใน container โหวต
+    let voteBtns = document.querySelectorAll('#voting-choices-container .choice-btn');
+    voteBtns.forEach(btn => btn.classList.remove('selected'));
+    // ใส่สีไฮไลต์ให้ปุ่มที่เพิ่งโดนคลิก
+    btnElement.classList.add('selected');
+}
+
+function submitFinalVote() {
+    // เช็กว่าเด็กคลิกเลือกตัวเลือกหรือยัง
+    if (!selectedFinalVoteAnswer) {
+        alert("⚠️ กรุณาปรึกษากับทีมและเลือกสาเหตุการเสียชีวิตก่อนกด To the Fact ➡");
+        return;
+    }
+    
+    // นำค่าที่เลือกส่งไปตรวจ
+    checkVote(selectedFinalVoteAnswer);
 }
 
 function checkVote(answer) {
@@ -574,7 +602,7 @@ function checkVote(answer) {
 
 function startReviewPhase() {
     showPage('page-review');
-    clearInterval(votingTimerInterval); // หยุดเวลาโหวตชั่วคราว
+    clearInterval(votingTimerInterval); 
     
     let allContent = "";
     for(let i=1; i<=4; i++) {
@@ -606,9 +634,15 @@ function startReviewPhase() {
 
 function skipReview() {
     clearInterval(reviewTimerInterval);
+    
+    // เคลียร์ค่าที่เคยโหวตผิดไว้ก่อนหน้า เพื่อให้โหวตครั้งที่ 2 เป็นค่าว่างสะอาดๆ
+    selectedFinalVoteAnswer = null;
+    let voteBtns = document.querySelectorAll('#voting-choices-container .choice-btn');
+    voteBtns.forEach(btn => btn.classList.remove('selected'));
+    
     showPage('page-voting');
     document.getElementById('top-bar').classList.remove('hidden');
-    // ดำเนินการจับเวลาโหวตต่อจากเดิม
+    
     let timerEl = document.getElementById('timerDisplay');
     votingTimerInterval = setInterval(() => {
         votingTimeRemaining--;
