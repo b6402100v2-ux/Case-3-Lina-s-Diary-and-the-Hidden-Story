@@ -247,8 +247,41 @@ function checkVote(answer) {
 }
 
 function saveData() {
-    alert("ระบบกำลังส่งข้อมูล: ชื่อ, กลุ่ม, คะแนน กลับไปยัง Google Sheet...");
-    // ตรงนี้จะใช้ fetch() เพื่อยิงข้อมูลไปที่ Web App URL ของ Google Apps Script
+    alert("ระบบกำลังส่งข้อมูลกลับไปยัง Google Sheet กรุณารอสักครู่...");
+    
+    // 1. นำ URL ที่ได้จาก Google Apps Script มาใส่ตรงนี้
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzkC7Bbv4I3nXWYB5vad_1Ohv8hIUaoPgl39PxtuG0GAy8qwoggf1EbAcGmBADWBWkH3g/exec';
+    
+    // 2. รวบรวมข้อมูลที่ต้องการส่ง
+    const dataToSend = {
+        groupName: document.getElementById('groupName').value,
+        playerName: document.getElementById('playerName').value,
+        avatar: document.getElementById('avatar').value,
+        diaryNo: currentDiary, // ดึงจากตัวแปร global ที่เก็บค่าไว้ตอนเลือกไดอารี่
+        points: points         // ดึงจากตัวแปร global ที่เก็บคะแนนสะสมไว้
+    };
+
+    // 3. ใช้ fetch() เพื่อส่งข้อมูล
+    fetch(scriptURL, {
+        method: 'POST',
+        // ตั้งค่า Content-Type เป็น text/plain เพื่อป้องกันปัญหา CORS error ของ Google Apps Script
+        headers: {
+            'Content-Type': 'text/plain;charset=utf-8', 
+        },
+        body: JSON.stringify(dataToSend) // แปลงข้อมูลให้เป็นข้อความ (String) ก่อนส่ง
+    })
+    .then(response => response.json()) // รอรับผลลัพธ์ที่ Google Apps Script ตอบกลับมา
+    .then(data => {
+        if(data.result === "success") {
+            alert("✅ บันทึกข้อมูลคะแนนลง Google Sheet สำเร็จ!");
+        } else {
+            alert("⚠️ ส่งข้อมูลสำเร็จ แต่มีบางอย่างผิดพลาดหลังบ้าน");
+        }
+    })
+    .catch(error => {
+        console.error('Error!', error.message);
+        alert("❌ เกิดข้อผิดพลาดในการส่งข้อมูล: " + error.message);
+    });
 }
 </script>
 </body>
