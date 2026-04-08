@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case 3: Lina’s Diary</title>
+    <style>
+        :root {
+            --primary: #A2D2FF;
+            --secondary: #BDE0FE;
+            --accent: #FFC8DD;
+            --text-dark: #4A4E69;
+            --bg-color: #F4F9FF;
+            --white: #FFFFFF;
+        }
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background-color: var(--white);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(162, 210, 255, 0.3);
+            text-align: center;
+        }
+        .hidden { display: none !important; }
+        h1, h2 { color: var(--primary); }
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: 0.3s;
+        }
+        .btn:hover { background-color: var(--secondary); }
+        .diary-btn { padding: 15px; margin: 10px; border-radius: 15px; border: 2px solid var(--primary); background: var(--white); cursor: pointer;}
+        .diary-btn:focus { background: var(--secondary); }
+        input, select {
+            width: 80%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid var(--secondary);
+        }
+        .timer { font-size: 24px; color: #ff6b6b; font-weight: bold; }
+        .question-block { text-align: left; margin-bottom: 20px; background: var(--bg-color); padding: 15px; border-radius: 10px;}
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+    <div id="page-login">
+        <h1>Case 3: Lina’s Diary and the Hidden Story</h1>
+        <input type="text" id="groupName" placeholder="Group Name (ตั้งชื่อกลุ่มให้ตรงกัน 4 คน)">
+        <input type="text" id="playerName" placeholder="Your Name">
+        <select id="avatar">
+            <option value="avatar1">Avatar 1 (ผู้ชาย)</option>
+            <option value="avatar2">Avatar 2 (ผู้หญิง)</option>
+        </select>
+        <h3>เลือก Diary ที่ต้องการสืบสวน</h3>
+        <div>
+            <button class="diary-btn" onclick="selectDiary(1)">🍽️ Diary No.1</button>
+            <button class="diary-btn" onclick="selectDiary(2)">🖌️ Diary No.2</button>
+            <button class="diary-btn" onclick="selectDiary(3)">💔 Diary No.3</button>
+            <button class="diary-btn" onclick="selectDiary(4)">💮 Diary No.4</button>
+        </div>
+        <button class="btn" onclick="startGame()">Start Game</button>
+    </div>
+
+    <div id="page-intro" class="hidden">
+        <h2>Introduction</h2>
+        <p style="text-align: justify; font-style: italic;">
+            "Lina was a student everyone noticed for the right reasons. She was a gifted artist at her secondary school, known for her kindness and her quiet, focused energy in the art studio. She had a loving family and a close group of friends. Life seemed "perfect" on the surface, which is exactly why the incident was so devastating—it happened in the shadows where no one thought to look."
+        </p>
+        <button class="btn" onclick="enterDiary()">อ่าน Diary ของคุณ</button>
+    </div>
+
+    <div id="page-diary" class="hidden">
+        <h2 id="diary-title">Diary</h2>
+        <div id="diary-content" style="text-align: justify; margin-bottom: 20px; border: 1px solid var(--secondary); padding: 15px; border-radius: 10px;"></div>
+        <div class="timer" id="timerDisplay">10:00</div>
+        
+        <div id="questions-container"></div>
+        <button class="btn" onclick="submitAnswers()">Submit Answers</button>
+    </div>
+
+    <div id="page-waiting" class="hidden">
+        <h2>ทีมของคุณกำลังสืบสวน...</h2>
+        <p>สถานะเพื่อนในทีม (จำลองระบบ)</p>
+        <ul style="list-style: none; padding: 0;">
+            <li>Player 1: <span style="color: green;">เสร็จแล้ว (ได้แว่นขยาย)</span></li>
+            <li>Player 2: <span style="color: green;">เสร็จแล้ว (ไม่ได้โบนัส)</span></li>
+            <li>Player 3: <span style="color: orange;">กำลังทำ...</span></li>
+            <li>คุณ: <span style="color: green;">เสร็จแล้ว</span></li>
+        </ul>
+        <button class="btn" onclick="startVotingPhase()">ทุกคนพร้อมแล้ว (ไปโหวต)</button>
+    </div>
+
+    <div id="page-voting" class="hidden">
+        <h2>โหวตหาสาเหตุการเสียชีวิต (เวลา 10 นาที)</h2>
+        <p>คุณมีสิทธิ์ตอบ 2 ครั้ง (ครั้งแรก 10 คะแนน, ครั้งที่สอง 5 คะแนน)</p>
+        <button class="btn" style="display:block; width:100%" onclick="checkVote('Accident')">1. อุบัติเหตุ (Accident)</button>
+        <button class="btn" style="display:block; width:100%" onclick="checkVote('Sickness')">2. โรคประจำตัว (Sickness)</button>
+        <button class="btn" style="display:block; width:100%" onclick="checkVote('Cyberbully')">3. การกลั่นแกล้งไซเบอร์ (Cyberbully)</button>
+        <button class="btn" style="display:block; width:100%" onclick="checkVote('Murder')">4. ฆาตกรรม (Murder)</button>
+        <button class="btn" style="display:block; width:100%" onclick="checkVote('Family')">5. ปัญหาครอบครัว (Family)</button>
+    </div>
+
+    <div id="page-result" class="hidden">
+        <h2>ไขคดีสำเร็จ! สาเหตุคือ: Cyberbullying</h2>
+        <div style="background: var(--accent); padding: 20px; border-radius: 10px; text-align: left;">
+            <p><strong>ทำไมถึงเป็น Cyberbullying?</strong><br>
+            จาก Diary ทั้ง 4 เล่ม จะเห็นว่า Lina มีครอบครัวอบอุ่น มีเพื่อนที่ดี และมีแฟนที่รักเธอ แต่เธอถูกคุกคามผ่านหน้าจอ (Shadows, Unseen audience, Slaughterhouse ในช่องคอมเมนต์, URL บนล็อกเกอร์) ซึ่งทำให้เธอรู้สึกว่าไม่มีที่ไหนปลอดภัยแม้แต่ในโลกความจริง</p>
+            <p><strong>นิยามของ Cyberbully:</strong><br>
+            การกลั่นแกล้ง การคุกคาม หรือการให้ร้ายผู้อื่นผ่านช่องทางดิจิทัล เช่น โซเชียลมีเดีย ข้อความ หรือเว็บไซต์ ซึ่งมักสร้างบาดแผลทางจิตใจที่มองไม่เห็นแต่รุนแรงมาก</p>
+        </div>
+        <h3 id="final-score">คะแนนของคุณ: </h3>
+        <button class="btn" onclick="saveData()">บันทึกข้อมูลคะแนน</button>
+    </div>
+</div>
+
+<script>
+// --- ใส่ JavaScript ตามด้านล่างในส่วนนี้ ---
+</script>
+</body>
+</html>
