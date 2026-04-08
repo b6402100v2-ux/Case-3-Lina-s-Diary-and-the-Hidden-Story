@@ -66,10 +66,11 @@
         .explanation-box { margin-top: 25px; padding: 20px; background: linear-gradient(135deg, #FFF0F3 0%, #FFE6E9 100%); border-left: 5px solid var(--dark-pink); border-radius: 12px; font-size: 1rem; color: #902933; display: none; animation: slideUpFade 0.4s ease-out; }
 
         .btn { background: linear-gradient(to bottom, var(--primary-blue), #5688d6); color: white; border: none; padding: 14px 28px; border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: all 0.2s; box-shadow: 0 6px 0 var(--dark-blue); position: relative; top: 0; font-family: 'Sarabun', sans-serif; }
-        .btn:hover { filter: brightness(1.1); }
-        .btn:active { top: 6px; box-shadow: 0 0 0 var(--dark-blue); }
+        .btn:hover:not(:disabled) { filter: brightness(1.1); }
+        .btn:active:not(:disabled) { top: 6px; box-shadow: 0 0 0 var(--dark-blue); }
         .btn-pink { background: linear-gradient(to bottom, var(--accent-pink), #e68d94); box-shadow: 0 6px 0 var(--dark-pink); color: #fff; }
-        .btn-pink:active { top: 6px; box-shadow: 0 0 0 var(--dark-pink); }
+        .btn-pink:active:not(:disabled) { top: 6px; box-shadow: 0 0 0 var(--dark-pink); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; filter: grayscale(50%); top: 0; box-shadow: 0 6px 0 rgba(0,0,0,0.2); }
 
         input { width: 80%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 2px solid #E2E8F0; font-family: 'Sarabun', sans-serif; font-size: 1rem; }
         input:focus { outline: none; border-color: var(--primary-blue); }
@@ -194,7 +195,9 @@
             <div class="agents-grid" id="agents-grid">
                 </div>
             
-            <div class="sync-text">⏳ Synchronizing with Database...</div>
+            <div class="sync-text" id="sync-status">⏳ Synchronizing with Database...</div>
+
+            <button id="btn-proceed-vote" class="btn btn-pink" disabled style="margin-top: 30px; width: 100%;">🔒 รอสมาชิกครบ 4 คนก่อนถึงจะโหวตได้...</button>
         </div>
     </div>
 
@@ -243,7 +246,7 @@
 
 <script>
 // ==========================================
-// ⚠️ https://script.google.com/macros/s/AKfycbzkC7Bbv4I3nXWYB5vad_1Ohv8hIUaoPgl39PxtuG0GAy8qwoggf1EbAcGmBADWBWkH3g/exec
+// ⚠️ URL ของ Google Apps Script ของคุณ ⚠️
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkC7Bbv4I3nXWYB5vad_1Ohv8hIUaoPgl39PxtuG0GAy8qwoggf1EbAcGmBADWBWkH3g/exec';
 // ==========================================
 
@@ -422,12 +425,11 @@ function startTimer(seconds, displayId) {
         timerEl.innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
         if(timeRemaining <= 60) timerEl.classList.add('warning');
         
-        // --- 1. แก้ไขให้หมดเวลาแล้วไปหน้า Waiting ได้ แต่ไม่ได้ Bonus ---
         if (timeRemaining <= 0) {
             clearInterval(timerInterval);
             alert("⏰ Time is up! หมดเวลาการวิเคราะห์ คุณจะถูกส่งไปรวมกับทีมโดยไม่ได้รับคะแนนโบนัส");
             document.getElementById('top-bar').classList.add('hidden');
-            saveToSheet("saveProgress", "READY"); // ส่งสถานะว่าพร้อมแล้วเพื่อให้เพื่อนไปต่อได้
+            saveToSheet("saveProgress", "READY"); 
             showPage('page-waiting');
             pollTeamStatus();
             pollingInterval = setInterval(pollTeamStatus, 3000);
@@ -472,9 +474,16 @@ function pollTeamStatus() {
         
         if (members.length >= 4) {
             clearInterval(pollingInterval);
-            setTimeout(() => {
-                showPage('page-voting');
-            }, 1000);
+            
+            let syncText = document.getElementById('sync-status');
+            syncText.innerText = "✅ All agents are ready!";
+            syncText.style.color = "var(--success)";
+            syncText.style.animation = "none";
+
+            let btnVote = document.getElementById('btn-proceed-vote');
+            btnVote.disabled = false;
+            btnVote.onclick = goToVoting;
+            btnVote.innerText = "⚖️ เข้าสู่ห้องโหวตสรุปคดี (Proceed to Vote) ➡";
         }
     }).catch(err => console.log("Poll error", err));
 }
@@ -499,7 +508,10 @@ function updateAssemblyUI(readyMembers) {
     document.getElementById('agents-grid').innerHTML = gridHtml;
 }
 
-// --- 3. ระบบโหวต 2 ขั้นตอน และ Review Phase ---
+function goToVoting() {
+    showPage('page-voting');
+}
+
 function checkVote(answer) {
     votingAttempts++;
     if (answer === 'Cyberbullying') {
@@ -528,7 +540,6 @@ function checkVote(answer) {
 function startReviewPhase() {
     showPage('page-review');
     
-    // โหลด Diary ทั้ง 4 เล่มมาให้อ่าน
     let allContent = "";
     for(let i=1; i<=4; i++) {
         allContent += `
@@ -540,7 +551,6 @@ function startReviewPhase() {
     }
     document.getElementById('all-diaries-content').innerHTML = allContent;
 
-    // จับเวลา 3 นาที (180 วินาที)
     let reviewTime = 180;
     document.getElementById('review-timer').innerText = "03:00";
     clearInterval(reviewTimerInterval);
