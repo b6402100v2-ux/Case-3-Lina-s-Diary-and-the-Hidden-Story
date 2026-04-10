@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case 3: Lina’s Diary - Scrapbook</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+        
+        :root {
+            /* Scrapbook Earthtone Palette */
+            --bg-desk: #D7CCC8;          /* สีพื้นหลัง (โต๊ะไม้) */
+            --paper-main: #F5EFE6;       /* สีกระดาษหลัก (ครีมอ่อน) */
+            --paper-dark: #EAE0D5;       /* สีกระดาษเข้ม (กล่องคำถาม) */
+            --ink-dark: #3E2723;         /* สีหมึกดำ/น้ำตาลเข้ม (ข้อความหลัก) */
+            --ink-light: #5D4037;        /* สีหมึกอ่อน */
+            --accent-green: #558B2F;     /* สีเขียวใบไม้ (ตอบถูก) */
+            --accent-red: #D84315;       /* สีส้มอิฐ/แดง (ตอบผิด) */
+            --accent-highlight: #D7CCC8; /* สีไฮไลต์ (น้ำตาลอ่อน) */
+            --tape-color: rgba(244, 238, 210, 0.6); /* สีเทปกาว */
+            
+            --asm-bg: #4E342E;           /* สีพื้นหลังหน้า Assembly */
+            --asm-card: #3E2723;
+            --asm-border-ready: #8BC34A;
+        }
+        
+        * { box-sizing: border-box; }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--paper-dark); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--ink-light); border-radius: 10px; border: 2px solid var(--paper-dark); }
+        
+        body { 
+            font-family: 'Sarabun', sans-serif; 
+            background-color: var(--bg-desk);
+            /* ลายตารางจางๆ บนโต๊ะ */
+            background-image: linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: var(--ink-dark); 
+            margin: 0; padding: 2vh 2vw; 
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; 
+        }
+        
+        /* กระดาษแผ่นใหญ่ (Main Container) */
+        .container { 
+            background-color: var(--paper-main); 
+            width: 100%; max-width: 1100px; 
+            /* ทำให้ขอบกระดาษดูไม่เนี๊ยบ */
+            border-radius: 2px 15px 5px 20px; 
+            padding: 40px; 
+            box-shadow: 10px 10px 25px rgba(62, 39, 35, 0.2), inset 0 0 40px rgba(141, 110, 99, 0.1); 
+            border: 1px solid #D7CCC8;
+            text-align: center; display: flex; flex-direction: column; animation: fadeIn 0.8s ease-out; 
+            position: relative;
+        }
+        .hidden { display: none !important; }
+        
+        h1 { color: var(--ink-dark); font-family: 'Courier Prime', monospace; font-size: 2.5rem; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px;}
+        h2 { color: var(--ink-dark); font-weight: 700; font-family: 'Courier Prime', monospace; }
+        
+        /* เทปกาว (Tape Effect) */
+        .tape {
+            position: absolute;
+            background-color: var(--tape-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            backdrop-filter: blur(2px);
+            z-index: 10;
+        }
+        .tape-top { width: 120px; height: 30px; top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg); }
+        .tape-corner { width: 80px; height: 25px; top: 10px; left: -20px; transform: rotate(-45deg); }
+
+        .top-bar { 
+            background: var(--ink-dark); color: var(--paper-main); 
+            padding: 15px 30px; border-radius: 5px 10px 3px 8px; 
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; 
+            box-shadow: 2px 4px 10px rgba(0,0,0,0.2); font-family: 'Courier Prime', monospace;
+        }
+        .agent-info { font-size: 1.2rem; font-weight: 600; display: flex; align-items: center; gap: 10px;}
+        .timer { font-size: 1.3rem; font-weight: bold; background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 5px; }
+        .timer.warning { color: var(--accent-red); animation: pulse 1s infinite; }
+
+        .game-layout { display: flex; gap: 30px; height: 65vh; min-height: 550px; }
+        
+        /* กระดาษบทอ่าน */
+        .reading-panel { 
+            flex: 1.2; background-color: #FAFAFA; 
+            border: 1px solid #D7CCC8; border-radius: 2px 10px 5px 12px; 
+            padding: 0; overflow-y: auto; text-align: left; position: relative; 
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.05);
+        }
+        .file-header { 
+            background: var(--ink-light); color: var(--paper-main); 
+            font-family: 'Courier Prime', monospace; font-size: 1.2rem; 
+            padding: 15px 25px; position: sticky; top: 0; z-index: 10; 
+            border-bottom: 3px dashed var(--accent-highlight); 
+        }
+        .file-content { padding: 30px; }
+        .diary-domain { font-weight: 600; color: var(--accent-red); margin-bottom: 20px; display: inline-block; background: var(--paper-dark); padding: 6px 15px; border-radius: 3px; font-size: 0.9rem; font-family: 'Courier Prime', monospace;}
+        .diary-text { font-size: 1.15rem; line-height: 1.9; color: var(--ink-dark); }
+
+        /* กระดาษคำถาม */
+        .question-panel { 
+            flex: 1; background-color: var(--paper-dark); 
+            border: 2px dashed #BCAAA4; border-radius: 10px 5px 15px 2px; 
+            padding: 30px; display: flex; flex-direction: column; text-align: left; position: relative;
+        }
+        .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #A1887F; font-family: 'Courier Prime', monospace;}
+        .score-badge { background-color: var(--ink-light); color: #fff; padding: 6px 18px; border-radius: 3px; font-weight: bold; }
+        .question-text { font-size: 1.2rem; font-weight: 600; margin-bottom: 25px; color: var(--ink-dark); line-height: 1.5; }
+        
+        .choices-container { display: flex; flex-direction: column; gap: 15px; }
+        .choice-btn { 
+            background-color: var(--paper-main); border: 1px solid #BCAAA4; 
+            padding: 16px 20px; border-radius: 3px 8px 4px 6px; 
+            text-align: left; font-size: 1.05rem; font-family: 'Sarabun', sans-serif; font-weight: 600; 
+            cursor: pointer; transition: all 0.2s; color: var(--ink-dark); 
+            box-shadow: 1px 2px 5px rgba(0,0,0,0.05);
+        }
+        .choice-btn:hover { background-color: #FFF; transform: translateY(-2px); border-color: var(--ink-light);}
+        .choice-btn.selected { border: 2px solid var(--ink-dark); background-color: #EFEBE9; box-shadow: inset 0 0 0 1px var(--ink-dark); }
+        .choice-btn.correct { background-color: #DCEDC8; border-color: var(--accent-green); color: #33691E; }
+        .choice-btn.wrong { background-color: #FFCCBC; border-color: var(--accent-red); color: #BF360C; animation: shake 0.5s; }
+        
+        .explanation-box { margin-top: 25px; padding: 20px; background: #FFF3E0; border-left: 5px solid var(--accent-red); border-radius: 2px; font-size: 1rem; color: #5D4037; display: none; animation: slideUpFade 0.4s ease-out; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);}
+
+        /* ปุ่มสไตล์ตราปั๊ม / กระดาษโน้ต */
+        .btn { 
+            background: var(--ink-dark); color: var(--paper-main); 
+            border: none; padding: 14px 28px; border-radius: 4px; 
+            cursor: pointer; font-size: 1.1rem; font-weight: bold; 
+            transition: all 0.2s; box-shadow: 2px 4px 0 var(--ink-light); 
+            position: relative; top: 0; font-family: 'Courier Prime', monospace; text-transform: uppercase;
+        }
+        .btn:hover:not(:disabled) { background: #271412; }
+        .btn:active:not(:disabled) { top: 4px; box-shadow: 0 0 0 var(--ink-light); }
+        .btn-pink { background: var(--accent-red); box-shadow: 2px 4px 0 #9E2A0B; color: #fff; }
+        .btn-pink:active:not(:disabled) { top: 4px; box-shadow: 0 0 0 #9E2A0B; }
+        .btn:disabled { opacity: 0.7; cursor: not-allowed; filter: grayscale(50%); top: 0; box-shadow: 2px 4px 0 rgba(0,0,0,0.2); } 
+
+        input { 
+            width: 80%; padding: 15px; margin: 10px 0; 
+            border-radius: 3px; border: 2px dashed #BCAAA4; 
+            font-family: 'Courier Prime', monospace; font-size: 1.1rem; 
+            background: #FAFAFA; color: var(--ink-dark);
+        }
+        input:focus { outline: none; border-color: var(--ink-dark); background: #FFF; }
+
+        /* ระบบอวตาร Pixel Art */
+        .avatar-container { display: flex; justify-content: center; gap: 25px; margin: 25px 0; flex-wrap: wrap; }
+        .avatar-label { 
+            cursor: pointer; padding: 15px; border-radius: 8px; 
+            border: 3px dashed transparent; background-color: var(--paper-dark); 
+            transition: all 0.3s; display: inline-block;
+        }
+        .avatar-label img { width: 55px; height: 55px; image-rendering: pixelated; vertical-align: middle; }
+        .avatar-radio { display: none; }
+        .avatar-radio:checked + .avatar-label { 
+            border-color: var(--ink-dark); background-color: #FFF; 
+            transform: scale(1.1) rotate(-5deg); box-shadow: 3px 5px 10px rgba(0,0,0,0.1); 
+        }
+        
+        /* ปุ่มเลือกแฟ้มคดี */
+        .diary-btn { 
+            padding: 15px 25px; margin: 10px; border-radius: 2px 10px 5px 10px; 
+            border: 1px solid #BCAAA4; background: var(--paper-dark); 
+            cursor: pointer; font-size: 1.1rem; transition: all 0.3s; 
+            font-family: 'Courier Prime', monospace; font-weight: bold; color: var(--ink-dark);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+        }
+        .diary-btn:hover { transform: translateY(-3px); background: #FFF;}
+        .diary-btn.selected { background: var(--ink-dark); color: var(--paper-main); transform: scale(1.05) rotate(2deg); }
+
+        /* หน้า Waiting Room แบบบอร์ดสืบสวน */
+        .assembly-wrapper { 
+            background-color: var(--asm-bg); border-radius: 5px; padding: 40px; 
+            color: var(--paper-main); width: 100%; max-width: 800px; margin: 0 auto; 
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8); border: 10px solid #3E2723;
+            position: relative;
+        }
+        .assembly-title { color: var(--paper-dark); font-family: 'Courier Prime', monospace; font-size: 24px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+        .bonus-badge { border: 2px dashed #FFD54F; color: #FFD54F; padding: 8px 20px; border-radius: 3px; display: inline-block; font-size: 16px; font-weight: bold; margin-bottom: 20px; background: rgba(255, 213, 79, 0.1); }
+        .assembly-subtitle { color: #BCAAA4; font-size: 16px; margin-bottom: 30px; font-family: 'Courier Prime', monospace;}
+        
+        .agents-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .agent-card { 
+            background-color: var(--asm-card); border: 2px dashed #5D4037; 
+            border-radius: 3px; padding: 25px 20px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; gap: 15px; transition: 0.5s; height: 120px; 
+        }
+        .agent-card.ready { background-color: #33691E; border-color: var(--asm-border-ready); border-style: solid; box-shadow: 0 0 15px rgba(139, 195, 74, 0.3);}
+        .agent-name { font-size: 18px; font-weight: bold; color: white; display: flex; align-items: center; gap: 10px;}
+        
+        .status-pill { padding: 5px 20px; border-radius: 2px; font-size: 14px; font-weight: bold; text-transform: uppercase; font-family: 'Courier Prime', monospace;}
+        .status-pill.waiting { background-color: #271412; color: #8D6E63; }
+        .status-pill.ready { background-color: var(--asm-border-ready); color: #1B5E20; }
+        
+        .sync-text { color: #FFD54F; font-size: 14px; animation: pulse 1.5s infinite; font-family: 'Courier Prime', monospace;}
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        @media (max-width: 900px) { .game-layout { flex-direction: column; height: auto; } .reading-panel { max-height: 40vh; } .agents-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+    <div class="tape tape-top"></div>
+    <div class="tape tape-corner"></div>
+    
+    <div id="top-bar" class="top-bar hidden">
+        <div class="agent-info">
+            <span id="agent-avatar"></span> 
+            Agent: <span id="display-playerName"></span>
+        </div>
+        <div class="timer"><span id="timer-label">Time:</span> <span id="timerDisplay">10:00</span></div>
+    </div>
+
+    <div id="page-login">
+        <h1>Case 3: Lina’s Diary</h1>
+        <p style="color: var(--ink-light); font-size: 1.2rem; margin-bottom: 30px; font-family: 'Courier Prime', monospace;">-- The Hidden Story --</p>
+        
+        <input type="text" id="groupName" placeholder="Group Name (ชื่อกลุ่มต้องเหมือนกัน 4 คน)" autocomplete="off">
+        <input type="text" id="playerName" placeholder="Your Name (ชื่อนักสืบของคุณ)" autocomplete="off">
+        
+        <h3 style="margin-top: 35px; color: var(--ink-dark); font-family: 'Courier Prime', monospace;">:: Select Your Team Icon ::</h3>
+        <div class="avatar-container">
+            <input type="radio" name="avatar" id="av1" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Coffee%20(1).png?raw=true" class="avatar-radio" checked>
+            <label for="av1" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Coffee%20(1).png?raw=true" alt="Coffee"></label>
+            
+            <input type="radio" name="avatar" id="av2" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Marigold.png?raw=true" class="avatar-radio">
+            <label for="av2" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Marigold.png?raw=true" alt="Marigold"></label>
+            
+            <input type="radio" name="avatar" id="av3" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lantern.png?raw=true" class="avatar-radio">
+            <label for="av3" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lantern.png?raw=true" alt="Lantern"></label>
+            
+            <input type="radio" name="avatar" id="av4" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Medkit.png?raw=true" class="avatar-radio">
+            <label for="av4" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Medkit.png?raw=true" alt="Medkit"></label>
+        </div>
+
+        <h3 style="margin-top: 25px; color: var(--ink-dark); font-family: 'Courier Prime', monospace;">:: Select Evidence File ::</h3>
+        <div style="margin-bottom: 30px;">
+            <button id="btn-diary-1" class="diary-btn" onclick="selectDiary(1)">File No.1</button>
+            <button id="btn-diary-2" class="diary-btn" onclick="selectDiary(2)">File No.2</button>
+            <button id="btn-diary-3" class="diary-btn" onclick="selectDiary(3)">File No.3</button>
+            <button id="btn-diary-4" class="diary-btn" onclick="selectDiary(4)">File No.4</button>
+        </div>
+        <button class="btn" onclick="startGame()" style="width: 70%; padding: 18px;">Start Investigation</button>
+    </div>
+
+    <div id="page-intro" class="hidden">
+        <h2>MISSION BRIEFING</h2>
+        <div class="reading-panel" style="margin: 30px 0; height: auto;">
+            <div class="file-header">FILE: BACKGROUND.DOC</div>
+            <div class="file-content" style="font-style: italic; font-size: 1.2rem; text-align: center;">
+                "Lina was a student everyone noticed for the right reasons. She was a gifted artist at her secondary school, known for her kindness and her quiet, focused energy in the art studio. She had a loving family and a close group of friends. Life seemed 'perfect' on the surface, which is exactly why the incident was so devastating—it happened in the shadows where no one thought to look."
+            </div>
+        </div>
+        <button class="btn btn-pink" onclick="enterDiary()">Open Your File 📖</button>
+    </div>
+
+    <div id="page-diary" class="hidden">
+        <div class="game-layout">
+            <div class="reading-panel">
+                <div class="file-header" id="diary-title">FILE: LINA'S DIARY</div>
+                <div class="file-content">
+                    <span class="diary-domain" id="diary-domain">Domain: ...</span>
+                    <div class="diary-text" id="diary-content"></div>
+                </div>
+            </div>
+
+            <div class="question-panel">
+                <div class="tape tape-top" style="width: 80px; top: -12px;"></div>
+                <div class="q-header">
+                    <span style="font-size: 1.2rem; font-weight: bold; color: var(--ink-light);">Question <span id="q-current" style="color: var(--ink-dark); font-size: 1.4rem;">1</span>/5</span>
+                    <span class="score-badge">Score: <span id="score-display">0</span>/5</span>
+                </div>
+                <div class="question-text" id="q-text" style="text-align: left;">คำถามจะปรากฏที่นี่...</div>
+                <div class="choices-container" id="choices-container"></div>
+                
+                <div class="explanation-box" id="explanation-box">
+                    <strong>💡 Analysis:</strong> <span id="exp-text">คำอธิบาย...</span>
+                </div>
+
+                <div style="margin-top: auto; padding-top: 20px; display: flex; justify-content: flex-end;">
+                    <button class="btn" id="btn-submit-ans" onclick="checkAnswer()" style="width: 100%;">Submit Answer</button>
+                    <button class="btn btn-pink hidden" id="btn-next-q" onclick="nextQuestion()" style="width: 100%;">Next ➡</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-waiting" class="hidden">
+        <div class="assembly-wrapper">
+            <div class="tape tape-corner" style="background: rgba(255,255,255,0.5);"></div>
+            <div class="assembly-title">Evidence Board</div>
+            <div class="bonus-badge hidden" id="bonus-badge">🔍 +3 Bonus Points Earned!</div>
+            <div class="assembly-subtitle">Waiting for all members of <strong id="asm-group" style="color: white;">Group</strong> to pin their files...</div>
+            
+            <div class="agents-grid" id="agents-grid">
+                </div>
+            
+            <div class="sync-text" id="sync-status">⏳ Connecting lines on evidence board...</div>
+
+            <button id="btn-proceed-vote" class="btn btn-pink" disabled style="margin-top: 30px; width: 100%;">🔒 รอสมาชิกผ่านส่วนที่ 1 ครบ 4 คน (ตอนนี้ 1/4)...</button>
+        </div>
+    </div>
+
+    <div id="page-voting" class="hidden">
+        <h2 style="font-size: 2.2rem; color: var(--ink-dark);">FINAL VERDICT ⚖️</h2>
+        <p style="font-size: 1.1rem; margin-bottom: 30px;">All agents are ready! Consult your team and vote for the real cause. (You have 2 attempts)</p>
+        <div class="choices-container" style="max-width: 500px; margin: 0 auto; text-align: center;" id="voting-choices-container">
+            <button class="choice-btn" onclick="selectFinalVote('Accident', this)" style="text-align: center;">1. Accident</button>
+            <button class="choice-btn" onclick="selectFinalVote('Sickness', this)" style="text-align: center;">2. Sickness</button>
+            <button class="choice-btn" onclick="selectFinalVote('Cyberbullying', this)" style="text-align: center; color: var(--ink-dark);">3. Cyberbullying</button>
+            <button class="choice-btn" onclick="selectFinalVote('Murder', this)" style="text-align: center;">4. Murder</button>
+            <button class="choice-btn" onclick="selectFinalVote('Family', this)" style="text-align: center;">5. Family Issues</button>
+        </div>
+        
+        <div style="margin-top: 30px; text-align: center;">
+            <button class="btn btn-pink" onclick="submitFinalVote()" style="width: 100%; max-width: 500px; padding: 16px;">To the Fact ➡</button>
+        </div>
+    </div>
+
+    <div id="page-review" class="hidden">
+        <h2 style="font-size: 2.2rem; color: var(--accent-red);">CASE REVIEW 🔍</h2>
+        <p style="font-size: 1.1rem; margin-bottom: 15px; font-family: 'Courier Prime', monospace;">Your first verdict was incorrect. You have 3 minutes to review all evidence before the final vote.</p>
+        <div class="timer" id="review-timer" style="margin-bottom: 20px; display: inline-block; background: #FFCCBC; color: #BF360C;">03:00</div>
+        
+        <div class="reading-panel" style="height: 55vh; overflow-y: auto; text-align: left; margin-bottom: 20px; border-color: var(--accent-red);" id="all-diaries-content">
+            </div>
+        <button class="btn btn-pink" onclick="skipReview()" style="width: 50%;">Proceed to Final Vote ➡</button>
+    </div>
+
+    <div id="page-result" class="hidden">
+        <div class="tape tape-top" style="width: 150px;"></div>
+        <h2 style="font-size: 3rem; color: var(--accent-green); margin-bottom: 5px;">CASE CLOSED 🎉</h2>
+        <h3 style="color: var(--accent-red); font-size: 1.5rem; margin-bottom: 30px;">True Cause: Cyberbullying</h3>
+        
+        <div class="reading-panel" style="height: auto; margin-bottom: 30px; text-align: left;">
+            <div class="file-header" style="background: var(--ink-dark);">EXECUTIVE SUMMARY</div>
+            <div class="file-content">
+                <p><strong>🔎 ทำไมถึงเป็น Cyberbullying?</strong><br>
+                จาก Diary ทั้ง 4 เล่ม จะเห็นว่า Lina มีครอบครัวอบอุ่น มีเพื่อนที่ดี และมีแฟนที่รักเธอ แต่เธอถูกคุกคามผ่านหน้าจอ ซึ่งทำให้เธอรู้สึกว่าไม่มีที่ไหนปลอดภัยแม้แต่ในโลกความจริง</p>
+                <p style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed #BCAAA4;"><strong>📌 นิยามของ Cyberbully:</strong><br>
+                การกลั่นแกล้ง การคุกคาม หรือการให้ร้ายผู้อื่นผ่านช่องทางดิจิทัล เช่น โซเชียลมีเดีย ข้อความ หรือเว็บไซต์ ซึ่งมักสร้างบาดแผลทางจิตใจที่มองไม่เห็นแต่รุนแรงมาก</p>
+            </div>
+        </div>
+        
+        <div style="background: var(--paper-dark); padding: 20px; border-radius: 5px; display: inline-block; border: 2px dashed #BCAAA4;">
+            <span style="font-size: 1.2rem; color: var(--ink-light); font-family: 'Courier Prime', monospace;">Total Score</span><br>
+            <div id="final-score" style="color: var(--ink-dark); font-size: 3.5rem; font-weight: bold; line-height: 1.2; font-family: 'Courier Prime', monospace;">0</div>
+        </div>
+    </div>
+</div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkC7Bbv4I3nXWYB5vad_1Ohv8hIUaoPgl39PxtuG0GAy8qwoggf1EbAcGmBADWBWkH3g/exec';
+
+let currentDiary = 0; let points = 0; let timeRemaining = 600; let timerInterval; let pollingInterval; let reviewTimerInterval; let votingAttempts = 0;
+let currentQuestionIndex = 0; let correctAnswersCount = 0; let mistakesMade = 0; let selectedChoiceIndex = null;
+let votingTimerInterval; let votingTimeRemaining = 600;
+let selectedFinalVoteAnswer = null; 
+
+const diaries = {
+    1: { 
+        title: "FILE: OCT 14 - THE DINNER TABLE", 
+        domain: "Domain: Family Relations",
+        content: `The house smells like garlic and rosemary—Mom’s "celebration roast." We sat there for two hours, just talking. Dad was retelling that ridiculous story about his first car, and for a second, I actually forgot to be afraid. They look at me with so much pride when I talk about my upcoming art exhibition. I felt so safe in the warmth of the yellow kitchen light, surrounded by people who would move mountains for me. Mom reached over and squeezed my hand, telling me how much she loves my "bright spirit."<br><br>I almost told them then. I almost let the words spill out. But how do you tell people who think you’re a masterpiece that you’re actually being dismantled?<br><br>When my phone vibrated against the wooden table, the sound was like a gunshot. My stomach did a slow, sickening flip. I didn't even look at the screen, but I instinctively pulled my hand away from Mom’s. She didn't notice the way I suddenly went cold, or how I spent the rest of the meal staring at the shadows the candles cast on the wall—jagged, dark shapes that looked exactly like the 'shame' emojis that have been flooding my private folders since Monday.`,
+        qa: [
+            { q: "1. How does the girl feel during dinner?", opts: ["A) Happy and hungry.", "B) Scared and quiet.", "C) Angry and loud."], ans: 1, exp: "ตอนแรกเธอบอกว่า 'forgot to be afraid' แต่เมื่อโทรศัพท์สั่นเธอก็ 'went cold'" },
+            { q: "2. Why does she pull her hand away from her mom?", opts: ["A) The food is hot.", "B) Her phone vibrated.", "C) She is being rude."], ans: 1, exp: "ในบทความระบุว่า 'When my phone vibrated... instinctively pulled my hand away'" },
+            { q: "3. What do the 'shadows' on the wall look like?", opts: ["A) Mean emojis.", "B) Her parents.", "C) Pretty art."], ans: 0, exp: "บทความเปรียบเทียบเงาว่า 'looked exactly like the shame emojis'" },
+            { q: "4. What do her parents think of her?", opts: ["A) She is a 'bright spirit.'", "B) She is a bad student.", "C) She is very sick."], ans: 0, exp: "แม่ของเธอบอกว่ารัก 'bright spirit' ของเธอ" },
+            { q: "5. Main Idea: What is the girl doing at dinner?", opts: ["A) Eating her favorite meal.", "B) Hiding a secret.", "C) Arguing with her dad."], ans: 1, exp: "ความจริงคือเธอกำลังปิดบังความลับเรื่องที่ถูกกลั่นแกล้ง" }
+        ]
+    },
+    2: { 
+        title: "FILE: OCT 17 - THE ART ROOM SANCTUARY", 
+        domain: "Domain: School Relations", 
+        content: `Mr. Harrison let me stay late in the studio today. He says I have a "rare eye for perspective." It’s the only place in this building where the air doesn't feel like it’s running out. Even Chloe and Sarah came by to drop off a coffee; they’re the best friends anyone could ask for. We spent the afternoon laughing about our disastrous history presentation, and for a few hours, I felt like a normal sixteen-year-old. I’m surrounded by teachers who believe in me and friends who hold my hand in the hallway. I should be happy. I have every reason to be.<br><br>As they walked away, I saw them glance at their phones and then quickly at me. It was a split second, a tiny hitch in their laughter. I looked down at my canvas and realized I’d been painting the same recursive loop of thorns over and over. My phone buzzed in my pocket—a sharp, rhythmic pulse. It’s a "ping" that follows me into every room, a digital footprint I can’t scrub off. Even in this sanctuary, I can feel the unseen audience watching me through the lens, waiting for the girl in the "perfect" art room to finally break.`, 
+        qa: [ 
+            { q: "1. Why does she like the art room?", opts: ["A) She can breathe there.", "B) There are no teachers.", "C) She can sleep there."], ans: 0, exp: "เธอบอกว่าที่นี่เป็นที่เดียวที่ 'air doesn't feel like it’s running out'" }, 
+            { q: "2. What do her friends Chloe and Sarah bring her?", opts: ["A) A new painting.", "B) A cup of coffee.", "C) A history book."], ans: 1, exp: "บทความระบุว่าเพื่อน 'came by to drop off a coffee'" }, 
+            { q: "3. What 'clue' shows a problem at school?", opts: ["A) Her friends ignore her.", "B) Her friends check their phones.", "C) The room is too dark."], ans: 1, exp: "อาการชะงักและเหลือบมองโทรศัพท์ของเพื่อนเป็นสัญญาณผิดปกติ" }, 
+            { q: "4. Who is the 'unseen audience'?", opts: ["A) People in the hallway.", "B) People online.", "C) People at a museum."], ans: 1, exp: "หมายถึงคนที่จับจ้องเธอจากโลกออนไลน์" }, 
+            { q: "5. Main Idea: How does the girl feel at school?", opts: ["A) Happy and successful.", "B) Watched and judged.", "C) Bored and tired."], ans: 1, exp: "เธอยังรู้สึกเหมือนถูกจับตามองตลอดเวลา" } 
+        ]
+    },
+    3: { 
+        title: "FILE: OCT 20 - THE LAST DATE", 
+        domain: "Domain: Romantic Relationships", 
+        content: `Leo took me to the pier tonight. The air was salty and cold, and he gave me his hoodie without me even asking. We sat on the edge of the wood, watching the black water churn underneath. He told me he’s never met anyone as "real" as me. He makes me feel seen, truly seen, in a way that makes the rest of the world fade into the background. When he kissed me, I felt a flicker of hope—the idea that maybe his love could be a shield thick enough to stop the arrows.<br><br>We took a selfie against the moonlight, but as he went to post it, I felt a wave of pure terror. "Don't tag me," I whispered, my voice shaking. He looked confused, his thumb hovering over the screen. He doesn't know that every time my name is linked to a photo, the 'Comment' section turns into a slaughterhouse. He sees a beautiful memory; I see a new coordinate for them to find me. The "tether" is tightening, and even his arms around me can't stop the silent, digital scream waiting for me in the notifications I’m too scared to open.`, 
+        qa: [ 
+            { q: "1. How is Leo during the date?", opts: ["A) Mean and cold.", "B) Kind and loving.", "C) Quiet and bored."], ans: 1, exp: "Leo อ่อนโยน ให้เสื้อฮู้ด และทำให้เธอรู้สึกอบอุ่น" }, 
+            { q: "2. Why does she say 'Don't tag me'?", opts: ["A) She looks ugly.", "B) She fears mean comments.", "C) She hates the photo."], ans: 1, exp: "เธอกลัวว่าช่องคอมเมนต์จะกลายเป็นพื้นที่ให้คนด่าเธอ" }, 
+            { q: "3. What is the 'slaughterhouse'?", opts: ["A) The internet comments.", "B) A place at the pier.", "C) A scary movie."], ans: 0, exp: "เธอเปรียบเทียบช่องคอมเมนต์ว่าเหมือนโรงฆ่าสัตว์" }, 
+            { q: "4. How does she feel when Leo kisses her?", opts: ["A) A little hopeful.", "B) Very angry.", "C) Totally safe."], ans: 0, exp: "เมื่อเขาจูบ เธอรู้สึก 'felt a flicker of hope' (มีความหวังเล็กน้อย)" }, 
+            { q: "5. Main Idea: Why is the date sad?", opts: ["A) The weather was bad.", "B) Love cannot stop the bullies.", "C) Leo wants to break up."], ans: 1, exp: "แม้จะมีความรัก แต่มันก็ไม่สามารถหยุดการถูกบูลลี่ได้" } 
+        ]
+    },
+    4: { 
+        title: "FILE: OCT 23 - THE FINAL ENTRY", 
+        domain: "The Reveal: The Digital Storm", 
+        content: `The "Countdown" is over. I finally looked.<br><br>I thought I could keep the worlds separate. I thought if I had a good family, good friends, and a boy who loved me, the voices on the screen wouldn't matter. But they found the cracks. They took the photo from the pier. They took my art. They took the "bright spirit" Mom loves and turned it into something unrecognizable.<br><br>They’ve been voting on my life for weeks. A thousand people I don't know, and a few I thought I did, all hitting "like" on a thread that says I shouldn't exist. The "Burn Page" didn't just stay on the internet; it bled into the physical world. I saw the URL scratched into my locker, the same one I saw in the bathroom stall, the same one sent to my inbox a hundred times a day.<br><br>I’m looking at the roast Mom made, the art Mr. Harrison praised, and the hoodie Leo gave me. They are all beautiful things, but they aren't loud enough. The notifications are a rhythmic, digital heartbeat that has replaced my own. I realize now that the "map" they drew leads to a place where the lights are always on and the shouting never stops. If I can't turn off the screen, I have to turn off the sound. I’m tired of being a spectacle. I just want to be still.`, 
+        qa: [ 
+            { q: "1. What is the girl's real problem?", opts: ["A) She failed her art class.", "B) She is being cyberbullied.", "C) She lost her phone."], ans: 1, exp: "บทความพูดถึง 'Burn Page' และคนกดไลค์ในเพจแอนตี้ แสดงถึงการถูก Cyberbullying" }, 
+            { q: "2. Where did she see the bullying link?", opts: ["A) On her locker.", "B) On the TV.", "C) In a library book."], ans: 0, exp: "เธอเห็น URL ที่ใช้บูลลี่เธอ 'scratched into my locker' (ถูกขูดไว้บนล็อกเกอร์)" }, 
+            { q: "3. What is the 'Countdown'?", opts: ["A) A game for a party.", "B) A timer for the bullying.", "C) A school project."], ans: 1, exp: "'Countdown' ในบริบทนี้คือการรอคอยเวลาที่ความอดทนของเธอจะสิ้นสุดลง" }, 
+            { q: "4. Why can't her family help her now?", opts: ["A) They don't love her.", "B) The digital hate is too loud.", "C) They are not at home."], ans: 1, exp: "สิ่งดีๆ รอบตัวเธอ 'aren't loud enough' ที่จะกลบเสียงด่าทอจากโลกออนไลน์" }, 
+            { q: "5. Main Idea: What does 'turn off the sound' mean?", opts: ["A) Fix her broken phone.", "B) Stop the bullying forever.", "C) Listen to soft music."], ans: 1, exp: "'Turn off the sound' เป็นการเปรียบเปรยถึงการยุติทุกอย่างเพื่อหนีจากความเจ็บปวด" } 
+        ]
+    }
+};
+
+function selectDiary(num) {
+    currentDiary = num;
+    document.querySelectorAll('.diary-btn').forEach(btn => btn.classList.remove('selected'));
+    document.getElementById('btn-diary-' + num).classList.add('selected');
+}
+
+function showPage(pageId) {
+    document.querySelectorAll('.container > div:not(#top-bar):not(.tape)').forEach(div => div.classList.add('hidden'));
+    document.getElementById(pageId).classList.remove('hidden');
+}
+
+function startGame() {
+    let group = document.getElementById('groupName').value.trim();
+    let player = document.getElementById('playerName').value.trim();
+    if(!group || !player) { alert("⚠️ กรุณากรอกชื่อกลุ่มและชื่อของคุณ"); return; }
+    if(currentDiary === 0) { alert("⚠️ กรุณาเลือกแฟ้มคดี"); return; }
+    
+    let selectedAvatarUrl = document.querySelector('input[name="avatar"]:checked').value;
+    
+    // ตั้งค่ารูป Avatar ในหน้าเกม
+    document.getElementById('agent-avatar').innerHTML = `<img src="${selectedAvatarUrl}" width="30" style="vertical-align:middle; image-rendering: pixelated;">`;
+    document.getElementById('display-playerName').innerText = player;
+    document.getElementById('asm-group').innerText = group;
+    
+    showPage('page-intro');
+}
+
+function enterDiary() {
+    document.getElementById('top-bar').classList.remove('hidden');
+    document.getElementById('timer-label').innerText = "Time:";
+    showPage('page-diary');
+    let diaryData = diaries[currentDiary];
+    document.getElementById('diary-title').innerText = diaryData.title;
+    document.getElementById('diary-domain').innerText = diaryData.domain;
+    document.getElementById('diary-content').innerHTML = diaryData.content;
+    
+    currentQuestionIndex = 0; correctAnswersCount = 0; mistakesMade = 0;
+    renderQuestion();
+    startTimer(600, 'timerDisplay');
+}
+
+function renderQuestion() {
+    let qData = diaries[currentDiary].qa[currentQuestionIndex];
+    document.getElementById('q-current').innerText = currentQuestionIndex + 1;
+    document.getElementById('score-display').innerText = correctAnswersCount;
+    document.getElementById('q-text').innerText = qData.q;
+    document.getElementById('explanation-box').style.display = 'none';
+    document.getElementById('btn-next-q').classList.add('hidden');
+    document.getElementById('btn-submit-ans').classList.remove('hidden');
+    selectedChoiceIndex = null;
+    
+    let choicesHtml = '';
+    qData.opts.forEach((opt, index) => {
+        choicesHtml += `<button class="choice-btn" id="choice-${index}" onclick="selectChoice(${index})" style="text-align: left;">
+                            <span style="font-weight:bold; color:var(--ink-light); margin-right:10px;">${opt.substring(0,2)}</span>${opt.substring(2)}
+                        </button>`;
+    });
+    document.getElementById('choices-container').innerHTML = choicesHtml;
+}
+
+function selectChoice(index) {
+    document.querySelectorAll('#choices-container .choice-btn').forEach(btn => btn.classList.remove('selected', 'wrong'));
+    document.getElementById('choice-' + index).classList.add('selected');
+    selectedChoiceIndex = index;
+}
+
+function checkAnswer() {
+    if (selectedChoiceIndex === null) { alert("⚠️ กรุณาเลือกคำตอบ!"); return; }
+    
+    let qData = diaries[currentDiary].qa[currentQuestionIndex];
+    let selectedBtn = document.getElementById('choice-' + selectedChoiceIndex);
+    
+    if (selectedChoiceIndex === qData.ans) {
+        selectedBtn.classList.remove('selected'); selectedBtn.classList.add('correct');
+        correctAnswersCount++;
+        document.getElementById('score-display').innerText = correctAnswersCount;
+        document.getElementById('exp-text').innerText = qData.exp;
+        document.getElementById('explanation-box').style.display = 'block';
+        document.getElementById('btn-submit-ans').classList.add('hidden');
+        document.getElementById('btn-next-q').classList.remove('hidden');
+        document.querySelectorAll('#choices-container .choice-btn').forEach(btn => btn.style.pointerEvents = 'none');
+    } else {
+        mistakesMade++;
+        selectedBtn.classList.add('wrong');
+        setTimeout(() => {
+            alert("❌ ตอบผิดพลาด! ระบบจะส่งคุณกลับไปเริ่มวิเคราะห์ใหม่ตั้งแต่ข้อ 1 เพื่อความแม่นยำ");
+            currentQuestionIndex = 0;
+            correctAnswersCount = 0;
+            renderQuestion();
+        }, 300);
+    }
+}
+
+function nextQuestion() {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < 5) {
+        renderQuestion();
+    } else {
+        clearInterval(timerInterval);
+        document.getElementById('top-bar').classList.add('hidden');
+        
+        if (mistakesMade === 0) {
+            points += 3;
+            document.getElementById('bonus-badge').classList.remove('hidden');
+        }
+        
+        saveToSheet("saveProgress", "READY");
+        showPage('page-waiting');
+        
+        pollTeamStatus();
+        pollingInterval = setInterval(pollTeamStatus, 3000);
+    }
+}
+
+function startTimer(seconds, displayId) {
+    clearInterval(timerInterval);
+    timeRemaining = seconds;
+    let timerEl = document.getElementById(displayId);
+    timerInterval = setInterval(() => {
+        timeRemaining--;
+        let min = Math.floor(timeRemaining / 60); let sec = timeRemaining % 60;
+        timerEl.innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        if(timeRemaining <= 60) timerEl.classList.add('warning');
+        
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert("⏰ Time is up! หมดเวลาการวิเคราะห์ คุณจะถูกส่งไปรวมกับทีมโดยไม่ได้รับคะแนนโบนัส");
+            document.getElementById('top-bar').classList.add('hidden');
+            saveToSheet("saveProgress", "READY"); 
+            showPage('page-waiting');
+            pollTeamStatus();
+            pollingInterval = setInterval(pollTeamStatus, 3000);
+        }
+    }, 1000);
+}
+
+function saveToSheet(actionType, statusTxt) {
+    let selectedAvatarUrl = document.querySelector('input[name="avatar"]:checked').value;
+    const dataToSend = {
+        action: actionType,
+        groupName: document.getElementById('groupName').value.trim(),
+        playerName: document.getElementById('playerName').value.trim(),
+        avatar: selectedAvatarUrl, 
+        diaryNo: currentDiary,
+        points: points,
+        status: statusTxt
+    };
+
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(dataToSend)
+    }).catch(err => console.log("Save error", err));
+}
+
+function pollTeamStatus() {
+    const dataToSend = {
+        action: "checkTeam",
+        groupName: document.getElementById('groupName').value.trim()
+    };
+
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(dataToSend)
+    })
+    .then(res => res.json())
+    .then(data => {
+        let members = data.members || [];
+        updateAssemblyUI(members);
+        
+        let btnVote = document.getElementById('btn-proceed-vote');
+        
+        if (members.length >= 4) {
+            clearInterval(pollingInterval); 
+            
+            let syncText = document.getElementById('sync-status');
+            syncText.innerText = "✅ สมาชิกทุกคนผ่านส่วนที่ 1 เรียบร้อยแล้ว!";
+            syncText.style.color = "var(--asm-border-ready)";
+            syncText.style.animation = "none";
+
+            btnVote.disabled = false;
+            btnVote.onclick = goToVoting;
+            btnVote.innerText = "⚖️ เข้าสู่ห้องโหวตสรุปคดี (Proceed to Vote) ➡";
+        } else {
+            btnVote.disabled = true;
+            btnVote.innerText = `🔒 รอสมาชิกผ่านส่วนที่ 1 ครบ 4 คน (ตอนนี้ ${members.length}/4)...`;
+        }
+    }).catch(err => console.log("Poll error", err));
+}
+
+function updateAssemblyUI(readyMembers) {
+    let gridHtml = '';
+    for (let i = 0; i < 4; i++) {
+        if (i < readyMembers.length) {
+            // ดึง URL รูปมาใส่ใน tag img 
+            gridHtml += `
+            <div class="agent-card ready">
+                <div class="agent-name">
+                    <img src="${readyMembers[i].avatar}" width="40" style="image-rendering: pixelated;"> 
+                    ${readyMembers[i].name}
+                </div>
+                <div class="status-pill ready">READY</div>
+            </div>`;
+        } else {
+            gridHtml += `
+            <div class="agent-card">
+                <div class="agent-name">Agent ${i + 1}</div>
+                <div class="status-pill waiting">Waiting...</div>
+            </div>`;
+        }
+    }
+    document.getElementById('agents-grid').innerHTML = gridHtml;
+}
+
+function goToVoting() {
+    showPage('page-voting');
+    document.getElementById('top-bar').classList.remove('hidden');
+    document.getElementById('timer-label').innerText = "Voting Time:";
+    startVotingTimer();
+}
+
+function startVotingTimer() {
+    clearInterval(votingTimerInterval);
+    votingTimeRemaining = 600; 
+    let timerEl = document.getElementById('timerDisplay');
+    timerEl.classList.remove('warning');
+    
+    votingTimerInterval = setInterval(() => {
+        votingTimeRemaining--;
+        let min = Math.floor(votingTimeRemaining / 60); let sec = votingTimeRemaining % 60;
+        timerEl.innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        if(votingTimeRemaining <= 60) timerEl.classList.add('warning');
+        
+        if (votingTimeRemaining <= 0) {
+            clearInterval(votingTimerInterval);
+            alert("⏰ Voting Time is up! หมดเวลาสำหรับการโหวต!");
+            document.getElementById('top-bar').classList.add('hidden');
+            document.getElementById('final-score').innerHTML = points + "<br><span style='font-size: 1.5rem; color: var(--accent-red);'>❌ Timeout (0 Medals)</span>";
+            saveToSheet("saveProgress", "TIMEOUT_VOTE");
+            showPage('page-result');
+        }
+    }, 1000);
+}
+
+function selectFinalVote(answer, btnElement) {
+    selectedFinalVoteAnswer = answer;
+    let voteBtns = document.querySelectorAll('#voting-choices-container .choice-btn');
+    voteBtns.forEach(btn => btn.classList.remove('selected'));
+    btnElement.classList.add('selected');
+}
+
+function submitFinalVote() {
+    if (!selectedFinalVoteAnswer) {
+        alert("⚠️ กรุณาปรึกษากับทีมและเลือกสาเหตุการเสียชีวิตก่อนกด To the Fact ➡");
+        return;
+    }
+    checkVote(selectedFinalVoteAnswer);
+}
+
+function checkVote(answer) {
+    votingAttempts++;
+    if (answer === 'Cyberbullying') {
+        clearInterval(votingTimerInterval);
+        document.getElementById('top-bar').classList.add('hidden');
+        if (votingAttempts === 1) {
+            points += 10;
+            document.getElementById('final-score').innerHTML = points + "<br><span style='font-size: 1.5rem; color: #D4AF37;'>🥇 Gold Medal Earned! (+10)</span>";
+        } else if (votingAttempts === 2) {
+            points += 5;
+            document.getElementById('final-score').innerHTML = points + "<br><span style='font-size: 1.5rem; color: #9E9E9E;'>🥈 Silver Medal Earned! (+5)</span>";
+        }
+        saveToSheet("saveProgress", "VOTED"); 
+        showPage('page-result');
+    } else {
+        if (votingAttempts === 1) {
+            alert("❌ Incorrect Verdict! ทีมของคุณวิเคราะห์ผิดพลาด เข้าสู่ช่วงทบทวนข้อมูลเป็นเวลา 3 นาที");
+            document.getElementById('top-bar').classList.add('hidden');
+            startReviewPhase();
+        } else {
+            clearInterval(votingTimerInterval);
+            document.getElementById('top-bar').classList.add('hidden');
+            alert("❌ Incorrect Again! ทีมของคุณสรุปคดีพลาดทั้ง 2 ครั้ง");
+            document.getElementById('final-score').innerHTML = points + "<br><span style='font-size: 1.5rem; color: var(--accent-red);'>❌ No Medal Earned</span>";
+            saveToSheet("saveProgress", "FAILED_VOTE"); 
+            showPage('page-result');
+        }
+    }
+}
+
+function startReviewPhase() {
+    showPage('page-review');
+    clearInterval(votingTimerInterval); 
+    
+    let allContent = "";
+    for(let i=1; i<=4; i++) {
+        allContent += `
+        <div class="file-header" style="background: var(--ink-dark); position: relative;">${diaries[i].title}</div>
+        <div class="file-content diary-text" style="background: #FFF; padding-bottom: 40px; margin-bottom: 20px; border: 1px solid #D7CCC8;">
+            <span class="diary-domain">${diaries[i].domain}</span><br>
+            ${diaries[i].content}
+        </div>`;
+    }
+    document.getElementById('all-diaries-content').innerHTML = allContent;
+
+    let reviewTime = 180;
+    document.getElementById('review-timer').innerText = "03:00";
+    clearInterval(reviewTimerInterval);
+    reviewTimerInterval = setInterval(() => {
+        reviewTime--;
+        let min = Math.floor(reviewTime / 60);
+        let sec = reviewTime % 60;
+        document.getElementById('review-timer').innerText = `0${min}:${sec < 10 ? '0' : ''}${sec}`;
+        
+        if (reviewTime <= 0) {
+            clearInterval(reviewTimerInterval);
+            alert("⏳ Review Time Over! หมดเวลาทบทวนข้อมูล กรุณาทำการโหวตครั้งสุดท้าย");
+            skipReview();
+        }
+    }, 1000);
+}
+
+function skipReview() {
+    clearInterval(reviewTimerInterval);
+    
+    selectedFinalVoteAnswer = null;
+    let voteBtns = document.querySelectorAll('#voting-choices-container .choice-btn');
+    voteBtns.forEach(btn => btn.classList.remove('selected'));
+    
+    showPage('page-voting');
+    document.getElementById('top-bar').classList.remove('hidden');
+    
+    let timerEl = document.getElementById('timerDisplay');
+    votingTimerInterval = setInterval(() => {
+        votingTimeRemaining--;
+        let min = Math.floor(votingTimeRemaining / 60); let sec = votingTimeRemaining % 60;
+        timerEl.innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        if(votingTimeRemaining <= 60) timerEl.classList.add('warning');
+        if (votingTimeRemaining <= 0) {
+            clearInterval(votingTimerInterval);
+            alert("⏰ Voting Time is up! หมดเวลาสำหรับการโหวต!");
+            document.getElementById('top-bar').classList.add('hidden');
+            document.getElementById('final-score').innerHTML = points + "<br><span style='font-size: 1.5rem; color: var(--accent-red);'>❌ Timeout (0 Medals)</span>";
+            saveToSheet("saveProgress", "TIMEOUT_VOTE");
+            showPage('page-result');
+        }
+    }, 1000);
+}
+</script>
+</body>
+</html>
