@@ -41,7 +41,7 @@
             border-radius: 2px 15px 5px 20px; padding: 40px; 
             box-shadow: 10px 10px 25px rgba(62, 39, 35, 0.2), inset 0 0 40px rgba(141, 110, 99, 0.1); 
             border: 1px solid #D7CCC8; text-align: center; display: flex; flex-direction: column; 
-            animation: fadeIn 0.8s ease-out; position: relative; overflow: hidden;
+            animation: fadeIn 0.8s ease-out; position: relative;
         }
         .hidden { display: none !important; }
         
@@ -62,7 +62,7 @@
         .progress-fill { height: 100%; background: #FFD54F; width: 0%; transition: width 0.3s ease; }
 
         .agent-info { font-size: 1.2rem; font-weight: 600; display: flex; align-items: center; gap: 10px;}
-        .game-stats { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center;}
+        .game-stats { display: flex; align-items: center; gap: 15px; }
         .hp-display { display: flex; gap: 5px; align-items: center; }
         .hp-icon { width: 28px; height: 28px; image-rendering: pixelated; transition: 0.3s; filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.5));}
         .hp-icon.lost { filter: grayscale(100%) opacity(0.3); transform: scale(0.8); }
@@ -75,7 +75,7 @@
         .game-layout { display: flex; gap: 30px; height: 60vh; min-height: 500px; }
         
         .reading-panel { flex: 1.2; background-color: #FAFAFA; border: 1px solid #D7CCC8; border-radius: 2px 10px 5px 12px; padding: 0; overflow-y: auto; text-align: left; position: relative; box-shadow: 2px 2px 8px rgba(0,0,0,0.05); }
-        .file-header { background: var(--ink-light); color: var(--paper-main); font-family: 'Courier Prime', monospace; font-size: 1.2rem; padding: 15px 25px; position: sticky; top: 0; z-index: 10; border-bottom: 3px dashed var(--accent-highlight); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;}
+        .file-header { background: var(--ink-light); color: var(--paper-main); font-family: 'Courier Prime', monospace; font-size: 1.2rem; padding: 15px 25px; position: sticky; top: 0; z-index: 10; border-bottom: 3px dashed var(--accent-highlight); display: flex; justify-content: space-between;}
         .file-content { padding: 30px; }
         .diary-domain { font-weight: 600; color: var(--accent-red); margin-bottom: 20px; display: inline-block; background: var(--paper-dark); padding: 6px 15px; border-radius: 3px; font-size: 0.9rem; font-family: 'Courier Prime', monospace;}
         .diary-text { font-size: 1.15rem; line-height: 1.8; color: var(--ink-dark); }
@@ -110,7 +110,7 @@
         input { width: 100%; max-width: 400px; padding: 15px; margin: 10px 0; border-radius: 3px; border: 2px dashed #BCAAA4; font-family: 'Courier Prime', monospace; font-size: 1.1rem; background: #FAFAFA; color: var(--ink-dark); text-align: center;}
         input:focus { outline: none; border-color: var(--ink-dark); background: #FFF; }
 
-        .avatar-container { display: flex; justify-content: center; gap: 25px; margin: 15px 0 25px; flex-wrap: wrap; }
+        .avatar-container { display: flex; justify-content: center; gap: 25px; margin: 25px 0; flex-wrap: wrap; }
         .avatar-label { cursor: pointer; padding: 15px; border-radius: 8px; border: 3px dashed transparent; background-color: var(--paper-dark); transition: all 0.3s; display: inline-block; }
         .avatar-label img { width: 55px; height: 55px; image-rendering: pixelated; vertical-align: middle; }
         .avatar-radio { display: none; }
@@ -121,8 +121,8 @@
         .diary-btn.selected { background: var(--ink-dark); color: var(--paper-main); transform: scale(1.05) rotate(2deg); }
 
         /* Video Fullscreen Overlay */
-        #video-overlay, #final-video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        #intro-video, #final-video { width: 100%; max-width: 1200px; max-height: 90vh; outline: none; }
+        #video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #intro-video { width: 100%; max-width: 1200px; max-height: 90vh; outline: none; }
         .skip-btn-video { position: absolute; bottom: 40px; right: 40px; background: rgba(255,255,255,0.2); color: white; border: 2px solid white; padding: 10px 25px; font-size: 1.2rem; cursor: pointer; font-family: 'Courier Prime', monospace; border-radius: 5px; transition: 0.3s; backdrop-filter: blur(5px); z-index: 10000; }
         .skip-btn-video:hover { background: white; color: black; }
 
@@ -152,7 +152,6 @@
         .mg-card.matched { background: var(--asm-border-ready); border-color: #33691E; opacity: 0.8; cursor: default;}
 
         .instruction-box { background: var(--paper-dark); padding: 25px; border-radius: 5px; text-align: left; border: 1px dashed #BCAAA4; margin: 20px auto; max-width: 800px; font-size: 1.1rem; line-height: 1.6;}
-        .instruction-box strong { color: var(--accent-green); font-size: 1.15rem;} /* Green headings for instructions */
         .instruction-th { color: var(--ink-light); font-size: 0.95rem; font-style: italic; display: block; margin-bottom: 15px; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -160,46 +159,29 @@
         @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
-        /* Responsive Improvements */
-        img, video { max-width: 100%; height: auto; }
-        @media (max-width: 900px) { 
-            .game-layout { flex-direction: column; height: auto; } 
-            .reading-panel { max-height: 50vh; } 
-            .agents-grid { grid-template-columns: 1fr; } 
-            .login-decor { display: none; } 
-            .container { padding: 25px 15px; }
-            h1 { font-size: 1.8rem; }
-            .top-bar { flex-direction: column; text-align: center; }
-        }
+        @media (max-width: 900px) { .game-layout { flex-direction: column; height: auto; } .reading-panel { max-height: 40vh; } .agents-grid { grid-template-columns: 1fr; } .login-decor { display: none; } }
     </style>
 </head>
 <body>
 
 <audio id="intro-audio" src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Stranger%20Things%20Main%20Theme.mp3"></audio>
-<audio id="bgm-briefing" src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Main%20Theme%20-%20Detective%20Conan%20OST%20%5BPiano%5D.mp3" loop></audio>
+<audio id="fireworks-audio" src="https://actions.google.com/sounds/v1/foley/fireworks_with_whistles.ogg"></audio>
 
 <div id="splash-screen" class="modal-overlay" style="background: var(--bg-desk); z-index: 10000;">
     <div class="container" style="max-width: 500px;">
         <h1>CASE 3</h1>
         <h2 style="margin-top:0;">The Hidden Story</h2>
-        <img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/32de6ed7950d57f5520b9c9f517eabbc.jpg?raw=true" alt="Cover Image" style="width: 100%; border-radius: 8px; margin: 15px 0 25px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-        <button class="btn" onclick="startVideoBriefing()" style="width: 100%;">ENTER CASE FILE</button>
+        <p style="margin-bottom: 30px;">Click below to receive your briefing.</p>
+        <button class="btn" onclick="startVideoBriefing()">ENTER CASE FILE</button>
     </div>
 </div>
 
 <div id="video-overlay" class="hidden">
-    <video id="intro-video" disablepictureinpicture controlslist="nodownload nofullscreen" playsinline>
+    <video id="intro-video" disablepictureinpicture controlslist="nodownload nofullscreen">
         <source src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Julia-Case.mp4" type="video/mp4">
         Your browser does not support HTML video.
     </video>
     <button id="skip-video-btn" class="skip-btn-video hidden" onclick="endVideoBriefing()">Skip Intro ➡</button>
-</div>
-
-<div id="final-video-overlay" class="hidden">
-    <video id="final-video" disablepictureinpicture controlslist="nodownload nofullscreen" playsinline>
-        <source src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Game-Master-Apr-13-02-25-33.mp4" type="video/mp4">
-    </video>
-    <button class="skip-btn-video" onclick="endFinalVideo()">Skip Video ➡</button>
 </div>
 
 <div id="pause-modal" class="modal-overlay hidden">
@@ -252,8 +234,7 @@
             <input type="text" id="playerName" placeholder="Your Nickname" maxlength="20" autocomplete="off">
         </div>
         
-        <h3 style="margin-top: 25px; margin-bottom: 5px; color: var(--ink-dark); font-family: 'Courier Prime', monospace;">:: Select Your Team Icon ::</h3>
-        <p style="font-size: 0.95rem; color: var(--accent-red); margin-top: 0;">Choose the same group icon as your team to stay connected throughout the investigation.<br><span style="font-style: italic;">(เลือกไอคอนกลุ่มให้ตรงกับทีมของคุณ เพื่อให้ทุกคนติดต่อกันได้ตลอดการสืบสวน!)</span></p>
+        <h3 style="margin-top: 25px; color: var(--ink-dark); font-family: 'Courier Prime', monospace;">:: Select Your Team Icon ::</h3>
         <div class="avatar-container">
             <input type="radio" name="avatar" id="av1" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Coffee%20(1).png?raw=true" class="avatar-radio" checked>
             <label for="av1" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Coffee%20(1).png?raw=true" alt="Coffee"></label>
@@ -271,8 +252,7 @@
         <button class="btn" onclick="goToBriefing()" style="width: 100%; max-width: 400px; padding: 18px; margin-top: 10px;">Proceed to Briefing</button>
     </div>
 
-    <div id="page-briefing" class="hidden" style="position: relative;">
-        <button id="btn-mute-bgm" class="btn-control" onclick="toggleBGM()" style="position: absolute; top: 0; right: 0;">🔊 Mute BGM</button>
+    <div id="page-briefing" class="hidden">
         <h2>CASE BACKGROUND</h2>
         <div style="font-size: 1.15rem; line-height: 1.6; text-align: left; max-width: 800px; margin: 0 auto;">
             <p>Lina was the student everyone admired — the school’s most gifted artist. Her life seemed perfect on the surface. That is why what happened next was so devastating. The truth unfolded in a place no one thought to look.</p>
@@ -297,8 +277,8 @@
             <span class="instruction-th">มีเวลา 10 นาทีในการอ่าน วิเคราะห์ และตอบคำถาม</span>
             
             <strong>4. Manage Your HP (Detective Badges)</strong><br>
-            You start with 3 lives (detective badge tokens). Each wrong answer costs 1 life. Lose all three and the case is closed — against you.
-            <span class="instruction-th">นักสืบทุกคนจะได้รับค่าพลังชีวิต (ตรานักสืบ) ทั้งหมดคนละ 3 ตรา การตอบผิดแต่ละครั้ง จะทำให้ตราของคุณนักสืบหายไป 1 ตรา หากคุณเสียตราทั้งหมด ลีน่าคงปวดใจน่าดูที่คุณช่วยเธอไขความลับของเธอไม่ได้ T-T</span>
+            Each player starts with 3 HP. Each incorrect answer reduces HP by 1. If all HP are lost, the current attempt ends.
+            <span class="instruction-th">มี 3 ตรา ตอบผิดเสีย 1 ตรา หมด = จบรอบ</span>
         </div>
         
         <p style="font-weight: bold; color: var(--accent-red); margin-top: 30px; font-family: 'Courier Prime', monospace;">You are now ready. Trust your instincts, read carefully, and solve the case.</p>
@@ -322,11 +302,8 @@
         <div class="game-layout">
             <div class="reading-panel">
                 <div class="file-header" id="diary-title">
-                    <div>
-                        <span id="diary-title-text">FILE: LINA'S DIARY</span>
-                        <span style="font-size: 0.9rem; background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 10px; margin-left: 10px;">TOP SECRET</span>
-                    </div>
-                    <button id="btn-read-diary" class="btn-control" style="font-size: 0.9rem;" onclick="toggleVoiceReader()">🔊 Play Diary</button>
+                    <span>FILE: LINA'S DIARY</span>
+                    <span style="font-size: 0.9rem; background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 10px;">TOP SECRET</span>
                 </div>
                 <div class="file-content">
                     <span class="diary-domain" id="diary-domain">Domain: ...</span>
@@ -366,9 +343,9 @@
     </div>
 
     <div id="page-revive" class="hidden">
-        <p style="color: var(--accent-red); font-weight: bold; font-size: 1.2rem; margin-top: 0;">⚠️ Time and tide wait for no man!</p>
-        <h2 style="font-size: 2.2rem; color: var(--primary-blue); margin-top: 5px;">REOPEN THE CASE</h2>
+        <h2 style="font-size: 2.2rem; color: var(--primary-blue);">REOPEN THE CASE</h2>
         <p style="font-size: 1.1rem; margin-bottom: 20px;">Complete this challenge to restore your Detective Badges. (Need 2/3 correct)</p>
+        <p style="color: var(--accent-red); font-weight: bold; margin-bottom: 20px;">⚠️ The countdown timer is still running!</p>
         
         <div class="question-panel" style="max-width: 800px; margin: 0 auto; background: #FFF;">
             <div class="q-header">
@@ -388,7 +365,7 @@
         <div class="assembly-wrapper">
             <div class="tape tape-corner" style="background: rgba(255,255,255,0.2);"></div>
             <div class="assembly-title">Evidence Board</div>
-            <div class="bonus-badge hidden" id="bonus-badge" style="color: #FFD54F; font-weight: bold; margin-bottom: 10px;">🔍 +3 Bonus Points Earned!</div>
+            <div class="bonus-badge hidden" id="bonus-badge">🔍 +3 Bonus Points Earned!</div>
             <div class="assembly-subtitle" id="waiting-text">Investigating... Preparing the next phase...</div>
             
             <div class="agents-grid" id="agents-grid"></div>
@@ -444,13 +421,9 @@
             </div>
         </div>
         
-        <div style="background: var(--paper-dark); padding: 20px; border-radius: 5px; display: inline-block; border: 2px dashed #BCAAA4; margin-bottom: 25px;">
+        <div style="background: var(--paper-dark); padding: 20px; border-radius: 5px; display: inline-block; border: 2px dashed #BCAAA4;">
             <span style="font-size: 1.2rem; color: var(--ink-light); font-family: 'Courier Prime', monospace;">Total Score</span><br>
             <div id="final-score" style="color: var(--ink-dark); font-size: 3.5rem; font-weight: bold; line-height: 1.2; font-family: 'Courier Prime', monospace;">0</div>
-        </div>
-
-        <div>
-            <button class="btn btn-pink" onclick="exitGame()">End Investigation</button>
         </div>
     </div>
 </div>
@@ -486,56 +459,6 @@ let selectedFinalVoteAnswer = null;
 let hp = 3; let isPaused = false;
 let assist5050Count = 2; let assistHintCount = 1;
 const HP_ICON_URL = "https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lion_Crest.png?raw=true";
-
-// --- TTS System ---
-let isReading = false;
-let utterance = null;
-function toggleVoiceReader() {
-    if (!('speechSynthesis' in window)) {
-        alert("Sorry, your browser doesn't support text to speech!");
-        return;
-    }
-    let btn = document.getElementById('btn-read-diary');
-    if (isReading) {
-        window.speechSynthesis.cancel();
-        isReading = false;
-        btn.innerText = '🔊 Play Diary';
-    } else {
-        // Replace <br> with space to read smoothly
-        let textToRead = document.getElementById('diary-content').innerText;
-        utterance = new SpeechSynthesisUtterance(textToRead);
-        utterance.lang = 'en-US'; 
-        utterance.rate = 0.9; 
-        utterance.onend = function() {
-            isReading = false;
-            btn.innerText = '🔊 Play Diary';
-        };
-        window.speechSynthesis.speak(utterance);
-        isReading = true;
-        btn.innerText = '⏹️ Stop Audio';
-    }
-}
-function stopVoiceReader() {
-    if ('speechSynthesis' in window && isReading) {
-        window.speechSynthesis.cancel();
-        isReading = false;
-        let btn = document.getElementById('btn-read-diary');
-        if(btn) btn.innerText = '🔊 Play Diary';
-    }
-}
-
-// --- BGM Toggle ---
-function toggleBGM() {
-    let bgm = document.getElementById('bgm-briefing');
-    let btn = document.getElementById('btn-mute-bgm');
-    if(bgm.muted) {
-        bgm.muted = false;
-        btn.innerText = '🔊 Mute BGM';
-    } else {
-        bgm.muted = true;
-        btn.innerText = '🔇 Unmute BGM';
-    }
-}
 
 const positiveMessages = ["Good try! Let's think again 😊", "You're close! Keep going! 💡", "Don't give up, you can do it! ✨", "Take a deep breath and read carefully again! 📖"];
 
@@ -577,7 +500,6 @@ function startVideoBriefing() {
     if(vid) vid.play().catch(e => console.log(e));
     if(aud) aud.play().catch(e => console.log(e));
     
-    // ปุ่ม Skip โผล่มาหลัง 10 วิ
     skipVideoTimeout = setTimeout(() => {
         document.getElementById('skip-video-btn').classList.remove('hidden');
     }, 10000);
@@ -594,7 +516,14 @@ function endVideoBriefing() {
     let vid = document.getElementById('intro-video');
     let aud = document.getElementById('intro-audio');
     if(vid) vid.pause();
-    if(aud) aud.pause();
+    if(aud) {
+        // Fade out music
+        let vol = 1;
+        let fadeOut = setInterval(() => {
+            if (vol > 0.1) { vol -= 0.1; aud.volume = vol; }
+            else { clearInterval(fadeOut); aud.pause(); }
+        }, 100);
+    }
     document.getElementById('video-overlay').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
 }
@@ -612,18 +541,9 @@ function goToBriefing() {
     if(asmEl) asmEl.innerText = group;
     
     showPage('page-briefing');
-    
-    // Play Briefing BGM
-    let bgm = document.getElementById('bgm-briefing');
-    bgm.volume = 0.5; // Optional: soften background track
-    bgm.play().catch(e => console.log('Auto-play prevented by browser, waiting for interaction', e));
 }
 
-function goToFileSelect() { 
-    showPage('page-file-select'); 
-    let bgm = document.getElementById('bgm-briefing');
-    bgm.pause(); // Pause BGM when moving to file select to focus
-}
+function goToFileSelect() { showPage('page-file-select'); }
 
 function startInvestigation() {
     if(currentDiary === 0) { alert("⚠️ กรุณาเลือกแฟ้มคดีก่อนเริ่มสืบสวน"); return; }
@@ -640,7 +560,7 @@ function startInvestigation() {
     showPage('page-diary');
     
     let diaryData = diaries[currentDiary];
-    document.getElementById('diary-title-text').innerText = diaryData.title;
+    document.getElementById('diary-title').innerHTML = `<span>${diaryData.title}</span>`;
     document.getElementById('diary-domain').innerText = diaryData.domain;
     document.getElementById('diary-content').innerHTML = diaryData.content;
     
@@ -654,7 +574,6 @@ function startInvestigation() {
 
 function pauseGame() {
     isPaused = true;
-    stopVoiceReader(); // Stop reading if game paused
     document.getElementById('pause-modal').classList.remove('hidden');
 }
 function resumeGame() {
@@ -673,8 +592,8 @@ function updateHPUI() {
     if(hpEl) hpEl.innerHTML = heartsHtml;
     
     if (hp <= 0) {
-        stopVoiceReader(); // Stop reading if game over
         document.getElementById('gameover-modal').classList.remove('hidden');
+        // No auto-pause so timer keeps ticking to force urgency
     }
 }
 
@@ -717,7 +636,6 @@ function useHint() {
 }
 
 function proceedToWaitingRoom(isFail = false) {
-    stopVoiceReader(); // Ensure TTS stops
     document.getElementById('gameover-modal').classList.add('hidden');
     document.getElementById('top-bar').classList.add('hidden');
     saveToSheet("saveProgress", "READY"); 
@@ -1021,7 +939,7 @@ function startVotingTimer() {
             document.getElementById('top-bar').classList.add('hidden');
             document.getElementById('final-score').innerHTML = points + "<br><span style='font-size: 1.5rem; color: var(--accent-red);'>❌ Timeout (0 Medals)</span>";
             saveToSheet("saveProgress", "TIMEOUT_VOTE");
-            playFinalRevealVideo();
+            showPage('page-result');
         }
     }, 1000);
 }
@@ -1037,6 +955,9 @@ function submitFinalVote() {
     votingAttempts++;
     if (selectedFinalVoteAnswer === 'Cyberbullying') {
         playSound('correct');
+        let fw = document.getElementById('fireworks-audio');
+        if(fw) fw.play().catch(e=>{});
+
         clearInterval(votingTimerInterval);
         document.getElementById('top-bar').classList.add('hidden');
         if (votingAttempts === 1) {
@@ -1047,7 +968,7 @@ function submitFinalVote() {
             document.getElementById('final-score').innerHTML = points + "<br><span style='font-size: 1.5rem; color: #9E9E9E;'>🥈 Silver Medal Earned! (+5)</span>";
         }
         saveToSheet("saveProgress", "VOTED"); 
-        playFinalRevealVideo();
+        showPage('page-result');
     } else {
         playSound('wrong');
         if (votingAttempts === 1) {
@@ -1058,33 +979,9 @@ function submitFinalVote() {
             document.getElementById('top-bar').classList.add('hidden');
             document.getElementById('final-score').innerHTML = points + "<br><span style='font-size: 1.5rem; color: var(--accent-red);'>❌ No Medal Earned</span>";
             saveToSheet("saveProgress", "FAILED_VOTE"); 
-            playFinalRevealVideo();
+            showPage('page-result');
         }
     }
-}
-
-// --- Final Reveal Video Flow ---
-function playFinalRevealVideo() {
-    document.querySelectorAll('.container > div').forEach(div => div.classList.add('hidden')); // hide everything else
-    document.getElementById('final-video-overlay').classList.remove('hidden');
-    let finalVid = document.getElementById('final-video');
-    
-    if(finalVid) {
-        finalVid.play().catch(e => {
-            console.log("Autoplay blocked for final video", e);
-            endFinalVideo(); // Skip if browser blocks it
-        });
-        finalVid.onended = function() { endFinalVideo(); };
-    } else {
-        endFinalVideo();
-    }
-}
-
-function endFinalVideo() {
-    let finalVid = document.getElementById('final-video');
-    if(finalVid) finalVid.pause();
-    document.getElementById('final-video-overlay').classList.add('hidden');
-    showPage('page-result');
 }
 
 function startReviewPhase() {
@@ -1139,7 +1036,7 @@ function skipReview() {
             document.getElementById('top-bar').classList.add('hidden');
             document.getElementById('final-score').innerHTML = points + "<br><span style='font-size: 1.5rem; color: var(--accent-red);'>❌ Timeout (0 Medals)</span>";
             saveToSheet("saveProgress", "TIMEOUT_VOTE");
-            playFinalRevealVideo();
+            showPage('page-result');
         }
     }, 1000);
 }
