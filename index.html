@@ -155,10 +155,6 @@
         .instruction-th { color: var(--ink-light); font-size: 0.95rem; font-style: italic; display: block; margin-bottom: 15px; }
         .inst-title { color: var(--accent-green); font-weight: bold; font-family: 'Courier Prime', monospace; font-size: 1.15rem; }
 
-        /* Case Closed Full Video Overlay */
-        #case-closed-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 50; display: flex; justify-content: center; align-items: center;}
-        #case-closed-video { width: 100%; height: 100%; object-fit: cover; }
-
         /* Mini Game Styles */
         .minigame-container { margin-top: 30px; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px; border: 1px dashed #5D4037;}
         .mg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 300px; margin: 15px auto 0; }
@@ -184,14 +180,14 @@
 </head>
 <body>
 
-<audio id="intro-audio" src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Stranger%20Things%20Main%20Theme.mp3"></audio>
-<audio id="bgm-briefing" loop src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Main%20Theme%20-%20Detective%20Conan%20OST%20%5BPiano%5D.mp3"></audio>
-<audio id="case-closed-bgm" src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Detective%20Conan%20Movie%201_%20Opening%20Theme.mp3"></audio>
+<audio id="intro-audio" src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Stranger%20Things%20Main%20Theme.mp3"></audio>
+<audio id="bgm-briefing" loop src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Main%20Theme%20-%20Detective%20Conan%20OST%20%5BPiano%5D.mp3"></audio>
+<audio id="case-closed-bgm" src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Detective%20Conan%20Movie%201_%20Opening%20Theme.mp3"></audio>
 <audio id="fireworks-audio" src="https://actions.google.com/sounds/v1/foley/fireworks_with_whistles.ogg"></audio>
 
 <div id="splash-screen" class="modal-overlay" style="background: var(--bg-desk); z-index: 10000;">
     <div class="container" style="max-width: 500px; padding: 30px;">
-        <img src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/32de6ed7950d57f5520b9c9f517eabbc.jpg" alt="Game Logo" style="max-width: 100%; border-radius: 10px; margin-bottom: 15px; box-shadow: 2px 4px 10px rgba(0,0,0,0.2);">
+        <img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/32de6ed7950d57f5520b9c9f517eabbc.jpg?raw=true" alt="Game Logo" style="max-width: 100%; border-radius: 10px; margin-bottom: 15px; box-shadow: 2px 4px 10px rgba(0,0,0,0.2);">
         <h1 style="font-size: 2rem;">CASE 3</h1>
         <h2 style="margin-top:0; font-size: 1.5rem;">The Hidden Story</h2>
         <button class="btn" onclick="startVideoBriefing()" style="margin-top: 15px;">ENTER CASE FILE</button>
@@ -199,16 +195,16 @@
 </div>
 
 <div id="video-overlay" class="video-overlay hidden">
-    <video id="intro-video" class="intro-video" disablepictureinpicture controlslist="nodownload nofullscreen" controls>
-        <source src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Julia-Case.mp4" type="video/mp4">
+    <video id="intro-video" class="intro-video" preload="auto" disablepictureinpicture playsinline controlslist="nodownload nofullscreen" controls>
+        <source src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Julia-Case.mp4" type="video/mp4">
         Your browser does not support HTML video.
     </video>
     <button id="skip-video-btn" class="skip-btn-video hidden" onclick="endVideoBriefing()">Skip Intro ➡</button>
 </div>
 
 <div id="page-case-closed-video" class="video-overlay hidden">
-    <video id="case-closed-vid" class="intro-video" disablepictureinpicture controlslist="nodownload nofullscreen" controls style="border: 5px solid white; border-radius: 10px;">
-        <source src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Game-Master-Apr-13-02-25-33.mp4" type="video/mp4">
+    <video id="case-closed-vid" class="intro-video" preload="auto" disablepictureinpicture playsinline controlslist="nodownload nofullscreen" style="border: 5px solid white; border-radius: 10px;">
+        <source src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Game-Master-Apr-13-02-25-33.mp4" type="video/mp4">
     </video>
     <button class="skip-btn-video" onclick="skipCaseClosedVideo()">Skip Scene ➡</button>
 </div>
@@ -249,7 +245,7 @@
 
     <div id="page-login" class="page active">
         <div class="login-decor">TOP SECRET</div>
-        <img src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/32de6ed7950d57f5520b9c9f517eabbc.jpg" alt="Game Banner" style="max-width: 100%; height: auto; max-height: 200px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; box-shadow: 2px 4px 8px rgba(0,0,0,0.1);">
+        <img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/32de6ed7950d57f5520b9c9f517eabbc.jpg?raw=true" alt="Game Banner" style="max-width: 100%; height: auto; max-height: 200px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; box-shadow: 2px 4px 8px rgba(0,0,0,0.1);">
         <h1 style="font-size: 2.2rem; margin-top: 10px;">CASE 3: The Hidden Story</h1>
         <p style="color: var(--ink-light); margin-bottom: 5px; font-family: 'Courier Prime', monospace;">-- Official Agent Registration --</p>
         
@@ -267,17 +263,17 @@
         <p style="font-size:0.95rem; color:var(--ink-light); margin: 5px 0 10px;">Choose the same group icon as your team to stay connected throughout the investigation.<br><span style="font-style: italic;">(เลือกไอคอนกลุ่มให้ตรงกับทีมของคุณ เพื่อให้ทุกคนติดต่อกันได้ตลอดการสืบสวน!)</span></p>
         
         <div class="avatar-container">
-            <input type="radio" name="avatar" id="av1" value="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Coffee%20(1).png" class="avatar-radio" checked>
-            <label for="av1" class="avatar-label"><img src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Coffee%20(1).png" alt="Coffee"></label>
+            <input type="radio" name="avatar" id="av1" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Coffee%20(1).png?raw=true" class="avatar-radio" checked>
+            <label for="av1" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Coffee%20(1).png?raw=true" alt="Coffee"></label>
             
-            <input type="radio" name="avatar" id="av2" value="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Marigold.png" class="avatar-radio">
-            <label for="av2" class="avatar-label"><img src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Marigold.png" alt="Marigold"></label>
+            <input type="radio" name="avatar" id="av2" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Marigold.png?raw=true" class="avatar-radio">
+            <label for="av2" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Marigold.png?raw=true" alt="Marigold"></label>
             
-            <input type="radio" name="avatar" id="av3" value="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Lantern.png" class="avatar-radio">
-            <label for="av3" class="avatar-label"><img src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Lantern.png" alt="Lantern"></label>
+            <input type="radio" name="avatar" id="av3" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lantern.png?raw=true" class="avatar-radio">
+            <label for="av3" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lantern.png?raw=true" alt="Lantern"></label>
             
-            <input type="radio" name="avatar" id="av4" value="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Medkit.png" class="avatar-radio">
-            <label for="av4" class="avatar-label"><img src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Medkit.png" alt="Medkit"></label>
+            <input type="radio" name="avatar" id="av4" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Medkit.png?raw=true" class="avatar-radio">
+            <label for="av4" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Medkit.png?raw=true" alt="Medkit"></label>
         </div>
 
         <button class="btn" onclick="goToBriefing()" style="width: 100%; max-width: 400px; padding: 16px;">Proceed to Briefing</button>
@@ -295,7 +291,7 @@
         </div>
 
         <div style="text-align: center; margin: 25px 0;">
-            <img src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Lina's%20note.png" alt="Lina's Note" style="max-width: 90%; max-height: 220px; border: 5px solid white; box-shadow: 2px 4px 15px rgba(0,0,0,0.15); transform: rotate(-2deg);">
+            <img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lina's%20note.png?raw=true" alt="Lina's Note" style="max-width: 90%; max-height: 220px; border: 5px solid white; box-shadow: 2px 4px 15px rgba(0,0,0,0.15); transform: rotate(-2deg);">
         </div>
 
         <h2 style="margin-top: 20px;">INSTRUCTIONS</h2>
@@ -491,6 +487,7 @@ function playSound(type) {
 let bgmBriefing = document.getElementById('bgm-briefing');
 bgmBriefing.volume = 0.4;
 function toggleMuteBgm() {
+    if(!bgmBriefing) return;
     if(bgmBriefing.muted) { bgmBriefing.muted = false; document.getElementById('btn-mute-bgm').innerText = "🔊 Mute BGM"; } 
     else { bgmBriefing.muted = true; document.getElementById('btn-mute-bgm').innerText = "🔇 Unmute BGM"; }
 }
@@ -525,7 +522,7 @@ let currentDiary = 0; let points = 0; let timeRemaining = 600; let timerInterval
 let currentQuestionIndex = 0; let correctAnswersCount = 0; let selectedChoiceIndex = null;
 let votingTimerInterval; let votingTimeRemaining = 600; let selectedFinalVoteAnswer = null; 
 let hp = 3; let isPaused = false; let assist5050Count = 2; let assistHintCount = 1;
-const HP_ICON_URL = "https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Lion_Crest.png";
+const HP_ICON_URL = "https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lion_Crest.png?raw=true";
 
 const positiveMessages = ["Good try! Let's think again 😊", "You're close! Keep going! 💡", "Don't give up, you can do it! ✨", "Take a deep breath and read carefully again! 📖"];
 
@@ -561,7 +558,7 @@ function startVideoBriefing() {
     let vid = document.getElementById('intro-video'); let aud = document.getElementById('intro-audio');
     
     if(vid) vid.play().catch(e => console.log(e));
-    if(aud) aud.play().catch(e => console.log(e));
+    if(aud) { aud.volume = 0.7; aud.play().catch(e => console.log(e)); }
     
     skipVideoTimeout = setTimeout(() => { document.getElementById('skip-video-btn').classList.remove('hidden'); }, 10000);
     if(vid) vid.onended = function() { endVideoBriefing(); };
@@ -573,14 +570,13 @@ function endVideoBriefing() {
     let vid = document.getElementById('intro-video'); let aud = document.getElementById('intro-audio');
     if(vid) vid.pause();
     if(aud) {
-        let vol = 1;
+        let vol = aud.volume;
         let fadeOut = setInterval(() => {
             if (vol > 0.1) { vol -= 0.1; aud.volume = vol; }
             else { clearInterval(fadeOut); aud.pause(); }
         }, 100);
     }
     document.getElementById('video-overlay').classList.add('hidden');
-    document.getElementById('app').classList.remove('hidden');
     showPage('page-login');
 }
 
@@ -596,13 +592,6 @@ function goToBriefing() {
     showPage('page-briefing');
     let bgmBriefing = document.getElementById('bgm-briefing');
     if(bgmBriefing) bgmBriefing.play().catch(e=>console.log(e)); 
-}
-
-function toggleMuteBgm() {
-    let bgmBriefing = document.getElementById('bgm-briefing');
-    if(!bgmBriefing) return;
-    if(bgmBriefing.muted) { bgmBriefing.muted = false; document.getElementById('btn-mute-bgm').innerText = "🔊 Mute BGM"; } 
-    else { bgmBriefing.muted = true; document.getElementById('btn-mute-bgm').innerText = "🔇 Unmute BGM"; }
 }
 
 function goToFileSelect() { 
@@ -939,27 +928,29 @@ function skipReview() {
 }
 
 function playCaseClosedVideo() {
-    showPage('page-case-closed-video');
-    let vid = document.getElementById('case-closed-vid');
-    let aud = document.getElementById('case-closed-bgm');
-    if(vid) vid.play().catch(e=>console.log(e));
-    if(aud) { aud.volume = 0.7; aud.play().catch(e=>console.log(e)); }
+    document.getElementById('app').classList.add('hidden');
+    document.getElementById('page-case-closed-video').classList.remove('hidden');
     
+    let vid = document.getElementById('case-closed-vid');
     if(vid) {
+        vid.play().catch(e=>console.log(e));
         vid.onended = function() {
-            if(aud) aud.pause();
-            showPage('page-result');
-            let fw = document.getElementById('fireworks-audio');
-            if(fw && selectedFinalVoteAnswer === 'Cyberbullying') fw.play().catch(e=>{});
+            showResultPage();
         };
     } else {
-        showPage('page-result');
+        showResultPage();
     }
 }
 
 function skipCaseClosedVideo() {
-    let vid = document.getElementById('case-closed-vid'); let aud = document.getElementById('case-closed-bgm');
-    if(vid) vid.pause(); if(aud) aud.pause();
+    let vid = document.getElementById('case-closed-vid');
+    if(vid) vid.pause();
+    showResultPage();
+}
+
+function showResultPage() {
+    document.getElementById('page-case-closed-video').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
     showPage('page-result');
     let fw = document.getElementById('fireworks-audio');
     if(fw && selectedFinalVoteAnswer === 'Cyberbullying') fw.play().catch(e=>{});
