@@ -16,7 +16,7 @@
             --ink-light: #5D4037;        
             --accent-green: #558B2F;     
             --accent-red: #D84315;       
-            --primary-blue: #709CE6;     
+            --primary-blue: #709CE6;     /* Light Blue */
             --accent-highlight: #D7CCC8; 
             --tape-color: rgba(244, 238, 210, 0.7); 
             --asm-bg: #2d1b18;           
@@ -165,7 +165,6 @@
 <body>
 
 <audio id="intro-audio" src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Stranger%20Things%20Main%20Theme.mp3"></audio>
-<audio id="fireworks-audio" src="https://actions.google.com/sounds/v1/foley/fireworks_with_whistles.ogg"></audio>
 
 <div id="splash-screen" class="modal-overlay" style="background: var(--bg-desk); z-index: 10000;">
     <div class="container" style="max-width: 500px;">
@@ -225,8 +224,8 @@
         <p style="color: var(--ink-light); margin-bottom: 10px; font-family: 'Courier Prime', monospace;">-- Official Agent Registration --</p>
         
         <div class="ack-box">
-            Please enter each team member’s name and your group name exactly as registered with the Case Cracker Club.<br>
-            <span style="color: var(--ink-light); font-style: italic;">(กรุณากรอกชื่อสมาชิกแต่ละคนและชื่อกลุ่มให้ตรงกับข้อมูลที่ลงทะเบียนไว้กับ Case Cracker Club)</span>
+            Please enter each team member’s name and your group name exactly as registered with the Case Cracker Club. Also, Choose the same group icon as your team to stay connected throughout the investigation.<br>
+            <span style="color: var(--ink-light); font-style: italic;">(กรุณากรอกชื่อสมาชิกแต่ละคนและชื่อกลุ่มให้ตรงกับข้อมูลที่ลงทะเบียนไว้กับ Case Cracker Club และเลือกไอคอนกลุ่มให้ตรงกับทีมของคุณ เพื่อให้ทุกคนติดต่อกันได้ตลอดการสืบสวน!)</span>
         </div>
 
         <div>
@@ -277,8 +276,8 @@
             <span class="instruction-th">มีเวลา 10 นาทีในการอ่าน วิเคราะห์ และตอบคำถาม</span>
             
             <strong>4. Manage Your HP (Detective Badges)</strong><br>
-            Each player starts with 3 HP. Each incorrect answer reduces HP by 1. If all HP are lost, the current attempt ends.
-            <span class="instruction-th">มี 3 ตรา ตอบผิดเสีย 1 ตรา หมด = จบรอบ</span>
+            Each player starts with 3 HP. Each incorrect answer reduces HP by 1. Lose all three and the case is closed — against you.
+            <span class="instruction-th">นักสืบทุกคนจะได้รับค่าพลังชีวิต (ตรานักสืบ) ทั้งหมดคนละ 3 ตรา การตอบผิดแต่ละครั้ง จะทำให้ตราของคุณนักสืบหายไป 1 ตรา หากคุณเสียตราทั้งหมด ลีน่าคงปวดใจน่าดูที่คุณช่วยเธอไขความลับของเธอไม่ได้ T-T</span>
         </div>
         
         <p style="font-weight: bold; color: var(--accent-red); margin-top: 30px; font-family: 'Courier Prime', monospace;">You are now ready. Trust your instincts, read carefully, and solve the case.</p>
@@ -345,7 +344,6 @@
     <div id="page-revive" class="hidden">
         <h2 style="font-size: 2.2rem; color: var(--primary-blue);">REOPEN THE CASE</h2>
         <p style="font-size: 1.1rem; margin-bottom: 20px;">Complete this challenge to restore your Detective Badges. (Need 2/3 correct)</p>
-        <p style="color: var(--accent-red); font-weight: bold; margin-bottom: 20px;">⚠️ The countdown timer is still running!</p>
         
         <div class="question-panel" style="max-width: 800px; margin: 0 auto; background: #FFF;">
             <div class="q-header">
@@ -371,7 +369,7 @@
             <div class="agents-grid" id="agents-grid"></div>
             
             <div class="sync-text" id="sync-status">⏳ Synchronizing data...</div>
-            <button id="btn-proceed-vote" class="btn btn-pink" disabled style="margin-top: 30px; width: 100%;">🔒 Waiting for all 4 agents...</button>
+            <button id="btn-proceed-vote" class="btn btn-pink" disabled style="margin-top: 30px; width: 100%;">🔒 Waiting for your team to assemble</button>
             
             <div class="minigame-container" id="waiting-minigame">
                 <h3 style="color: #FFD54F; font-family: 'Courier Prime', monospace; margin-top: 0; font-size: 1.1rem;">-- Agent Memory Training --</h3>
@@ -500,6 +498,7 @@ function startVideoBriefing() {
     if(vid) vid.play().catch(e => console.log(e));
     if(aud) aud.play().catch(e => console.log(e));
     
+    // ปุ่ม Skip โผล่มาหลัง 10 วิ
     skipVideoTimeout = setTimeout(() => {
         document.getElementById('skip-video-btn').classList.remove('hidden');
     }, 10000);
@@ -516,14 +515,7 @@ function endVideoBriefing() {
     let vid = document.getElementById('intro-video');
     let aud = document.getElementById('intro-audio');
     if(vid) vid.pause();
-    if(aud) {
-        // Fade out music
-        let vol = 1;
-        let fadeOut = setInterval(() => {
-            if (vol > 0.1) { vol -= 0.1; aud.volume = vol; }
-            else { clearInterval(fadeOut); aud.pause(); }
-        }, 100);
-    }
+    if(aud) aud.pause();
     document.getElementById('video-overlay').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
 }
@@ -546,7 +538,7 @@ function goToBriefing() {
 function goToFileSelect() { showPage('page-file-select'); }
 
 function startInvestigation() {
-    if(currentDiary === 0) { alert("⚠️ กรุณาเลือกแฟ้มคดีก่อนเริ่มสืบสวน"); return; }
+    if(currentDiary === 0) { alert("⚠️ Don’t forget to choose a case file before you begin. (กรุณาเลือกแฟ้มคดีก่อนเริ่มสืบสวน)"); return; }
     
     let avatarRadio = document.querySelector('input[name="avatar"]:checked');
     let selectedAvatarUrl = avatarRadio ? avatarRadio.value : "";
@@ -593,7 +585,7 @@ function updateHPUI() {
     
     if (hp <= 0) {
         document.getElementById('gameover-modal').classList.remove('hidden');
-        // No auto-pause so timer keeps ticking to force urgency
+        // เอา isPaused = true; ออก เพื่อให้เวลาบีบคั้นต่อไปในตอน Revive 
     }
 }
 
@@ -642,7 +634,7 @@ function proceedToWaitingRoom(isFail = false) {
     showPage('page-waiting');
     pollTeamStatus();
     pollingInterval = setInterval(pollTeamStatus, 3000);
-    initMiniGame(); 
+    initMiniGame(); // เริ่มมินิเกม
 }
 
 function renderQuestion() {
@@ -676,7 +668,7 @@ function selectChoice(index) {
 }
 
 function checkAnswer() {
-    if (selectedChoiceIndex === null) { alert("⚠️ Please select an answer!"); return; }
+    if (selectedChoiceIndex === null) { alert("🕵️‍♂️ This clue is still waiting for your answer!"); return; }
     
     let qData = diaries[currentDiary].qa[currentQuestionIndex];
     let selectedBtn = document.getElementById('choice-' + selectedChoiceIndex);
@@ -844,7 +836,7 @@ function pollTeamStatus() {
             btnVote.innerText = "⚖️ Proceed to Vote ➡";
         } else {
             btnVote.disabled = true;
-            btnVote.innerText = `🔒 รอสมาชิกครบ 4 คน (ตอนนี้ ${members.length}/4)...`;
+            btnVote.innerText = `🔒 Waiting for your team to assemble (ตอนนี้ ${members.length}/4)...`;
         }
     }).catch(e=>{});
 }
@@ -955,9 +947,6 @@ function submitFinalVote() {
     votingAttempts++;
     if (selectedFinalVoteAnswer === 'Cyberbullying') {
         playSound('correct');
-        let fw = document.getElementById('fireworks-audio');
-        if(fw) fw.play().catch(e=>{});
-
         clearInterval(votingTimerInterval);
         document.getElementById('top-bar').classList.add('hidden');
         if (votingAttempts === 1) {
