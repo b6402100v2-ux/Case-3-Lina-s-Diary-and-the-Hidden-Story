@@ -123,9 +123,9 @@
         .diary-btn.selected { background: var(--ink-dark); color: var(--paper-main); transform: scale(1.05) rotate(2deg); }
 
         /* Video Fullscreen Overlays */
-        .video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .intro-video { width: 100%; max-width: 1200px; max-height: 90vh; outline: none; }
-        .skip-btn-video { position: absolute; bottom: 40px; right: 40px; background: rgba(255,255,255,0.2); color: white; border: 2px solid white; padding: 10px 25px; font-size: 1.2rem; cursor: pointer; font-family: 'Courier Prime', monospace; border-radius: 5px; transition: 0.3s; backdrop-filter: blur(5px); z-index: 10000; }
+        .skip-btn-video { position: absolute; bottom: 40px; right: 40px; background: rgba(255,255,255,0.2); color: white; border: 2px solid white; padding: 10px 25px; font-size: 1.2rem; cursor: pointer; font-family: 'Courier Prime', monospace; border-radius: 5px; transition: 0.3s; backdrop-filter: blur(5px); z-index: 100000; }
         .skip-btn-video:hover { background: white; color: black; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px); }
@@ -167,7 +167,7 @@
         @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
-        /* Responsive Improvements */
+        /* Responsive */
         @media (max-width: 900px) { 
             .game-layout { flex-direction: column; height: auto; min-height: auto;} 
             .reading-panel { max-height: 45vh; margin-bottom: 15px;} 
@@ -180,14 +180,13 @@
 </head>
 <body>
 
-<audio id="intro-audio" src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Stranger%20Things%20Main%20Theme.mp3"></audio>
-<audio id="bgm-briefing" loop src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Main%20Theme%20-%20Detective%20Conan%20OST%20%5BPiano%5D.mp3"></audio>
-<audio id="case-closed-bgm" src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Detective%20Conan%20Movie%201_%20Opening%20Theme.mp3"></audio>
+<audio id="bgm-briefing" loop src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Main%20Theme%20-%20Detective%20Conan%20OST%20%5BPiano%5D.mp3"></audio>
+<audio id="case-closed-bgm" src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Detective%20Conan%20Movie%201_%20Opening%20Theme.mp3"></audio>
 <audio id="fireworks-audio" src="https://actions.google.com/sounds/v1/foley/fireworks_with_whistles.ogg"></audio>
 
 <div id="splash-screen" class="modal-overlay" style="background: var(--bg-desk); z-index: 10000;">
     <div class="container" style="max-width: 500px; padding: 30px;">
-        <img src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/32de6ed7950d57f5520b9c9f517eabbc.jpg" alt="Game Logo" style="max-width: 100%; border-radius: 10px; margin-bottom: 15px; box-shadow: 2px 4px 10px rgba(0,0,0,0.2);">
+        <img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/32de6ed7950d57f5520b9c9f517eabbc.jpg?raw=true" alt="Game Logo" style="max-width: 100%; border-radius: 10px; margin-bottom: 15px; box-shadow: 2px 4px 10px rgba(0,0,0,0.2);">
         <h1 style="font-size: 2rem;">CASE 3</h1>
         <h2 style="margin-top:0; font-size: 1.5rem;">The Hidden Story</h2>
         <button class="btn" onclick="startVideoBriefing()" style="margin-top: 15px;">ENTER CASE FILE</button>
@@ -195,16 +194,16 @@
 </div>
 
 <div id="video-overlay" class="video-overlay hidden">
-    <video id="intro-video" class="intro-video" preload="auto" disablepictureinpicture playsinline controlslist="nodownload nofullscreen" controls>
-        <source src="./Julia-Case.mp4" type="video/mp4">
+    <video id="intro-video" class="intro-video" playsinline controlslist="nodownload nofullscreen" controls>
+        <source src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Julia-Case.mp4" type="video/mp4">
         Your browser does not support HTML video.
     </video>
-    <button id="skip-video-btn" class="skip-btn-video" onclick="endVideoBriefing()">Skip Intro ➡</button>
+    <button id="skip-video-btn" class="skip-btn-video hidden" onclick="endVideoBriefing()">Skip Intro ➡</button>
 </div>
 
 <div id="page-case-closed-video" class="video-overlay hidden">
-    <video id="case-closed-vid" class="intro-video" preload="auto" disablepictureinpicture playsinline controlslist="nodownload nofullscreen" controls style="border: 5px solid white; border-radius: 10px;">
-        <source src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Game-Master-Apr-13-02-25-33.mp4" type="video/mp4">
+    <video id="case-closed-vid" class="intro-video" playsinline controlslist="nodownload nofullscreen" controls style="border: 5px solid white; border-radius: 10px;">
+        <source src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Game-Master-Apr-13-02-25-33.mp4" type="video/mp4">
     </video>
     <button class="skip-btn-video" onclick="skipCaseClosedVideo()">Skip Scene ➡</button>
 </div>
@@ -245,7 +244,7 @@
 
     <div id="page-login" class="page active">
         <div class="login-decor">TOP SECRET</div>
-        <img src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/32de6ed7950d57f5520b9c9f517eabbc.jpg" alt="Game Banner" style="max-width: 100%; height: auto; max-height: 200px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; box-shadow: 2px 4px 8px rgba(0,0,0,0.1);">
+        <img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/32de6ed7950d57f5520b9c9f517eabbc.jpg?raw=true" alt="Game Banner" style="max-width: 100%; height: auto; max-height: 200px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; box-shadow: 2px 4px 8px rgba(0,0,0,0.1);">
         <h1 style="font-size: 2.2rem; margin-top: 10px;">CASE 3: The Hidden Story</h1>
         <p style="color: var(--ink-light); margin-bottom: 5px; font-family: 'Courier Prime', monospace;">-- Official Agent Registration --</p>
         
@@ -263,17 +262,17 @@
         <p style="font-size:0.95rem; color:var(--ink-light); margin: 5px 0 10px;">Choose the same group icon as your team to stay connected throughout the investigation.<br><span style="font-style: italic;">(เลือกไอคอนกลุ่มให้ตรงกับทีมของคุณ เพื่อให้ทุกคนติดต่อกันได้ตลอดการสืบสวน!)</span></p>
         
         <div class="avatar-container">
-            <input type="radio" name="avatar" id="av1" value="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Coffee%20(1).png" class="avatar-radio" checked>
-            <label for="av1" class="avatar-label"><img src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Coffee%20(1).png" alt="Coffee"></label>
+            <input type="radio" name="avatar" id="av1" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Coffee%20(1).png?raw=true" class="avatar-radio" checked>
+            <label for="av1" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Coffee%20(1).png?raw=true" alt="Coffee"></label>
             
-            <input type="radio" name="avatar" id="av2" value="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Marigold.png" class="avatar-radio">
-            <label for="av2" class="avatar-label"><img src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Marigold.png" alt="Marigold"></label>
+            <input type="radio" name="avatar" id="av2" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Marigold.png?raw=true" class="avatar-radio">
+            <label for="av2" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Marigold.png?raw=true" alt="Marigold"></label>
             
-            <input type="radio" name="avatar" id="av3" value="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Lantern.png" class="avatar-radio">
-            <label for="av3" class="avatar-label"><img src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Lantern.png" alt="Lantern"></label>
+            <input type="radio" name="avatar" id="av3" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lantern.png?raw=true" class="avatar-radio">
+            <label for="av3" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lantern.png?raw=true" alt="Lantern"></label>
             
-            <input type="radio" name="avatar" id="av4" value="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Medkit.png" class="avatar-radio">
-            <label for="av4" class="avatar-label"><img src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Medkit.png" alt="Medkit"></label>
+            <input type="radio" name="avatar" id="av4" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Medkit.png?raw=true" class="avatar-radio">
+            <label for="av4" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Medkit.png?raw=true" alt="Medkit"></label>
         </div>
 
         <button class="btn" onclick="goToBriefing()" style="width: 100%; max-width: 400px; padding: 16px;">Proceed to Briefing</button>
@@ -291,7 +290,7 @@
         </div>
 
         <div style="text-align: center; margin: 25px 0;">
-            <img src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Lina's%20note.png" alt="Lina's Note" style="max-width: 90%; max-height: 220px; border: 5px solid white; box-shadow: 2px 4px 15px rgba(0,0,0,0.15); transform: rotate(-2deg);">
+            <img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lina's%20note.png?raw=true" alt="Lina's Note" style="max-width: 90%; max-height: 220px; border: 5px solid white; box-shadow: 2px 4px 15px rgba(0,0,0,0.15); transform: rotate(-2deg);">
         </div>
 
         <h2 style="margin-top: 20px;">INSTRUCTIONS</h2>
@@ -441,13 +440,6 @@
         <button class="btn btn-pink" onclick="skipReview()" style="width: 50%;">Proceed to Final Vote ➡</button>
     </div>
 
-    <div id="page-case-closed-video" class="video-overlay hidden">
-        <video id="case-closed-vid" class="intro-video" preload="auto" disablepictureinpicture playsinline controlslist="nodownload nofullscreen" style="border: 5px solid white; border-radius: 10px;">
-            <source src="https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Game-Master-Apr-13-02-25-33.mp4" type="video/mp4">
-        </video>
-        <button class="skip-btn-video" onclick="skipCaseClosedVideo()">Skip Scene ➡</button>
-    </div>
-
     <div id="page-result" class="page">
         <div class="tape tape-top" style="width: 150px;"></div>
         <h2 style="font-size: 3rem; color: var(--accent-green); margin-bottom: 5px;">CASE CLOSED 🎉</h2>
@@ -529,7 +521,7 @@ let currentDiary = 0; let points = 0; let timeRemaining = 600; let timerInterval
 let currentQuestionIndex = 0; let correctAnswersCount = 0; let selectedChoiceIndex = null;
 let votingTimerInterval; let votingTimeRemaining = 600; let selectedFinalVoteAnswer = null; 
 let hp = 3; let isPaused = false; let assist5050Count = 2; let assistHintCount = 1;
-const HP_ICON_URL = "https://cdn.jsdelivr.net/gh/b6402100v2-ux/Pixelrepo@main/Lion_Crest.png";
+const HP_ICON_URL = "https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lion_Crest.png?raw=true";
 
 const positiveMessages = ["Good try! Let's think again 😊", "You're close! Keep going! 💡", "Don't give up, you can do it! ✨", "Take a deep breath and read carefully again! 📖"];
 
@@ -558,38 +550,35 @@ function showPage(pageId) {
     }
 }
 
+let skipVideoTimeout;
 function startVideoBriefing() {
     document.getElementById('splash-screen').classList.add('hidden');
     document.getElementById('video-overlay').classList.remove('hidden');
-    let vid = document.getElementById('intro-video'); let aud = document.getElementById('intro-audio');
+    let vid = document.getElementById('intro-video');
     
-    // โหลดวิดีโอจาก Relative Path โดยตรง
     if(vid) {
-        vid.play().catch(e => {
-            console.log("Video Play Error:", e);
-            document.getElementById('skip-video-btn').classList.remove('hidden'); // ถาพเล่นไม่ได้ให้ปุ่ม skip ขึ้นมาเลย
+        vid.muted = false; // ให้มั่นใจว่ามีเสียง (เพราะเราเอา audio แยกออกแล้ว)
+        vid.play().then(() => {
+            console.log("Video Playing.");
+        }).catch(e => {
+            console.log("Video autoplay blocked/failed:", e);
+            document.getElementById('skip-video-btn').classList.remove('hidden');
         });
-    }
-    if(aud) { aud.volume = 0.7; aud.play().catch(e => console.log(e)); }
-    
-    // ตั้งเวลาให้ปุ่ม Skip โผล่มา ไม่ว่าวิดีโอจะเล่นได้หรือไม่
-    setTimeout(() => { document.getElementById('skip-video-btn').classList.remove('hidden'); }, 3000);
-    
-    if(vid) {
+        
         vid.onended = function() { endVideoBriefing(); };
     }
+    
+    // ตั้งเวลาให้ปุ่ม Skip โผล่มาเร็วขึ้นเป็น 3 วิ (เผื่อโหลดช้า)
+    skipVideoTimeout = setTimeout(() => { 
+        document.getElementById('skip-video-btn').classList.remove('hidden'); 
+    }, 3000);
 }
 
 function endVideoBriefing() {
-    let vid = document.getElementById('intro-video'); let aud = document.getElementById('intro-audio');
+    clearTimeout(skipVideoTimeout);
+    let vid = document.getElementById('intro-video');
     if(vid) vid.pause();
-    if(aud) {
-        let vol = aud.volume;
-        let fadeOut = setInterval(() => {
-            if (vol > 0.1) { vol -= 0.1; aud.volume = vol; }
-            else { clearInterval(fadeOut); aud.pause(); }
-        }, 100);
-    }
+
     document.getElementById('video-overlay').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
     showPage('page-login');
@@ -950,17 +939,14 @@ function playCaseClosedVideo() {
     document.getElementById('page-case-closed-video').classList.remove('hidden');
     
     let vid = document.getElementById('case-closed-vid');
-    let aud = document.getElementById('case-closed-bgm');
     
     if(vid) {
         vid.play().catch(e => {
             console.log("Case Closed Video Error:", e);
-            showResultPage(); // หากวิดีโอมีปัญหาให้ข้ามไปหน้า Result ทันที
+            showResultPage(); 
         });
-        if(aud) { aud.volume = 0.6; aud.play().catch(e => console.log(e)); }
         
         vid.onended = function() {
-            if(aud) aud.pause();
             showResultPage();
         };
     } else {
@@ -969,8 +955,8 @@ function playCaseClosedVideo() {
 }
 
 function skipCaseClosedVideo() {
-    let vid = document.getElementById('case-closed-vid'); let aud = document.getElementById('case-closed-bgm');
-    if(vid) vid.pause(); if(aud) aud.pause();
+    let vid = document.getElementById('case-closed-vid');
+    if(vid) vid.pause(); 
     showResultPage();
 }
 
