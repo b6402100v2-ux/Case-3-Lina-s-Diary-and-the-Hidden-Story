@@ -16,6 +16,7 @@
             --ink-light: #5D4037;        
             --accent-green: #558B2F;     
             --accent-red: #D84315;       
+            --primary-blue: #709CE6;     
             --accent-highlight: #D7CCC8; 
             --tape-color: rgba(244, 238, 210, 0.7); 
             --asm-bg: #2d1b18;           
@@ -57,7 +58,6 @@
             box-shadow: 2px 4px 10px rgba(0,0,0,0.2); font-family: 'Courier Prime', monospace; flex-wrap: wrap; gap: 10px;
         }
         
-        /* Progress Bar */
         .progress-container { width: 100%; height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; margin-top: 5px; overflow: hidden; }
         .progress-fill { height: 100%; background: #FFD54F; width: 0%; transition: width 0.3s ease; }
 
@@ -110,6 +110,12 @@
         input { width: 100%; max-width: 400px; padding: 15px; margin: 10px 0; border-radius: 3px; border: 2px dashed #BCAAA4; font-family: 'Courier Prime', monospace; font-size: 1.1rem; background: #FAFAFA; color: var(--ink-dark); text-align: center;}
         input:focus { outline: none; border-color: var(--ink-dark); background: #FFF; }
 
+        .avatar-container { display: flex; justify-content: center; gap: 25px; margin: 25px 0; flex-wrap: wrap; }
+        .avatar-label { cursor: pointer; padding: 15px; border-radius: 8px; border: 3px dashed transparent; background-color: var(--paper-dark); transition: all 0.3s; display: inline-block; }
+        .avatar-label img { width: 55px; height: 55px; image-rendering: pixelated; vertical-align: middle; }
+        .avatar-radio { display: none; }
+        .avatar-radio:checked + .avatar-label { border-color: var(--ink-dark); background-color: #FFF; transform: scale(1.1) rotate(-5deg); box-shadow: 3px 5px 10px rgba(0,0,0,0.1); }
+        
         .diary-btn { padding: 15px 25px; margin: 10px; border-radius: 2px 10px 5px 10px; border: 1px solid #BCAAA4; background: var(--paper-dark); cursor: pointer; font-size: 1.1rem; transition: all 0.3s; font-family: 'Courier Prime', monospace; font-weight: bold; color: var(--ink-dark); box-shadow: 2px 2px 5px rgba(0,0,0,0.05); }
         .diary-btn:hover { transform: translateY(-3px); background: #FFF;}
         .diary-btn.selected { background: var(--ink-dark); color: var(--paper-main); transform: scale(1.05) rotate(2deg); }
@@ -117,7 +123,8 @@
         /* Video Fullscreen Overlay */
         #video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         #intro-video { width: 100%; max-width: 1200px; max-height: 90vh; outline: none; }
-        .video-skip-msg { color: #888; font-family: 'Courier Prime', monospace; margin-top: 15px; }
+        .skip-btn-video { position: absolute; bottom: 40px; right: 40px; background: rgba(255,255,255,0.2); color: white; border: 2px solid white; padding: 10px 25px; font-size: 1.2rem; cursor: pointer; font-family: 'Courier Prime', monospace; border-radius: 5px; transition: 0.3s; backdrop-filter: blur(5px); z-index: 10000; }
+        .skip-btn-video:hover { background: white; color: black; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px); }
         .modal-content { background: var(--paper-main); padding: 40px; border-radius: 5px; border: 2px dashed var(--ink-dark); text-align: center; max-width: 500px; width: 90%; box-shadow: 10px 10px 0 rgba(0,0,0,0.4); }
@@ -133,18 +140,32 @@
         .status-pill.waiting { background-color: #271412; color: #8D6E63; }
         .status-pill.ready { background-color: var(--asm-border-ready); color: #1B5E20; }
         
-        .instruction-box { background: var(--paper-dark); padding: 20px; border-radius: 5px; text-align: left; border-left: 5px solid var(--ink-dark); margin: 20px auto; max-width: 800px; font-size: 1.1rem; line-height: 1.6;}
-        .instruction-th { color: var(--ink-light); font-size: 0.95rem; font-style: italic; display: block; margin-bottom: 10px; }
+        /* Login Decor */
+        .login-decor { position: absolute; top: 20px; right: 30px; opacity: 0.8; font-family: 'Courier Prime', monospace; font-size: 1.5rem; color: var(--accent-red); border: 3px solid var(--accent-red); padding: 5px 10px; transform: rotate(15deg); border-radius: 5px;}
+        .ack-box { background: rgba(0,0,0,0.03); padding: 15px 20px; border-left: 4px solid var(--ink-dark); margin: 20px auto; max-width: 600px; font-family: 'Courier Prime', monospace; font-size: 0.95rem; text-align: left; border-radius: 0 5px 5px 0;}
+
+        /* Mini Game Styles */
+        .minigame-container { margin-top: 30px; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px; border: 1px dashed #5D4037;}
+        .mg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 300px; margin: 15px auto 0; }
+        .mg-card { background: var(--asm-card); height: 60px; border-radius: 5px; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; border: 2px solid #5D4037; transition: 0.3s;}
+        .mg-card.flipped { background: var(--paper-main); border-color: #D7CCC8; cursor: default; }
+        .mg-card.matched { background: var(--asm-border-ready); border-color: #33691E; opacity: 0.8; cursor: default;}
+
+        .instruction-box { background: var(--paper-dark); padding: 25px; border-radius: 5px; text-align: left; border: 1px dashed #BCAAA4; margin: 20px auto; max-width: 800px; font-size: 1.1rem; line-height: 1.6;}
+        .instruction-th { color: var(--ink-light); font-size: 0.95rem; font-style: italic; display: block; margin-bottom: 15px; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideUpFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
-        @media (max-width: 900px) { .game-layout { flex-direction: column; height: auto; } .reading-panel { max-height: 40vh; } .agents-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .game-layout { flex-direction: column; height: auto; } .reading-panel { max-height: 40vh; } .agents-grid { grid-template-columns: 1fr; } .login-decor { display: none; } }
     </style>
 </head>
 <body>
+
+<audio id="intro-audio" src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Stranger%20Things%20Main%20Theme.mp3"></audio>
+<audio id="fireworks-audio" src="https://actions.google.com/sounds/v1/foley/fireworks_with_whistles.ogg"></audio>
 
 <div id="splash-screen" class="modal-overlay" style="background: var(--bg-desk); z-index: 10000;">
     <div class="container" style="max-width: 500px;">
@@ -160,7 +181,7 @@
         <source src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Julia-Case.mp4" type="video/mp4">
         Your browser does not support HTML video.
     </video>
-    <div class="video-skip-msg">Audio is required. Video cannot be skipped.</div>
+    <button id="skip-video-btn" class="skip-btn-video hidden" onclick="endVideoBriefing()">Skip Intro ➡</button>
 </div>
 
 <div id="pause-modal" class="modal-overlay hidden">
@@ -173,11 +194,10 @@
 </div>
 
 <div id="gameover-modal" class="modal-overlay hidden">
-    <div class="modal-content" style="border-color: var(--ink-dark);">
-        <h2 style="font-size: 2rem; color: var(--ink-dark); margin-bottom: 10px;">You are a capable detective.</h2>
+    <div class="modal-content" style="border-color: var(--primary-blue);">
+        <h2 style="font-size: 2rem; color: var(--primary-blue); margin-bottom: 10px;">You are a capable detective.</h2>
         <p style="margin-bottom: 30px; line-height: 1.6;">Even the most experienced detectives revisit difficult cases.<br>This attempt has given you valuable insight. The case is still open for you.</p>
-        <button class="btn btn-pink" onclick="startReviveChallenge()" style="width: 100%; margin-bottom: 10px;">Reopen the Case (Mini Challenge)</button>
-        <button class="btn" onclick="proceedToWaitingRoom(true)" style="width: 100%; background: var(--paper-dark); color: var(--ink-dark);">Give Up & Join Team</button>
+        <button class="btn" onclick="startReviveChallenge()" style="width: 100%; background: var(--primary-blue); box-shadow: 2px 4px 0 #4A7CDE; color: white;">Reopen the Case (Mini Challenge)</button>
     </div>
 </div>
 
@@ -200,15 +220,36 @@
     </div>
 
     <div id="page-login">
+        <div class="login-decor">TOP SECRET</div>
         <h1>CASE 3: The Hidden Story</h1>
-        <p style="color: var(--ink-light); margin-bottom: 20px; font-family: 'Courier Prime', monospace;">-- Official Agent Registration --</p>
+        <p style="color: var(--ink-light); margin-bottom: 10px; font-family: 'Courier Prime', monospace;">-- Official Agent Registration --</p>
         
+        <div class="ack-box">
+            Please enter each team member’s name and your group name exactly as registered with the Case Cracker Club.<br>
+            <span style="color: var(--ink-light); font-style: italic;">(กรุณากรอกชื่อสมาชิกแต่ละคนและชื่อกลุ่มให้ตรงกับข้อมูลที่ลงทะเบียนไว้กับ Case Cracker Club)</span>
+        </div>
+
         <div>
             <input type="text" id="groupName" placeholder="Group Name (e.g. Alpha Team)" maxlength="30" autocomplete="off"><br>
             <input type="text" id="playerName" placeholder="Your Nickname" maxlength="20" autocomplete="off">
         </div>
         
-        <button class="btn" onclick="goToBriefing()" style="width: 100%; max-width: 400px; padding: 18px; margin-top: 20px;">Proceed to Briefing</button>
+        <h3 style="margin-top: 25px; color: var(--ink-dark); font-family: 'Courier Prime', monospace;">:: Select Your Team Icon ::</h3>
+        <div class="avatar-container">
+            <input type="radio" name="avatar" id="av1" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Coffee%20(1).png?raw=true" class="avatar-radio" checked>
+            <label for="av1" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Coffee%20(1).png?raw=true" alt="Coffee"></label>
+            
+            <input type="radio" name="avatar" id="av2" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Marigold.png?raw=true" class="avatar-radio">
+            <label for="av2" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Marigold.png?raw=true" alt="Marigold"></label>
+            
+            <input type="radio" name="avatar" id="av3" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lantern.png?raw=true" class="avatar-radio">
+            <label for="av3" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lantern.png?raw=true" alt="Lantern"></label>
+            
+            <input type="radio" name="avatar" id="av4" value="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Medkit.png?raw=true" class="avatar-radio">
+            <label for="av4" class="avatar-label"><img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Medkit.png?raw=true" alt="Medkit"></label>
+        </div>
+
+        <button class="btn" onclick="goToBriefing()" style="width: 100%; max-width: 400px; padding: 18px; margin-top: 10px;">Proceed to Briefing</button>
     </div>
 
     <div id="page-briefing" class="hidden">
@@ -218,25 +259,29 @@
             <p class="instruction-th">ลีน่าเป็นนักเรียนที่ทุกคนชื่นชม เธอคือศิลปินผู้มีพรสวรรค์ของโรงเรียน ชีวิตของเธอดูสมบูรณ์แบบในสายตาคนอื่น แต่เหตุการณ์ที่เกิดขึ้นกลับสร้างความสะเทือนใจ เพราะความจริงนั้นซ่อนอยู่ในที่ที่ไม่มีใครคาดคิด</p>
         </div>
 
-        <h2 style="margin-top: 40px;">INSTRUCTIONS</h2>
+        <div style="text-align: center; margin: 35px 0;">
+            <img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lina's%20note.png?raw=true" alt="Lina's Note" style="max-width: 90%; max-height: 250px; border: 5px solid white; box-shadow: 2px 4px 15px rgba(0,0,0,0.15); transform: rotate(-2deg);">
+        </div>
+
+        <h2 style="margin-top: 20px;">INSTRUCTIONS</h2>
         <div class="instruction-box">
             <strong>1. Register Your Team</strong>
             <span class="instruction-th">กรอกชื่อสมาชิกและชื่อกลุ่มให้ตรงกับที่ลงทะเบียนไว้ทุกประการ</span>
             
             <strong>2. Select Your File</strong><br>
-            Each team member must choose a different file (File 1–4).
+            Each team member must choose a different file (File 1–4). Duplicate selections are not allowed.
             <span class="instruction-th">สมาชิกแต่ละคนต้องเลือกไฟล์ไม่ซ้ำกัน</span>
             
             <strong>3. Time Limit: 10 Minutes</strong><br>
-            Read your assigned file, analyse the clues, and answer all 5 questions.
+            Read your assigned file, analyse the clues, and answer all 5 questions. Time management is critical.
             <span class="instruction-th">มีเวลา 10 นาทีในการอ่าน วิเคราะห์ และตอบคำถาม</span>
             
             <strong>4. Manage Your HP (Detective Badges)</strong><br>
-            Each player starts with 3 HP. Each incorrect answer reduces HP by 1.
+            Each player starts with 3 HP. Each incorrect answer reduces HP by 1. If all HP are lost, the current attempt ends.
             <span class="instruction-th">มี 3 ตรา ตอบผิดเสีย 1 ตรา หมด = จบรอบ</span>
         </div>
         
-        <p style="font-weight: bold; color: var(--accent-red); margin-top: 30px;">You are now ready. Trust your instincts, read carefully, and solve the case.</p>
+        <p style="font-weight: bold; color: var(--accent-red); margin-top: 30px; font-family: 'Courier Prime', monospace;">You are now ready. Trust your instincts, read carefully, and solve the case.</p>
         <button class="btn btn-pink" onclick="goToFileSelect()">Proceed to File Selection</button>
     </div>
 
@@ -298,19 +343,20 @@
     </div>
 
     <div id="page-revive" class="hidden">
-        <h2 style="font-size: 2.2rem; color: var(--ink-dark);">REOPEN THE CASE</h2>
+        <h2 style="font-size: 2.2rem; color: var(--primary-blue);">REOPEN THE CASE</h2>
         <p style="font-size: 1.1rem; margin-bottom: 20px;">Complete this challenge to restore your Detective Badges. (Need 2/3 correct)</p>
+        <p style="color: var(--accent-red); font-weight: bold; margin-bottom: 20px;">⚠️ The countdown timer is still running!</p>
         
-        <div class="question-panel" style="max-width: 800px; margin: 0 auto;">
+        <div class="question-panel" style="max-width: 800px; margin: 0 auto; background: #FFF;">
             <div class="q-header">
                 <span style="font-size: 1.2rem; font-weight: bold; color: var(--ink-light);">Task <span id="revive-current">1</span>/3</span>
-                <span class="score-badge" style="background: var(--accent-red);">Revive Score: <span id="revive-score">0</span>/3</span>
+                <span class="score-badge" style="background: var(--primary-blue);">Revive Score: <span id="revive-score">0</span>/3</span>
             </div>
             <div class="question-text" id="revive-q-text">คำถาม...</div>
             <div class="choices-container" id="revive-choices-container"></div>
             
             <div style="margin-top: 20px; text-align: right;">
-                <button class="btn" id="btn-submit-revive" onclick="checkReviveAnswer()" style="width: 100%;">Submit Answer</button>
+                <button class="btn" id="btn-submit-revive" onclick="checkReviveAnswer()" style="width: 100%; background: var(--primary-blue); box-shadow: 2px 4px 0 #4A7CDE;">Submit Answer</button>
             </div>
         </div>
     </div>
@@ -326,6 +372,12 @@
             
             <div class="sync-text" id="sync-status">⏳ Synchronizing data...</div>
             <button id="btn-proceed-vote" class="btn btn-pink" disabled style="margin-top: 30px; width: 100%;">🔒 Waiting for all 4 agents...</button>
+            
+            <div class="minigame-container" id="waiting-minigame">
+                <h3 style="color: #FFD54F; font-family: 'Courier Prime', monospace; margin-top: 0; font-size: 1.1rem;">-- Agent Memory Training --</h3>
+                <p style="color: #ccc; font-size: 0.9rem; margin-bottom: 0;">Match the clues while waiting for your team!</p>
+                <div class="mg-grid" id="mg-board"></div>
+            </div>
         </div>
     </div>
 
@@ -377,7 +429,7 @@
 </div>
 
 <script>
-// --- Audio System (Simple Beeps) ---
+// --- Audio System ---
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 function playSound(type) {
     if(audioCtx.state === 'suspended') audioCtx.resume();
@@ -399,7 +451,6 @@ function playSound(type) {
 
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkC7Bbv4I3nXWYB5vad_1Ohv8hIUaoPgl39PxtuG0GAy8qwoggf1EbAcGmBADWBWkH3g/exec';
 
-// Game States
 let currentDiary = 0; let points = 0; let timeRemaining = 600; let timerInterval; let pollingInterval; let reviewTimerInterval; let votingAttempts = 0;
 let currentQuestionIndex = 0; let correctAnswersCount = 0; let selectedChoiceIndex = null;
 let votingTimerInterval; let votingTimeRemaining = 600;
@@ -409,14 +460,8 @@ let hp = 3; let isPaused = false;
 let assist5050Count = 2; let assistHintCount = 1;
 const HP_ICON_URL = "https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lion_Crest.png?raw=true";
 
-const positiveMessages = [
-    "Good try! Let's think again 😊",
-    "You're close! Keep going! 💡",
-    "Don't give up, you can do it! ✨",
-    "Take a deep breath and read carefully again! 📖"
-];
+const positiveMessages = ["Good try! Let's think again 😊", "You're close! Keep going! 💡", "Don't give up, you can do it! ✨", "Take a deep breath and read carefully again! 📖"];
 
-// Revive Task Data
 const reviveQA = [
     { q: "1. Why do we find the main idea of a paragraph?", opts: ["A. To know every word a paragraph has mentioned", "B. To understand the most important point", "C. To remember all details of a paragraph"], ans: 1 },
     { q: "2. Where can we usually find the main idea in a passage?", opts: ["A. In the middle of it", "B. In the last paragraph of it", "C. In the first or last sentence of it"], ans: 2 },
@@ -424,53 +469,18 @@ const reviveQA = [
 ];
 let reviveIndex = 0; let reviveScore = 0;
 
-// Diary Data
 const diaries = {
-    1: { 
-        title: "FILE: OCT 14 - THE DINNER TABLE", domain: "Domain: Family Relations",
-        content: `The house smells like garlic and rosemary—Mom’s "celebration roast." We sat there for two hours, just talking. Dad was retelling that ridiculous story about his first car, and for a second, I actually forgot to be afraid. They look at me with so much pride when I talk about my upcoming art exhibition. I felt so safe in the warmth of the yellow kitchen light, surrounded by people who would move mountains for me. Mom reached over and squeezed my hand, telling me how much she loves my "bright spirit."<br><br>I almost told them then. I almost let the words spill out. But how do you tell people who think you’re a masterpiece that you’re actually being dismantled?<br><br>When my phone vibrated against the wooden table, the sound was like a gunshot. My stomach did a slow, sickening flip. I didn't even look at the screen, but I instinctively pulled my hand away from Mom’s. She didn't notice the way I suddenly went cold, or how I spent the rest of the meal staring at the shadows the candles cast on the wall—jagged, dark shapes that looked exactly like the 'shame' emojis that have been flooding my private folders since Monday.`,
-        qa: [
-            { q: "1. How does the girl feel during dinner?", opts: ["A) Happy and hungry.", "B) Scared and quiet.", "C) Angry and loud."], ans: 1, exp: "ตอนแรกเธอบอกว่า 'forgot to be afraid' แต่เมื่อโทรศัพท์สั่นเธอก็ 'went cold'", hint: "Look at how she reacts when her phone vibrates." },
-            { q: "2. Why does she pull her hand away from her mom?", opts: ["A) The food is hot.", "B) Her phone vibrated.", "C) She is being rude."], ans: 1, exp: "ในบทความระบุว่า 'When my phone vibrated... instinctively pulled my hand away'", hint: "What happened to her phone on the wooden table?" },
-            { q: "3. What do the 'shadows' on the wall look like?", opts: ["A) Mean emojis.", "B) Her parents.", "C) Pretty art."], ans: 0, exp: "บทความเปรียบเทียบเงาว่า 'looked exactly like the shame emojis'", hint: "Find the word 'shadows' in the last paragraph." },
-            { q: "4. What do her parents think of her?", opts: ["A) She is a 'bright spirit.'", "B) She is a bad student.", "C) She is very sick."], ans: 0, exp: "แม่ของเธอบอกว่ารัก 'bright spirit' ของเธอ", hint: "What does Mom say while squeezing her hand?" },
-            { q: "5. Main Idea: What is the girl doing at dinner?", opts: ["A) Eating her favorite meal.", "B) Hiding a secret.", "C) Arguing with her dad."], ans: 1, exp: "ความจริงคือเธอกำลังปิดบังความลับเรื่องที่ถูกกลั่นแกล้ง", hint: "She 'almost told them' but decided not to. What is she doing?" }
-        ]
-    },
-    2: { 
-        title: "FILE: OCT 17 - THE ART ROOM SANCTUARY", domain: "Domain: School Relations", 
-        content: `Mr. Harrison let me stay late in the studio today. He says I have a "rare eye for perspective." It’s the only place in this building where the air doesn't feel like it’s running out. Even Chloe and Sarah came by to drop off a coffee; they’re the best friends anyone could ask for. We spent the afternoon laughing about our disastrous history presentation, and for a few hours, I felt like a normal sixteen-year-old. I’m surrounded by teachers who believe in me and friends who hold my hand in the hallway. I should be happy. I have every reason to be.<br><br>As they walked away, I saw them glance at their phones and then quickly at me. It was a split second, a tiny hitch in their laughter. I looked down at my canvas and realized I’d been painting the same recursive loop of thorns over and over. My phone buzzed in my pocket—a sharp, rhythmic pulse. It’s a "ping" that follows me into every room, a digital footprint I can’t scrub off. Even in this sanctuary, I can feel the unseen audience watching me through the lens, waiting for the girl in the "perfect" art room to finally break.`, 
-        qa: [ 
-            { q: "1. Why does she like the art room?", opts: ["A) She can breathe there.", "B) There are no teachers.", "C) She can sleep there."], ans: 0, exp: "เธอบอกว่าที่นี่เป็นที่เดียวที่ 'air doesn't feel like it’s running out'", hint: "Think about the phrase 'air doesn't feel like it's running out'." }, 
-            { q: "2. What do her friends Chloe and Sarah bring her?", opts: ["A) A new painting.", "B) A cup of coffee.", "C) A history book."], ans: 1, exp: "บทความระบุว่าเพื่อน 'came by to drop off a coffee'", hint: "Read the third sentence carefully." }, 
-            { q: "3. What 'clue' shows a problem at school?", opts: ["A) Her friends ignore her.", "B) Her friends check their phones.", "C) The room is too dark."], ans: 1, exp: "อาการชะงักและเหลือบมองโทรศัพท์ของเพื่อนเป็นสัญญาณผิดปกติ", hint: "What do her friends do as they walk away?" }, 
-            { q: "4. Who is the 'unseen audience'?", opts: ["A) People in the hallway.", "B) People online.", "C) People at a museum."], ans: 1, exp: "หมายถึงคนที่จับจ้องเธอจากโลกออนไลน์", hint: "They are watching her 'through the lens'." }, 
-            { q: "5. Main Idea: How does the girl feel at school?", opts: ["A) Happy and successful.", "B) Watched and judged.", "C) Bored and tired."], ans: 1, exp: "เธอยังรู้สึกเหมือนถูกจับตามองตลอดเวลา", hint: "Despite having friends, she feels an 'unseen audience'." } 
-        ]
-    },
-    3: { 
-        title: "FILE: OCT 20 - THE LAST DATE", domain: "Domain: Romantic Relationships", 
-        content: `Leo took me to the pier tonight. The air was salty and cold, and he gave me his hoodie without me even asking. We sat on the edge of the wood, watching the black water churn underneath. He told me he’s never met anyone as "real" as me. He makes me feel seen, truly seen, in a way that makes the rest of the world fade into the background. When he kissed me, I felt a flicker of hope—the idea that maybe his love could be a shield thick enough to stop the arrows.<br><br>We took a selfie against the moonlight, but as he went to post it, I felt a wave of pure terror. "Don't tag me," I whispered, my voice shaking. He looked confused, his thumb hovering over the screen. He doesn't know that every time my name is linked to a photo, the 'Comment' section turns into a slaughterhouse. He sees a beautiful memory; I see a new coordinate for them to find me. The "tether" is tightening, and even his arms around me can't stop the silent, digital scream waiting for me in the notifications I’m too scared to open.`, 
-        qa: [ 
-            { q: "1. How is Leo during the date?", opts: ["A) Mean and cold.", "B) Kind and loving.", "C) Quiet and bored."], ans: 1, exp: "Leo อ่อนโยน ให้เสื้อฮู้ด และทำให้เธอรู้สึกอบอุ่น", hint: "He gave her his hoodie and made her feel truly seen." }, 
-            { q: "2. Why does she say 'Don't tag me'?", opts: ["A) She looks ugly.", "B) She fears mean comments.", "C) She hates the photo."], ans: 1, exp: "เธอกลัวว่าช่องคอมเมนต์จะกลายเป็นพื้นที่ให้คนด่าเธอ", hint: "She mentions the 'Comment' section turning into a slaughterhouse." }, 
-            { q: "3. What is the 'slaughterhouse'?", opts: ["A) The internet comments.", "B) A place at the pier.", "C) A scary movie."], ans: 0, exp: "เธอเปรียบเทียบช่องคอมเมนต์ว่าเหมือนโรงฆ่าสัตว์", hint: "It's related to what happens when her name is linked to a photo online." }, 
-            { q: "4. How does she feel when Leo kisses her?", opts: ["A) A little hopeful.", "B) Very angry.", "C) Totally safe."], ans: 0, exp: "เมื่อเขาจูบ เธอรู้สึก 'felt a flicker of hope'", hint: "Look at the end of the first paragraph." }, 
-            { q: "5. Main Idea: Why is the date sad?", opts: ["A) The weather was bad.", "B) Love cannot stop the bullies.", "C) Leo wants to break up."], ans: 1, exp: "แม้จะมีความรัก แต่มันก็ไม่สามารถหยุดการถูกบูลลี่ได้", hint: "Even his arms can't stop the silent digital scream." } 
-        ]
-    },
-    4: { 
-        title: "FILE: OCT 23 - THE FINAL ENTRY", domain: "The Reveal: The Digital Storm", 
-        content: `The "Countdown" is over. I finally looked.<br><br>I thought I could keep the worlds separate. I thought if I had a good family, good friends, and a boy who loved me, the voices on the screen wouldn't matter. But they found the cracks. They took the photo from the pier. They took my art. They took the "bright spirit" Mom loves and turned it into something unrecognizable.<br><br>They’ve been voting on my life for weeks. A thousand people I don't know, and a few I thought I did, all hitting "like" on a thread that says I shouldn't exist. The "Burn Page" didn't just stay on the internet; it bled into the physical world. I saw the URL scratched into my locker, the same one I saw in the bathroom stall, the same one sent to my inbox a hundred times a day.<br><br>I’m looking at the roast Mom made, the art Mr. Harrison praised, and the hoodie Leo gave me. They are all beautiful things, but they aren't loud enough. The notifications are a rhythmic, digital heartbeat that has replaced my own. I realize now that the "map" they drew leads to a place where the lights are always on and the shouting never stops. If I can't turn off the screen, I have to turn off the sound. I’m tired of being a spectacle. I just want to be still.`, 
-        qa: [ 
-            { q: "1. What is the girl's real problem?", opts: ["A) She failed her art class.", "B) She is being cyberbullied.", "C) She lost her phone."], ans: 1, exp: "บทความพูดถึง 'Burn Page' และคนกดไลค์ในเพจแอนตี้ แสดงถึงการถูก Cyberbullying", hint: "Look at phrases like 'Burn Page' and 'hitting like on a thread'." }, 
-            { q: "2. Where did she see the bullying link?", opts: ["A) On her locker.", "B) On the TV.", "C) In a library book."], ans: 0, exp: "เธอเห็น URL ที่ใช้บูลลี่เธอ 'scratched into my locker'", hint: "The 'Burn Page' bled into the physical world. Where was it scratched?" }, 
-            { q: "3. What is the 'Countdown'?", opts: ["A) A game for a party.", "B) A timer for the bullying.", "C) A school project."], ans: 1, exp: "'Countdown' ในบริบทนี้คือการรอคอยเวลาที่ความอดทนของเธอจะสิ้นสุดลง", hint: "It marks the moment she finally looks at the hate online." }, 
-            { q: "4. Why can't her family help her now?", opts: ["A) They don't love her.", "B) The digital hate is too loud.", "C) They are not at home."], ans: 1, exp: "สิ่งดีๆ รอบตัวเธอ 'aren't loud enough' ที่จะกลบเสียงด่าทอ", hint: "Beautiful things around her 'aren't loud enough'." }, 
-            { q: "5. Main Idea: What does 'turn off the sound' mean?", opts: ["A) Fix her broken phone.", "B) Stop the bullying forever.", "C) Listen to soft music."], ans: 1, exp: "'Turn off the sound' เป็นการเปรียบเปรยถึงการยุติทุกอย่างเพื่อหนีจากความเจ็บปวด", hint: "She wants to stop the 'digital heartbeat' and the shouting." } 
-        ]
-    }
+    1: { title: "FILE: OCT 14 - THE DINNER TABLE", domain: "Domain: Family Relations", content: `The house smells like garlic and rosemary—Mom’s "celebration roast." We sat there for two hours, just talking. Dad was retelling that ridiculous story about his first car, and for a second, I actually forgot to be afraid. They look at me with so much pride when I talk about my upcoming art exhibition. I felt so safe in the warmth of the yellow kitchen light, surrounded by people who would move mountains for me. Mom reached over and squeezed my hand, telling me how much she loves my "bright spirit."<br><br>I almost told them then. I almost let the words spill out. But how do you tell people who think you’re a masterpiece that you’re actually being dismantled?<br><br>When my phone vibrated against the wooden table, the sound was like a gunshot. My stomach did a slow, sickening flip. I didn't even look at the screen, but I instinctively pulled my hand away from Mom’s. She didn't notice the way I suddenly went cold, or how I spent the rest of the meal staring at the shadows the candles cast on the wall—jagged, dark shapes that looked exactly like the 'shame' emojis that have been flooding my private folders since Monday.`, qa: [ { q: "1. How does the girl feel during dinner?", opts: ["A) Happy and hungry.", "B) Scared and quiet.", "C) Angry and loud."], ans: 1, exp: "ตอนแรกเธอบอกว่า 'forgot to be afraid' แต่เมื่อโทรศัพท์สั่นเธอก็ 'went cold'", hint: "Look at how she reacts when her phone vibrates." }, { q: "2. Why does she pull her hand away from her mom?", opts: ["A) The food is hot.", "B) Her phone vibrated.", "C) She is being rude."], ans: 1, exp: "ในบทความระบุว่า 'When my phone vibrated... instinctively pulled my hand away'", hint: "What happened to her phone on the wooden table?" }, { q: "3. What do the 'shadows' on the wall look like?", opts: ["A) Mean emojis.", "B) Her parents.", "C) Pretty art."], ans: 0, exp: "บทความเปรียบเทียบเงาว่า 'looked exactly like the shame emojis'", hint: "Find the word 'shadows' in the last paragraph." }, { q: "4. What do her parents think of her?", opts: ["A) She is a 'bright spirit.'", "B) She is a bad student.", "C) She is very sick."], ans: 0, exp: "แม่ของเธอบอกว่ารัก 'bright spirit' ของเธอ", hint: "What does Mom say while squeezing her hand?" }, { q: "5. Main Idea: What is the girl doing at dinner?", opts: ["A) Eating her favorite meal.", "B) Hiding a secret.", "C) Arguing with her dad."], ans: 1, exp: "ความจริงคือเธอกำลังปิดบังความลับเรื่องที่ถูกกลั่นแกล้ง", hint: "She 'almost told them' but decided not to. What is she doing?" } ] },
+    2: { title: "FILE: OCT 17 - THE ART ROOM SANCTUARY", domain: "Domain: School Relations", content: `Mr. Harrison let me stay late in the studio today. He says I have a "rare eye for perspective." It’s the only place in this building where the air doesn't feel like it’s running out. Even Chloe and Sarah came by to drop off a coffee; they’re the best friends anyone could ask for. We spent the afternoon laughing about our disastrous history presentation, and for a few hours, I felt like a normal sixteen-year-old. I’m surrounded by teachers who believe in me and friends who hold my hand in the hallway. I should be happy. I have every reason to be.<br><br>As they walked away, I saw them glance at their phones and then quickly at me. It was a split second, a tiny hitch in their laughter. I looked down at my canvas and realized I’d been painting the same recursive loop of thorns over and over. My phone buzzed in my pocket—a sharp, rhythmic pulse. It’s a "ping" that follows me into every room, a digital footprint I can’t scrub off. Even in this sanctuary, I can feel the unseen audience watching me through the lens, waiting for the girl in the "perfect" art room to finally break.`, qa: [ { q: "1. Why does she like the art room?", opts: ["A) She can breathe there.", "B) There are no teachers.", "C) She can sleep there."], ans: 0, exp: "เธอบอกว่าที่นี่เป็นที่เดียวที่ 'air doesn't feel like it’s running out'", hint: "Think about the phrase 'air doesn't feel like it's running out'." }, { q: "2. What do her friends Chloe and Sarah bring her?", opts: ["A) A new painting.", "B) A cup of coffee.", "C) A history book."], ans: 1, exp: "บทความระบุว่าเพื่อน 'came by to drop off a coffee'", hint: "Read the third sentence carefully." }, { q: "3. What 'clue' shows a problem at school?", opts: ["A) Her friends ignore her.", "B) Her friends check their phones.", "C) The room is too dark."], ans: 1, exp: "อาการชะงักและเหลือบมองโทรศัพท์ของเพื่อนเป็นสัญญาณผิดปกติ", hint: "What do her friends do as they walk away?" }, { q: "4. Who is the 'unseen audience'?", opts: ["A) People in the hallway.", "B) People online.", "C) People at a museum."], ans: 1, exp: "หมายถึงคนที่จับจ้องเธอจากโลกออนไลน์", hint: "They are watching her 'through the lens'." }, { q: "5. Main Idea: How does the girl feel at school?", opts: ["A) Happy and successful.", "B) Watched and judged.", "C) Bored and tired."], ans: 1, exp: "เธอยังรู้สึกเหมือนถูกจับตามองตลอดเวลา", hint: "Despite having friends, she feels an 'unseen audience'." } ] },
+    3: { title: "FILE: OCT 20 - THE LAST DATE", domain: "Domain: Romantic Relationships", content: `Leo took me to the pier tonight. The air was salty and cold, and he gave me his hoodie without me even asking. We sat on the edge of the wood, watching the black water churn underneath. He told me he’s never met anyone as "real" as me. He makes me feel seen, truly seen, in a way that makes the rest of the world fade into the background. When he kissed me, I felt a flicker of hope—the idea that maybe his love could be a shield thick enough to stop the arrows.<br><br>We took a selfie against the moonlight, but as he went to post it, I felt a wave of pure terror. "Don't tag me," I whispered, my voice shaking. He looked confused, his thumb hovering over the screen. He doesn't know that every time my name is linked to a photo, the 'Comment' section turns into a slaughterhouse. He sees a beautiful memory; I see a new coordinate for them to find me. The "tether" is tightening, and even his arms around me can't stop the silent, digital scream waiting for me in the notifications I’m too scared to open.`, qa: [ { q: "1. How is Leo during the date?", opts: ["A) Mean and cold.", "B) Kind and loving.", "C) Quiet and bored."], ans: 1, exp: "Leo อ่อนโยน ให้เสื้อฮู้ด และทำให้เธอรู้สึกอบอุ่น", hint: "He gave her his hoodie and made her feel truly seen." }, { q: "2. Why does she say 'Don't tag me'?", opts: ["A) She looks ugly.", "B) She fears mean comments.", "C) She hates the photo."], ans: 1, exp: "เธอกลัวว่าช่องคอมเมนต์จะกลายเป็นพื้นที่ให้คนด่าเธอ", hint: "She mentions the 'Comment' section turning into a slaughterhouse." }, { q: "3. What is the 'slaughterhouse'?", opts: ["A) The internet comments.", "B) A place at the pier.", "C) A scary movie."], ans: 0, exp: "เธอเปรียบเทียบช่องคอมเมนต์ว่าเหมือนโรงฆ่าสัตว์", hint: "It's related to what happens when her name is linked to a photo online." }, { q: "4. How does she feel when Leo kisses her?", opts: ["A) A little hopeful.", "B) Very angry.", "C) Totally safe."], ans: 0, exp: "เมื่อเขาจูบ เธอรู้สึก 'felt a flicker of hope'", hint: "Look at the end of the first paragraph." }, { q: "5. Main Idea: Why is the date sad?", opts: ["A) The weather was bad.", "B) Love cannot stop the bullies.", "C) Leo wants to break up."], ans: 1, exp: "แม้จะมีความรัก แต่มันก็ไม่สามารถหยุดการถูกบูลลี่ได้", hint: "Even his arms can't stop the silent digital scream." } ] },
+    4: { title: "FILE: OCT 23 - THE FINAL ENTRY", domain: "The Reveal: The Digital Storm", content: `The "Countdown" is over. I finally looked.<br><br>I thought I could keep the worlds separate. I thought if I had a good family, good friends, and a boy who loved me, the voices on the screen wouldn't matter. But they found the cracks. They took the photo from the pier. They took my art. They took the "bright spirit" Mom loves and turned it into something unrecognizable.<br><br>They’ve been voting on my life for weeks. A thousand people I don't know, and a few I thought I did, all hitting "like" on a thread that says I shouldn't exist. The "Burn Page" didn't just stay on the internet; it bled into the physical world. I saw the URL scratched into my locker, the same one I saw in the bathroom stall, the same one sent to my inbox a hundred times a day.<br><br>I’m looking at the roast Mom made, the art Mr. Harrison praised, and the hoodie Leo gave me. They are all beautiful things, but they aren't loud enough. The notifications are a rhythmic, digital heartbeat that has replaced my own. I realize now that the "map" they drew leads to a place where the lights are always on and the shouting never stops. If I can't turn off the screen, I have to turn off the sound. I’m tired of being a spectacle. I just want to be still.`, qa: [ { q: "1. What is the girl's real problem?", opts: ["A) She failed her art class.", "B) She is being cyberbullied.", "C) She lost her phone."], ans: 1, exp: "บทความพูดถึง 'Burn Page' และคนกดไลค์ในเพจแอนตี้ แสดงถึงการถูก Cyberbullying", hint: "Look at phrases like 'Burn Page' and 'hitting like on a thread'." }, { q: "2. Where did she see the bullying link?", opts: ["A) On her locker.", "B) On the TV.", "C) In a library book."], ans: 0, exp: "เธอเห็น URL ที่ใช้บูลลี่เธอ 'scratched into my locker'", hint: "The 'Burn Page' bled into the physical world. Where was it scratched?" }, { q: "3. What is the 'Countdown'?", opts: ["A) A game for a party.", "B) A timer for the bullying.", "C) A school project."], ans: 1, exp: "'Countdown' ในบริบทนี้คือการรอคอยเวลาที่ความอดทนของเธอจะสิ้นสุดลง", hint: "It marks the moment she finally looks at the hate online." }, { q: "4. Why can't her family help her now?", opts: ["A) They don't love her.", "B) The digital hate is too loud.", "C) They are not at home."], ans: 1, exp: "สิ่งดีๆ รอบตัวเธอ 'aren't loud enough' ที่จะกลบเสียงด่าทอ", hint: "Beautiful things around her 'aren't loud enough'." }, { q: "5. Main Idea: What does 'turn off the sound' mean?", opts: ["A) Fix her broken phone.", "B) Stop the bullying forever.", "C) Listen to soft music."], ans: 1, exp: "'Turn off the sound' เป็นการเปรียบเปรยถึงการยุติทุกอย่างเพื่อหนีจากความเจ็บปวด", hint: "She wants to stop the 'digital heartbeat' and the shouting." } ] }
 };
+
+function selectDiary(num) {
+    currentDiary = num;
+    document.querySelectorAll('.diary-btn').forEach(btn => btn.classList.remove('selected'));
+    document.getElementById('btn-diary-' + num).classList.add('selected');
+}
 
 function showPage(pageId) {
     document.querySelectorAll('.container > div:not(#top-bar):not(.tape)').forEach(div => div.classList.add('hidden'));
@@ -478,31 +488,50 @@ function showPage(pageId) {
     if(target) target.classList.remove('hidden');
 }
 
-// 1. VIDEO INTRO FLOW
+let skipVideoTimeout;
+
 function startVideoBriefing() {
     document.getElementById('splash-screen').classList.add('hidden');
     document.getElementById('video-overlay').classList.remove('hidden');
     
     let vid = document.getElementById('intro-video');
+    let aud = document.getElementById('intro-audio');
+    
+    if(vid) vid.play().catch(e => console.log(e));
+    if(aud) aud.play().catch(e => console.log(e));
+    
+    skipVideoTimeout = setTimeout(() => {
+        document.getElementById('skip-video-btn').classList.remove('hidden');
+    }, 10000);
+
     if(vid) {
-        vid.play().catch(e => console.log("Autoplay prevented."));
-        // ปิดวีดีโออัตโนมัติเมื่อจบ
-        vid.onended = function() {
-            document.getElementById('video-overlay').classList.add('hidden');
-            document.getElementById('app').classList.remove('hidden');
-        };
+        vid.onended = function() { endVideoBriefing(); };
     } else {
-        document.getElementById('video-overlay').classList.add('hidden');
-        document.getElementById('app').classList.remove('hidden');
+        endVideoBriefing();
     }
 }
 
-// 2. LOGIN -> BRIEFING
+function endVideoBriefing() {
+    clearTimeout(skipVideoTimeout);
+    let vid = document.getElementById('intro-video');
+    let aud = document.getElementById('intro-audio');
+    if(vid) vid.pause();
+    if(aud) {
+        // Fade out music
+        let vol = 1;
+        let fadeOut = setInterval(() => {
+            if (vol > 0.1) { vol -= 0.1; aud.volume = vol; }
+            else { clearInterval(fadeOut); aud.pause(); }
+        }, 100);
+    }
+    document.getElementById('video-overlay').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+}
+
 function goToBriefing() {
     let groupInput = document.getElementById('groupName');
     let playerInput = document.getElementById('playerName');
     if(!groupInput || !playerInput) return; 
-    
     let group = groupInput.value.trim();
     let player = playerInput.value.trim();
     if(!group || !player) { alert("⚠️ กรุณากรอกข้อมูลให้ครบถ้วน (Required fields)"); return; }
@@ -514,20 +543,17 @@ function goToBriefing() {
     showPage('page-briefing');
 }
 
-// 3. BRIEFING -> FILE SELECT
-function goToFileSelect() {
-    showPage('page-file-select');
-}
-
-// 4. FILE SELECT -> GAMEPLAY
-function selectDiary(num) {
-    currentDiary = num;
-    document.querySelectorAll('.diary-btn').forEach(btn => btn.classList.remove('selected'));
-    document.getElementById('btn-diary-' + num).classList.add('selected');
-}
+function goToFileSelect() { showPage('page-file-select'); }
 
 function startInvestigation() {
     if(currentDiary === 0) { alert("⚠️ กรุณาเลือกแฟ้มคดีก่อนเริ่มสืบสวน"); return; }
+    
+    let avatarRadio = document.querySelector('input[name="avatar"]:checked');
+    let selectedAvatarUrl = avatarRadio ? avatarRadio.value : "";
+    let agentAvatarEl = document.getElementById('agent-avatar');
+    if(agentAvatarEl && selectedAvatarUrl) {
+        agentAvatarEl.innerHTML = `<img src="${selectedAvatarUrl}" width="30" style="vertical-align:middle; image-rendering: pixelated;">`;
+    }
     
     document.getElementById('top-bar').classList.remove('hidden');
     document.getElementById('timer-label').innerText = "Time:";
@@ -546,20 +572,15 @@ function startInvestigation() {
     startTimer(600, 'timerDisplay');
 }
 
-// Game System Controls
 function pauseGame() {
     isPaused = true;
     document.getElementById('pause-modal').classList.remove('hidden');
 }
-
 function resumeGame() {
     isPaused = false;
     document.getElementById('pause-modal').classList.add('hidden');
 }
-
-function exitGame() {
-    location.reload(); 
-}
+function exitGame() { location.reload(); }
 
 function updateHPUI() {
     let heartsHtml = '';
@@ -567,11 +588,12 @@ function updateHPUI() {
         if(i < hp) heartsHtml += `<img src="${HP_ICON_URL}" class="hp-icon">`;
         else heartsHtml += `<img src="${HP_ICON_URL}" class="hp-icon lost">`;
     }
-    document.getElementById('hp-display').innerHTML = heartsHtml;
+    let hpEl = document.getElementById('hp-display');
+    if(hpEl) hpEl.innerHTML = heartsHtml;
     
     if (hp <= 0) {
         document.getElementById('gameover-modal').classList.remove('hidden');
-        isPaused = true;
+        // No auto-pause so timer keeps ticking to force urgency
     }
 }
 
@@ -593,7 +615,6 @@ function useFiftyFifty() {
             wrongIndexes.push(i); 
         }
     });
-    
     if(wrongIndexes.length > 0) {
         let hideIndex = wrongIndexes[Math.floor(Math.random() * wrongIndexes.length)];
         document.getElementById('choice-' + hideIndex).style.display = 'none';
@@ -617,11 +638,11 @@ function useHint() {
 function proceedToWaitingRoom(isFail = false) {
     document.getElementById('gameover-modal').classList.add('hidden');
     document.getElementById('top-bar').classList.add('hidden');
-    // ให้ผ่านไปโหวตได้ทุกคน (Gatekeeper need "READY") แต่ไม่ให้คะแนนถ้า fail
     saveToSheet("saveProgress", "READY"); 
     showPage('page-waiting');
     pollTeamStatus();
     pollingInterval = setInterval(pollTeamStatus, 3000);
+    initMiniGame(); 
 }
 
 function renderQuestion() {
@@ -639,7 +660,6 @@ function renderQuestion() {
     document.getElementById('btn-hint').disabled = (assistHintCount <= 0);
     
     selectedChoiceIndex = null;
-    
     let choicesHtml = '';
     qData.opts.forEach((opt, index) => {
         choicesHtml += `<button class="choice-btn" id="choice-${index}" onclick="selectChoice(${index})" style="text-align: left; display: block;">
@@ -704,7 +724,7 @@ function nextQuestion() {
         renderQuestion();
     } else {
         clearInterval(timerInterval);
-        points += 3; // Finished -> get bonus
+        points += 3; 
         document.getElementById('bonus-badge').classList.remove('hidden');
         proceedToWaitingRoom(false);
     }
@@ -722,10 +742,7 @@ function startTimer(seconds, displayId) {
         timeRemaining--;
         let min = Math.floor(timeRemaining / 60); let sec = timeRemaining % 60;
         timerEl.innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
-        
-        // Update top bar time progress
         if(progressEl) progressEl.style.width = ((seconds - timeRemaining) / seconds * 100) + '%';
-
         if(timeRemaining <= 60) timerEl.classList.add('warning');
         
         if (timeRemaining <= 0) {
@@ -766,7 +783,6 @@ function selectReviveChoice(index) {
 
 function checkReviveAnswer() {
     if (selectedChoiceIndex === null) { alert("⚠️ Please select an answer!"); return; }
-    
     let qData = reviveQA[reviveIndex];
     if (selectedChoiceIndex === qData.ans) reviveScore++;
     
@@ -774,31 +790,30 @@ function checkReviveAnswer() {
     if(reviveIndex < 3) {
         renderReviveQuestion();
     } else {
-        // End of Challenge
         if(reviveScore >= 2) {
             alert("🌟 Challenge Passed! Your detective badges have been restored.");
-            hp = 3; isPaused = false;
-            updateHPUI();
+            hp = 3; updateHPUI();
             showPage('page-diary');
-            // Reset state to current question
             document.getElementById('btn-submit-ans').classList.remove('hidden');
             document.getElementById('btn-next-q').classList.add('hidden');
             selectedChoiceIndex = null;
             document.querySelectorAll('#choices-container .choice-btn').forEach(btn => btn.classList.remove('wrong','selected'));
         } else {
             alert("Even the best detectives overlook details sometimes.\nEvery attempt strengthens your skills.\n(Proceeding to Waiting Room...)");
-            proceedToWaitingRoom(true); // Fails revive -> straight to vote, no bonus
+            proceedToWaitingRoom(true); 
         }
     }
 }
 
 // --- SYNC & POLL ---
 function saveToSheet(actionType, statusTxt) {
+    let avatarRadio = document.querySelector('input[name="avatar"]:checked');
+    let selectedAvatarUrl = avatarRadio ? avatarRadio.value : "";
     const dataToSend = {
         action: actionType,
         groupName: document.getElementById('groupName').value.trim(),
         playerName: document.getElementById('playerName').value.trim(),
-        avatar: "", // Removed avatar for saving to avoid errors, we just track names
+        avatar: selectedAvatarUrl,
         diaryNo: currentDiary,
         points: points,
         status: statusTxt
@@ -807,7 +822,10 @@ function saveToSheet(actionType, statusTxt) {
 }
 
 function pollTeamStatus() {
-    const dataToSend = { action: "checkTeam", groupName: document.getElementById('groupName').value.trim() };
+    let groupInput = document.getElementById('groupName');
+    if(!groupInput) return;
+    const dataToSend = { action: "checkTeam", groupName: groupInput.value.trim() };
+
     fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(dataToSend) })
     .then(res => res.json())
     .then(data => {
@@ -817,14 +835,16 @@ function pollTeamStatus() {
         
         if (members.length >= 4) {
             clearInterval(pollingInterval); 
-            document.getElementById('sync-status').innerText = "✅ All agents are ready!";
-            document.getElementById('sync-status').style.color = "var(--asm-border-ready)";
+            let syncText = document.getElementById('sync-status');
+            syncText.innerText = "✅ All agents are ready!";
+            syncText.style.color = "var(--asm-border-ready)";
+            syncText.style.animation = "none";
             btnVote.disabled = false;
             btnVote.onclick = goToVoting;
             btnVote.innerText = "⚖️ Proceed to Vote ➡";
         } else {
             btnVote.disabled = true;
-            btnVote.innerText = `🔒 Waiting for all 4 agents (Now ${members.length}/4)...`;
+            btnVote.innerText = `🔒 รอสมาชิกครบ 4 คน (ตอนนี้ ${members.length}/4)...`;
         }
     }).catch(e=>{});
 }
@@ -833,12 +853,62 @@ function updateAssemblyUI(readyMembers) {
     let gridHtml = '';
     for (let i = 0; i < 4; i++) {
         if (i < readyMembers.length) {
-            gridHtml += `<div class="agent-card ready"><div class="agent-name">Agent: ${readyMembers[i].name}</div><div class="status-pill ready">READY</div></div>`;
+            gridHtml += `<div class="agent-card ready"><div class="agent-name"><img src="${readyMembers[i].avatar}" width="30" style="image-rendering: pixelated;"> ${readyMembers[i].name}</div><div class="status-pill ready">READY</div></div>`;
         } else {
-            gridHtml += `<div class="agent-card"><div class="agent-name">Unknown Agent</div><div class="status-pill waiting">Waiting...</div></div>`;
+            gridHtml += `<div class="agent-card"><div class="agent-name">Agent ${i + 1}</div><div class="status-pill waiting">Coming soon...</div></div>`;
         }
     }
-    document.getElementById('agents-grid').innerHTML = gridHtml;
+    let gridEl = document.getElementById('agents-grid');
+    if(gridEl) gridEl.innerHTML = gridHtml;
+}
+
+// --- WAITING ROOM MINI GAME (Emoji Memory Match) ---
+const mgEmojis = ['🔍','📂','☕','📸','🔍','📂','☕','📸'];
+let mgCards = []; let mgFlipped = []; let mgMatched = 0;
+
+function initMiniGame() {
+    let board = document.getElementById('mg-board');
+    if(!board) return;
+    board.innerHTML = '';
+    mgFlipped = []; mgMatched = 0;
+    
+    mgCards = mgEmojis.sort(() => 0.5 - Math.random());
+    mgCards.forEach((emoji, i) => {
+        let card = document.createElement('div');
+        card.className = 'mg-card';
+        card.dataset.idx = i;
+        card.dataset.val = emoji;
+        card.innerHTML = '❓';
+        card.onclick = function() { flipMgCard(card); };
+        board.appendChild(card);
+    });
+}
+
+function flipMgCard(card) {
+    if(card.classList.contains('flipped') || card.classList.contains('matched') || mgFlipped.length >= 2) return;
+    
+    card.classList.add('flipped');
+    card.innerHTML = card.dataset.val;
+    mgFlipped.push(card);
+    
+    if(mgFlipped.length === 2) {
+        setTimeout(checkMgMatch, 800);
+    }
+}
+
+function checkMgMatch() {
+    let c1 = mgFlipped[0]; let c2 = mgFlipped[1];
+    if(c1.dataset.val === c2.dataset.val) {
+        c1.classList.add('matched'); c2.classList.add('matched');
+        mgMatched += 2;
+        if(mgMatched === mgCards.length) {
+            setTimeout(() => { alert("Great memory! Let's play again."); initMiniGame(); }, 500);
+        }
+    } else {
+        c1.classList.remove('flipped'); c1.innerHTML = '❓';
+        c2.classList.remove('flipped'); c2.innerHTML = '❓';
+    }
+    mgFlipped = [];
 }
 
 // --- VOTING SYSTEM ---
@@ -885,6 +955,9 @@ function submitFinalVote() {
     votingAttempts++;
     if (selectedFinalVoteAnswer === 'Cyberbullying') {
         playSound('correct');
+        let fw = document.getElementById('fireworks-audio');
+        if(fw) fw.play().catch(e=>{});
+
         clearInterval(votingTimerInterval);
         document.getElementById('top-bar').classList.add('hidden');
         if (votingAttempts === 1) {
