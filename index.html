@@ -36,6 +36,7 @@
             display: flex; justify-content: center; align-items: center; min-height: 100vh; 
         }
         
+        /* Main Container */
         .container { 
             background-color: var(--paper-main); width: 100%; max-width: 1100px; 
             border-radius: 2px 15px 5px 20px; padding: 40px; 
@@ -50,32 +51,36 @@
         h1 { color: var(--ink-dark); font-family: 'Courier Prime', monospace; font-size: 2.5rem; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px;}
         h2 { color: var(--ink-dark); font-weight: 700; font-family: 'Courier Prime', monospace; }
         
+        /* Decor */
         .tape { position: absolute; background-color: var(--tape-color); box-shadow: 0 1px 3px rgba(0,0,0,0.1); backdrop-filter: blur(2px); z-index: 10; }
         .tape-top { width: 120px; height: 30px; top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg); }
         .tape-corner { width: 80px; height: 25px; top: 10px; left: -20px; transform: rotate(-45deg); }
-
-        .top-bar { 
-            background: var(--ink-dark); color: var(--paper-main); padding: 10px 25px; border-radius: 5px 10px 3px 8px; 
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; 
-            box-shadow: 2px 4px 10px rgba(0,0,0,0.2); font-family: 'Courier Prime', monospace; flex-wrap: wrap; gap: 10px;
-        }
+        .login-decor { position: absolute; top: 20px; right: 30px; opacity: 0.8; font-family: 'Courier Prime', monospace; font-size: 1.5rem; color: var(--accent-red); border: 3px solid var(--accent-red); padding: 5px 10px; transform: rotate(15deg); border-radius: 5px;}
         
+        /* Modals & Overlays */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px); }
+        .modal-content { background: var(--paper-main); padding: 40px; border-radius: 5px; border: 2px dashed var(--ink-dark); text-align: center; max-width: 500px; width: 90%; box-shadow: 10px 10px 0 rgba(0,0,0,0.4); position: relative;}
+        
+        /* Video Pop-up Modal */
+        .video-container-modal { background: var(--paper-main); padding: 20px; border-radius: 5px; border: 2px dashed var(--ink-dark); box-shadow: 10px 10px 0 rgba(0,0,0,0.4); max-width: 800px; width: 95%; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .intro-video { width: 100%; border-radius: 5px; border: 2px solid var(--ink-dark); background: #000; }
+
+        /* Top Bar */
+        .top-bar { background: var(--ink-dark); color: var(--paper-main); padding: 10px 25px; border-radius: 5px 10px 3px 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; box-shadow: 2px 4px 10px rgba(0,0,0,0.2); font-family: 'Courier Prime', monospace; flex-wrap: wrap; gap: 10px; }
         .progress-container { width: 100%; height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; margin-top: 5px; overflow: hidden; }
         .progress-fill { height: 100%; background: #FFD54F; width: 0%; transition: width 0.3s ease; }
-
         .agent-info { font-size: 1.2rem; font-weight: 600; display: flex; align-items: center; gap: 10px;}
         .game-stats { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center;}
         .hp-display { display: flex; gap: 5px; align-items: center; }
         .hp-icon { width: 28px; height: 28px; image-rendering: pixelated; transition: 0.3s; filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.5));}
         .hp-icon.lost { filter: grayscale(100%) opacity(0.3); transform: scale(0.8); }
-        
         .timer { font-size: 1.3rem; font-weight: bold; background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 5px; }
         .timer.warning { color: var(--accent-red); animation: pulse 1s infinite; }
         .btn-control { background: #FFF; color: var(--ink-dark); border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-family: 'Courier Prime', monospace; font-weight: bold; transition: 0.2s; }
         .btn-control:hover { background: var(--paper-dark); }
 
+        /* Game Layout */
         .game-layout { display: flex; gap: 30px; height: 60vh; min-height: 500px; }
-        
         .reading-panel { flex: 1.2; background-color: #FAFAFA; border: 1px solid #D7CCC8; border-radius: 2px 10px 5px 12px; padding: 0; overflow-y: auto; text-align: left; position: relative; box-shadow: 2px 2px 8px rgba(0,0,0,0.05); }
         .file-header { background: var(--ink-light); color: var(--paper-main); font-family: 'Courier Prime', monospace; font-size: 1.2rem; padding: 15px 25px; position: sticky; top: 0; z-index: 10; border-bottom: 3px dashed var(--accent-highlight); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;}
         .file-content { padding: 30px; }
@@ -102,16 +107,20 @@
         .feedback-box { margin-top: 15px; padding: 15px; background: #E1F5FE; border-left: 5px solid #0288D1; border-radius: 2px; font-size: 1rem; color: #01579B; display: none; animation: slideUpFade 0.3s ease-out; font-weight: 600; }
         .explanation-box { margin-top: 15px; padding: 15px; background: #F1F8E9; border-left: 5px solid var(--accent-green); border-radius: 2px; font-size: 1rem; color: #33691E; display: none; animation: slideUpFade 0.3s ease-out; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);}
 
+        /* General Buttons */
         .btn { background: var(--ink-dark); color: var(--paper-main); border: none; padding: 14px 28px; border-radius: 4px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition: all 0.2s; box-shadow: 2px 4px 0 var(--ink-light); position: relative; top: 0; font-family: 'Courier Prime', monospace; text-transform: uppercase; }
         .btn:hover:not(:disabled) { background: #271412; }
         .btn:active:not(:disabled) { top: 4px; box-shadow: 0 0 0 var(--ink-light); }
         .btn-pink { background: var(--accent-red); box-shadow: 2px 4px 0 #9E2A0B; color: #fff; }
         .btn-pink:active:not(:disabled) { top: 4px; box-shadow: 0 0 0 #9E2A0B; }
+        .btn-blue { background: var(--primary-blue); box-shadow: 2px 4px 0 #4A7CDE; color: #fff; }
+        .btn-blue:active:not(:disabled) { top: 4px; box-shadow: 0 0 0 #4A7CDE; }
         .btn:disabled { opacity: 0.7; cursor: not-allowed; filter: grayscale(50%); top: 0; box-shadow: 2px 4px 0 rgba(0,0,0,0.2); } 
 
         input { width: 100%; max-width: 400px; padding: 15px; margin: 10px 0; border-radius: 3px; border: 2px dashed #BCAAA4; font-family: 'Courier Prime', monospace; font-size: 1.1rem; background: #FAFAFA; color: var(--ink-dark); text-align: center;}
         input:focus { outline: none; border-color: var(--ink-dark); background: #FFF; }
 
+        /* Avatars */
         .avatar-container { display: flex; justify-content: center; gap: 15px; margin: 15px 0; flex-wrap: wrap; }
         .avatar-label { cursor: pointer; padding: 10px; border-radius: 8px; border: 3px dashed transparent; background-color: var(--paper-dark); transition: all 0.3s; display: inline-block; }
         .avatar-label img { width: 50px; height: 50px; image-rendering: pixelated; vertical-align: middle; }
@@ -122,15 +131,7 @@
         .diary-btn:hover { transform: translateY(-3px); background: #FFF;}
         .diary-btn.selected { background: var(--ink-dark); color: var(--paper-main); transform: scale(1.05) rotate(2deg); }
 
-        /* Video Fullscreen Overlays */
-        .video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .intro-video { width: 100%; max-width: 1200px; max-height: 90vh; outline: none; }
-        .skip-btn-video { position: absolute; bottom: 40px; right: 40px; background: rgba(255,255,255,0.2); color: white; border: 2px solid white; padding: 10px 25px; font-size: 1.2rem; cursor: pointer; font-family: 'Courier Prime', monospace; border-radius: 5px; transition: 0.3s; backdrop-filter: blur(5px); z-index: 100000; }
-        .skip-btn-video:hover { background: white; color: black; }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px); }
-        .modal-content { background: var(--paper-main); padding: 40px; border-radius: 5px; border: 2px dashed var(--ink-dark); text-align: center; max-width: 500px; width: 90%; box-shadow: 10px 10px 0 rgba(0,0,0,0.4); }
-        
+        /* Team Assembly & Waiting Room */
         .assembly-wrapper { background-color: var(--asm-bg); border-radius: 5px; padding: 40px; color: var(--paper-main); width: 100%; max-width: 800px; margin: 0 auto; box-shadow: inset 0 0 40px rgba(0,0,0,0.9); border: 8px solid #3E2723; position: relative; }
         .assembly-title { color: var(--paper-dark); font-family: 'Courier Prime', monospace; font-size: 24px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
         .assembly-subtitle { color: #BCAAA4; font-size: 16px; margin-bottom: 30px; font-family: 'Courier Prime', monospace;}
@@ -142,15 +143,10 @@
         .status-pill.waiting { background-color: #271412; color: #8D6E63; }
         .status-pill.ready { background-color: var(--asm-border-ready); color: #1B5E20; }
         
-        /* Login Decor */
-        .login-decor { position: absolute; top: 20px; right: 30px; opacity: 0.8; font-family: 'Courier Prime', monospace; font-size: 1.5rem; color: var(--accent-red); border: 3px solid var(--accent-red); padding: 5px 10px; transform: rotate(15deg); border-radius: 5px;}
         .ack-box { background: rgba(0,0,0,0.03); padding: 15px 20px; border-left: 4px solid var(--ink-dark); margin: 15px auto; max-width: 600px; font-family: 'Courier Prime', monospace; font-size: 0.95rem; text-align: left; border-radius: 0 5px 5px 0;}
-
-        /* Voice Reader Button */
         .btn-voice { background: #FFD54F; color: var(--ink-dark); border: 1px solid #FBC02D; padding: 5px 12px; border-radius: 3px; font-family: 'Courier Prime', monospace; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 1px 2px 0 #FBC02D; font-size: 0.9rem;}
         .btn-voice:hover { background: #FFF59D; transform: translateY(-2px); }
 
-        /* Instruction Highlights */
         .instruction-box { background: var(--paper-dark); padding: 25px; border-radius: 5px; text-align: left; border: 1px dashed #BCAAA4; margin: 20px auto; max-width: 800px; font-size: 1.1rem; line-height: 1.6;}
         .instruction-th { color: var(--ink-light); font-size: 0.95rem; font-style: italic; display: block; margin-bottom: 15px; }
         .inst-title { color: var(--accent-green); font-weight: bold; font-family: 'Courier Prime', monospace; font-size: 1.15rem; }
@@ -167,7 +163,7 @@
         @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
-        /* Responsive */
+        /* Responsive Improvements */
         @media (max-width: 900px) { 
             .game-layout { flex-direction: column; height: auto; min-height: auto;} 
             .reading-panel { max-height: 45vh; margin-bottom: 15px;} 
@@ -184,48 +180,34 @@
 <audio id="case-closed-bgm" src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Detective%20Conan%20Movie%201_%20Opening%20Theme.mp3"></audio>
 <audio id="fireworks-audio" src="https://actions.google.com/sounds/v1/foley/fireworks_with_whistles.ogg"></audio>
 
-<div id="splash-screen" class="modal-overlay" style="background: var(--bg-desk); z-index: 10000;">
-    <div class="container" style="max-width: 500px; padding: 30px;">
+<div class="container" id="app">
+    
+    <div id="splash-screen" class="page active" style="z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh;">
         <img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/32de6ed7950d57f5520b9c9f517eabbc.jpg?raw=true" alt="Game Logo" style="max-width: 100%; border-radius: 10px; margin-bottom: 15px; box-shadow: 2px 4px 10px rgba(0,0,0,0.2);">
-        <h1 style="font-size: 2rem;">CASE 3</h1>
+        <h1 style="font-size: 2.2rem;">CASE 3</h1>
         <h2 style="margin-top:0; font-size: 1.5rem;">The Hidden Story</h2>
-        <button class="btn" onclick="startVideoBriefing()" style="margin-top: 15px;">ENTER CASE FILE</button>
+        <button class="btn" onclick="startVideoBriefing()" style="margin-top: 15px; width: 100%; max-width: 300px;">ENTER CASE FILE</button>
     </div>
-</div>
 
-<div id="video-overlay" class="video-overlay hidden">
-    <video id="intro-video" class="intro-video" playsinline controlslist="nodownload nofullscreen" controls>
-        <source src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Julia-Case.mp4" type="video/mp4">
-        Your browser does not support HTML video.
-    </video>
-    <button id="skip-video-btn" class="skip-btn-video hidden" onclick="endVideoBriefing()">Skip Intro ➡</button>
-</div>
-
-<div id="page-case-closed-video" class="video-overlay hidden">
-    <video id="case-closed-vid" class="intro-video" playsinline controlslist="nodownload nofullscreen" controls style="border: 5px solid white; border-radius: 10px;">
-        <source src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Game-Master-Apr-13-02-25-33.mp4" type="video/mp4">
-    </video>
-    <button class="skip-btn-video" onclick="skipCaseClosedVideo()">Skip Scene ➡</button>
-</div>
-
-<div id="pause-modal" class="modal-overlay hidden">
-    <div class="modal-content">
-        <h2 style="font-size: 2rem; margin-bottom: 20px;">⏸️ PAUSED</h2>
-        <p style="margin-bottom: 30px; font-family: 'Courier Prime', monospace;">Take a deep breath. The timer is stopped.</p>
-        <button class="btn" onclick="resumeGame()" style="width: 100%; margin-bottom: 10px;">▶️ Continue</button>
-        <button class="btn btn-pink" onclick="exitGame()" style="width: 100%;">🚪 Exit Game</button>
+    <div id="video-overlay" class="modal-overlay hidden" style="position: absolute; border-radius: 5px;">
+        <div class="video-container-modal">
+            <video id="intro-video" class="intro-video" playsinline controlslist="nodownload nofullscreen" controls>
+                <source src="./Julia-Case.mp4" type="video/mp4">
+                Your browser does not support HTML video.
+            </video>
+            <button id="skip-video-btn" class="btn btn-pink" style="width: 100%;" onclick="endVideoBriefing()">Skip Intro ➡</button>
+        </div>
     </div>
-</div>
 
-<div id="gameover-modal" class="modal-overlay hidden">
-    <div class="modal-content" style="border-color: var(--primary-blue);">
-        <h2 style="font-size: 2rem; color: var(--primary-blue); margin-bottom: 10px;">You are a capable detective.</h2>
-        <p style="margin-bottom: 30px; line-height: 1.6;">Even the most experienced detectives revisit difficult cases.<br>This attempt has given you valuable insight. The case is still open for you.</p>
-        <button class="btn" onclick="startReviveChallenge()" style="width: 100%; background: var(--primary-blue); box-shadow: 2px 4px 0 #4A7CDE; color: white;">Reopen the Case (Mini Challenge)</button>
+    <div id="page-case-closed-video" class="modal-overlay hidden" style="position: absolute; border-radius: 5px;">
+        <div class="video-container-modal">
+            <video id="case-closed-vid" class="intro-video" playsinline controlslist="nodownload nofullscreen" controls>
+                <source src="https://github.com/b6402100v2-ux/Pixelrepo/raw/refs/heads/main/Game-Master-Apr-13-02-25-33.mp4" type="video/mp4">
+            </video>
+            <button class="btn btn-pink" style="width: 100%;" onclick="skipCaseClosedVideo()">Skip Scene ➡</button>
+        </div>
     </div>
-</div>
 
-<div class="container hidden" id="app">
     <div class="tape tape-top"></div>
     <div class="tape tape-corner"></div>
     
@@ -242,9 +224,8 @@
         </div>
     </div>
 
-    <div id="page-login" class="page active">
+    <div id="page-login" class="page">
         <div class="login-decor">TOP SECRET</div>
-        <img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/32de6ed7950d57f5520b9c9f517eabbc.jpg?raw=true" alt="Game Banner" style="max-width: 100%; height: auto; max-height: 200px; border-radius: 8px; margin-bottom: 15px; object-fit: cover; box-shadow: 2px 4px 8px rgba(0,0,0,0.1);">
         <h1 style="font-size: 2.2rem; margin-top: 10px;">CASE 3: The Hidden Story</h1>
         <p style="color: var(--ink-light); margin-bottom: 5px; font-family: 'Courier Prime', monospace;">-- Official Agent Registration --</p>
         
@@ -284,16 +265,16 @@
             <button id="btn-mute-bgm" class="btn-control" onclick="toggleMuteBgm()">🔊 Mute BGM</button>
         </div>
         
+        <div style="text-align: center; margin: 15px 0;">
+            <img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lina's%20note.png?raw=true" alt="Lina's Note" style="max-width: 90%; max-height: 200px; border: 5px solid white; box-shadow: 2px 4px 15px rgba(0,0,0,0.15); transform: rotate(-2deg);">
+        </div>
+
         <div style="font-size: 1.15rem; line-height: 1.6; text-align: left; max-width: 800px; margin: 0 auto;">
             <p>Lina was the student everyone admired — the school’s most gifted artist. Her life seemed perfect on the surface. That is why what happened next was so devastating. The truth unfolded in a place no one thought to look.</p>
             <p class="instruction-th">ลีน่าเป็นนักเรียนที่ทุกคนชื่นชม เธอคือศิลปินผู้มีพรสวรรค์ของโรงเรียน ชีวิตของเธอดูสมบูรณ์แบบในสายตาคนอื่น แต่เหตุการณ์ที่เกิดขึ้นกลับสร้างความสะเทือนใจ เพราะความจริงนั้นซ่อนอยู่ในที่ที่ไม่มีใครคาดคิด</p>
         </div>
 
-        <div style="text-align: center; margin: 25px 0;">
-            <img src="https://github.com/b6402100v2-ux/Pixelrepo/blob/main/Lina's%20note.png?raw=true" alt="Lina's Note" style="max-width: 90%; max-height: 220px; border: 5px solid white; box-shadow: 2px 4px 15px rgba(0,0,0,0.15); transform: rotate(-2deg);">
-        </div>
-
-        <h2 style="margin-top: 20px;">INSTRUCTIONS</h2>
+        <h2 style="margin-top: 30px;">INSTRUCTIONS</h2>
         <div class="instruction-box">
             <span class="inst-title">1. Register Your Team</span><br>
             Enter each member’s name and your group name exactly as registered. Accuracy is essential.
@@ -390,7 +371,7 @@
             <div class="choices-container" id="revive-choices-container"></div>
             
             <div style="margin-top: 20px; text-align: right;">
-                <button class="btn" id="btn-submit-revive" onclick="checkReviveAnswer()" style="width: 100%; background: var(--primary-blue); box-shadow: 2px 4px 0 #4A7CDE;">Submit Answer</button>
+                <button class="btn btn-blue" id="btn-submit-revive" onclick="checkReviveAnswer()" style="width: 100%;">Submit Answer</button>
             </div>
         </div>
     </div>
@@ -461,6 +442,23 @@
         </div>
         <br>
         <button class="btn btn-pink" onclick="exitGame()" style="padding: 15px 40px; font-size: 1.2rem;">End Investigation</button>
+    </div>
+</div>
+
+<div id="pause-modal" class="modal-overlay hidden" style="z-index: 2000;">
+    <div class="modal-content">
+        <h2 style="font-size: 2rem; margin-bottom: 20px;">⏸️ PAUSED</h2>
+        <p style="margin-bottom: 30px; font-family: 'Courier Prime', monospace;">Take a deep breath. The timer is stopped.</p>
+        <button class="btn" onclick="resumeGame()" style="width: 100%; margin-bottom: 10px;">▶️ Continue</button>
+        <button class="btn btn-pink" onclick="exitGame()" style="width: 100%;">🚪 Exit Game</button>
+    </div>
+</div>
+
+<div id="gameover-modal" class="modal-overlay hidden" style="z-index: 2000;">
+    <div class="modal-content" style="border-color: var(--primary-blue);">
+        <h2 style="font-size: 2rem; color: var(--primary-blue); margin-bottom: 10px;">You are a capable detective.</h2>
+        <p style="margin-bottom: 30px; line-height: 1.6;">Even the most experienced detectives revisit difficult cases.<br>This attempt has given you valuable insight. The case is still open for you.</p>
+        <button class="btn-blue" onclick="startReviveChallenge()" style="width: 100%; padding: 15px;">Reopen the Case (Mini Challenge)</button>
     </div>
 </div>
 
@@ -554,24 +552,18 @@ let skipVideoTimeout;
 function startVideoBriefing() {
     document.getElementById('splash-screen').classList.add('hidden');
     document.getElementById('video-overlay').classList.remove('hidden');
-    let vid = document.getElementById('intro-video');
     
+    let vid = document.getElementById('intro-video');
     if(vid) {
-        vid.muted = false; // ให้มั่นใจว่ามีเสียง (เพราะเราเอา audio แยกออกแล้ว)
-        vid.play().then(() => {
-            console.log("Video Playing.");
-        }).catch(e => {
-            console.log("Video autoplay blocked/failed:", e);
+        vid.muted = false; 
+        vid.play().catch(e => {
+            console.log("Video autoplay blocked:", e);
             document.getElementById('skip-video-btn').classList.remove('hidden');
         });
-        
         vid.onended = function() { endVideoBriefing(); };
     }
     
-    // ตั้งเวลาให้ปุ่ม Skip โผล่มาเร็วขึ้นเป็น 3 วิ (เผื่อโหลดช้า)
-    skipVideoTimeout = setTimeout(() => { 
-        document.getElementById('skip-video-btn').classList.remove('hidden'); 
-    }, 3000);
+    skipVideoTimeout = setTimeout(() => { document.getElementById('skip-video-btn').classList.remove('hidden'); }, 3000);
 }
 
 function endVideoBriefing() {
@@ -580,7 +572,6 @@ function endVideoBriefing() {
     if(vid) vid.pause();
 
     document.getElementById('video-overlay').classList.add('hidden');
-    document.getElementById('app').classList.remove('hidden');
     showPage('page-login');
 }
 
